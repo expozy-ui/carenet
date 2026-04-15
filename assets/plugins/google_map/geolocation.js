@@ -95,7 +95,7 @@ function initMap() {
     const finalAddress = parts.join(' ');
 
     inputAddress.value = finalAddress;
-    debugger;
+    ;
 
     // inputs.fullAddress.value = finalAddress;
 

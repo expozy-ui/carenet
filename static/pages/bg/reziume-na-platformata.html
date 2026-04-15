@@ -1,0 +1,384 @@
+<main class="flex-1" x-data="{ view: 'patient' }">
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-primary-500 to-primary-700 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="max-w-3xl">
+                <p class="text-primary-200 text-sm font-semibold uppercase tracking-wide mb-2">Как работи платформата</p>
+                <h1 class="text-3xl lg:text-4xl font-bold mb-4">Резюме на платформата SuperCare</h1>
+                <p class="text-primary-100 text-lg leading-relaxed">
+                    SuperCare е онлайн платформа за намиране на специалисти, записване на часове и управление на здравната грижа — всичко на едно място.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-gray-50 py-12 lg:py-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto">
+
+                <!-- View Switcher -->
+                <div class="flex items-center justify-center mb-12">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-1.5 flex items-center gap-1">
+                        <button @click="view = 'patient'" :class="view === 'patient' ? 'bg-primary-500 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'" class="px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 view ===  patient  ?  bg-primary-500 text-white shadow-md  :  text-gray-600 hover:bg-gray-50  view ===  specialist  ?  bg-accent-500 text-white shadow-md  :  text-gray-600 hover:bg-gray-50  view ===  patient  ?  bg-primary-500 text-white shadow-md  :  text-gray-600 hover:bg-gray-50  view ===  specialist  ?  bg-accent-500 text-white shadow-md  :  text-gray-600 hover:bg-gray-50 ">
+                            <i class="fa-solid fa-user" aria-hidden="true"></i>
+                            <span>За пациенти</span>
+                        </button>
+                        <button @click="view = 'specialist'" :class="view === 'specialist' ? 'bg-accent-500 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'" class="px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-user-doctor" aria-hidden="true"></i>
+                            <span>За специалисти</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ==================== PATIENT VIEW ==================== -->
+                <div x-show="view === 'patient'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+
+                    <!-- Steps -->
+                    <div class="space-y-8 mb-16">
+
+                        <!-- Step 1 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500"></div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-10 h-10 bg-primary-500 text-white rounded-xl flex items-center justify-center font-bold text-lg">1</span>
+                                <h2 class="text-xl font-bold text-gray-900">Създайте безплатен акаунт</h2>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                За да запишете час при специалист, е необходима регистрация. Процесът е бърз и безплатен — достатъчни са имейл и парола. Акаунтът Ви дава достъп до цялата функционалност на платформата.
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500"></div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-10 h-10 bg-primary-500 text-white rounded-xl flex items-center justify-center font-bold text-lg">2</span>
+                                <h2 class="text-xl font-bold text-gray-900">Намерете подходящ специалист</h2>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed mb-5">
+                                Търсете сред логопеди, психолози, ерготерапевти, рехабилитатори и много други специалисти. Филтрирайте по специалност, град и район, за да намерите точно това, от което се нуждаете.
+                            </p>
+                            <p class="font-semibold text-gray-900 mb-3">Всеки профил на специалист включва:</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-600 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-primary-500 text-xs" aria-hidden="true"></i>
+                                    <span>Биография, образование и стаж</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-primary-500 text-xs" aria-hidden="true"></i>
+                                    <span>Лицензи и сертификати</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-primary-500 text-xs" aria-hidden="true"></i>
+                                    <span>Услуги с цени и продължителност</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-primary-500 text-xs" aria-hidden="true"></i>
+                                    <span>Ревюта от реални пациенти</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-primary-500 text-xs" aria-hidden="true"></i>
+                                    <span>Налични часове в реално време</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-primary-500 text-xs" aria-hidden="true"></i>
+                                    <span>Безплатна онлайн консултация (при избрани специалисти)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500"></div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-10 h-10 bg-primary-500 text-white rounded-xl flex items-center justify-center font-bold text-lg">3</span>
+                                <h2 class="text-xl font-bold text-gray-900">Запишете час директно</h2>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                Изберете свободен час от календара на специалиста и го резервирайте веднага — без чакане на потвърждение. Часът се запазва мигновено и се появява в профила Ви. Можете да изберете преглед на място или онлайн консултация.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- After Booking -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 lg:p-10 mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-check text-accent-500" aria-hidden="true"></i>
+                            След като запазите час...
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-user text-primary-600 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600">Часът се появява незабавно в профила Ви и в календара на специалиста.</p>
+                            </div>
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-bell text-primary-600 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600"><strong class="text-gray-900">Един ден преди прегледа</strong> ще получите напомнящ имейл.</p>
+                            </div>
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-sliders text-primary-600 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600">Можете да <strong class="text-gray-900">отмените или промените часа</strong> до 24 часа преди прегледа директно от профила си.</p>
+                            </div>
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-star text-primary-600 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600"><strong class="text-gray-900">След посещението</strong> ще можете да оставите оценка и да помогнете на други потребители с избора им.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Features -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 lg:p-10 mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-accent-500" aria-hidden="true"></i>
+                            Допълнителни възможности
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center">
+                                        <i class="fa-solid fa-folder-open text-accent-500 text-sm" aria-hidden="true"></i>
+                                    </div>
+                                    <h3 class="font-semibold text-gray-900 text-sm">Терапевтично досие</h3>
+                                </div>
+                                <p class="text-gray-500 text-sm">Цели, бележки, задачи и файлове — достъпни само за Вас и Вашия специалист. Напълно конфиденциално.</p>
+                            </div>
+                            <!-- <div class="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center">
+                                        <i class="fa-solid fa-users text-accent-500 text-sm"></i>
+                                    </div>
+                                    <h3 class="font-semibold text-gray-900 text-sm">Виртуален екип</h3>
+                                </div>
+                                <p class="text-gray-500 text-sm">Групов чат с няколко специалиста, общ календар и споделяне на файлове — координирана грижа на едно място.</p>
+                            </div> -->
+                            <div class="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center">
+                                        <i class="fa-solid fa-video text-accent-500 text-sm" aria-hidden="true"></i>
+                                    </div>
+                                    <h3 class="font-semibold text-gray-900 text-sm">Безплатна онлайн консултация</h3>
+                                </div>
+                                <p class="text-gray-500 text-sm">Избрани специалисти предлагат безплатна първоначална онлайн консултация с директен линк.</p>
+                            </div>
+                            <div class="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center">
+                                        <i class="fa-solid fa-repeat text-accent-500 text-sm" aria-hidden="true"></i>
+                                    </div>
+                                    <h3 class="font-semibold text-gray-900 text-sm">Периодични часове</h3>
+                                </div>
+                                <p class="text-gray-500 text-sm">Специалистът може да създаде серия от редовни срещи — удобно за продължително лечение или терапия.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ==================== SPECIALIST VIEW ==================== -->
+                <div x-show="view === 'specialist'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+
+                    <!-- Steps -->
+                    <div class="space-y-8 mb-16">
+
+                        <!-- Step 1 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-accent-500"></div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-10 h-10 bg-accent-500 text-white rounded-xl flex items-center justify-center font-bold text-lg">1</span>
+                                <h2 class="text-xl font-bold text-gray-900">Регистрирайте се като специалист</h2>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                Създайте акаунт и попълнете професионалния си профил — специалност, биография, образование и сертификати. Регистрацията е безплатна и отнема само няколко минути.
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-accent-500"></div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-10 h-10 bg-accent-500 text-white rounded-xl flex items-center justify-center font-bold text-lg">2</span>
+                                <h2 class="text-xl font-bold text-gray-900">Одобрение на акаунта</h2>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                След регистрацията администратор ще прегледа и одобри профила Ви в рамките на 24–48 часа. След одобрението автоматично стартира <strong class="text-gray-900">безплатен пробен период от 1 месец</strong>, през който имате достъп до всички функции на платформата.
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-accent-500"></div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-10 h-10 bg-accent-500 text-white rounded-xl flex items-center justify-center font-bold text-lg">3</span>
+                                <h2 class="text-xl font-bold text-gray-900">Настройте практиката си</h2>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed mb-5">
+                                Добавете кабинетите си с адрес и работно време, въведете услугите, които предлагате, с цени и продължителност. Пациентите ще могат да виждат свободните Ви часове и да записват директно.
+                            </p>
+                            <p class="font-semibold text-gray-900 mb-3">Вашият профил включва:</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-600 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-accent-500 text-xs" aria-hidden="true"></i>
+                                    <span>Биография, образование и сертификати</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-accent-500 text-xs" aria-hidden="true"></i>
+                                    <span>Кабинети с адрес и работен график</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-accent-500 text-xs" aria-hidden="true"></i>
+                                    <span>Услуги с цени и продължителност</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-accent-500 text-xs" aria-hidden="true"></i>
+                                    <span>Представително видео</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-accent-500 text-xs" aria-hidden="true"></i>
+                                    <span>Безплатна видео консултация</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-accent-500 text-xs" aria-hidden="true"></i>
+                                    <span>Отзиви и рейтинг от пациенти</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-accent-500"></div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="w-10 h-10 bg-accent-500 text-white rounded-xl flex items-center justify-center font-bold text-lg">4</span>
+                                <h2 class="text-xl font-bold text-gray-900">Приемайте пациенти</h2>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">
+                                Пациентите Ви намират чрез платформата и записват часове директно от календара Ви. Получавате известия за всяко ново записване и управлявате графика си от удобен работен панел.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- What you get -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 lg:p-10 mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase-medical text-accent-500" aria-hidden="true"></i>
+                            Какво получавате
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-chart-line text-accent-500 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600"><strong class="text-gray-900">Работен панел</strong> с обобщена статистика — записани часове, приходи и активност.</p>
+                            </div>
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-calendar-check text-accent-500 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600"><strong class="text-gray-900">Календар и график</strong> — управлявайте работните си часове, блокирайте дни и преглеждайте записаните срещи.</p>
+                            </div>
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-folder-open text-accent-500 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600"><strong class="text-gray-900">Досиета на пациенти</strong> — водете бележки, поставяйте цели, задавайте задачи и проследявайте напредъка.</p>
+                            </div>
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-comments text-accent-500 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600"><strong class="text-gray-900">Съобщения</strong> — комуникирайте директно с пациентите си през платформата.</p>
+                            </div>
+                            <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
+                                <div class="w-8 h-8 bg-accent-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-video text-accent-500 text-sm" aria-hidden="true"></i>
+                                </div>
+                                <p class="text-gray-600"><strong class="text-gray-900">Безплатна видео консултация</strong> — предложете на пациентите първоначална онлайн среща с директен видео линк.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pricing -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 lg:p-10 mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-crown text-accent-500" aria-hidden="true"></i>
+                            Абонамент
+                        </h2>
+                        <div class="border-2 border-accent-200 rounded-2xl overflow-hidden max-w-lg">
+                            <div class="bg-accent-50 px-6 py-4 flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold text-gray-900 text-lg">Стандартен план</p>
+                                    <p class="text-sm text-gray-500">Всичко необходимо за вашата практика</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-3xl font-black text-accent-600">25<span class="text-base font-normal text-gray-500"> €/мес</span></p>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-2 mb-4">
+                                    <div class="flex items-center gap-2 text-sm text-gray-700">
+                                        <i class="fa-solid fa-check text-accent-500 w-5 text-center" aria-hidden="true"></i>
+                                        <span>Неограничен брой пациенти</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm text-gray-700">
+                                        <i class="fa-solid fa-check text-accent-500 w-5 text-center" aria-hidden="true"></i>
+                                        <span>Онлайн видео консултации</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm text-gray-700">
+                                        <i class="fa-solid fa-check text-accent-500 w-5 text-center" aria-hidden="true"></i>
+                                        <span>Календар и управление на графика</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm text-gray-700">
+                                        <i class="fa-solid fa-check text-accent-500 w-5 text-center" aria-hidden="true"></i>
+                                        <span>Досиета и съобщения с пациенти</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm text-gray-700">
+                                        <i class="fa-solid fa-check text-accent-500 w-5 text-center" aria-hidden="true"></i>
+                                        <span>Отзиви и рейтинг</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2 p-3 bg-amber-50 rounded-xl text-sm text-amber-700">
+                                    <i class="fa-solid fa-gift text-amber-500 mt-0.5" aria-hidden="true"></i>
+                                    <span>Първият месец е <strong>безплатен</strong> — стартира автоматично след одобрение на акаунта.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Contact -->
+                <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl p-8 text-white text-center">
+                    <h2 class="text-2xl font-bold mb-4">Свържете се с нас</h2>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 text-primary-100">
+                        <a href="https://supercare.bg" class="flex items-center gap-2 hover:text-white transition-colors">
+                            <i class="fa-solid fa-globe" aria-hidden="true"></i>
+                            <span>supercare.bg</span>
+                        </a>
+                        <a href="mailto:hello@supercare.bg" class="flex items-center gap-2 hover:text-white transition-colors">
+                            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                            <span>hello@supercare.bg</span>
+                        </a>
+                        <a href="tel:+359882212330" class="flex items-center gap-2 hover:text-white transition-colors">
+                            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                            <span>+359 882 212 330</span>
+                        </a>
+                    </div>
+                    <p class="text-primary-200 text-sm mt-6">© 2026 SuperCare. Всички права запазени.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</main>

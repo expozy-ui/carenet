@@ -1,0 +1,45 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//SuperCare//Часове//BG
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:SuperCare - Часове
+X-WR-TIMEZONE:Europe/Sofia
+BEGIN:VEVENT
+UID:appointment-10@supercare
+DTSTAMP:20260219T172526Z
+DTSTART:20260219T073000Z
+DTEND:20260219T080000Z
+SUMMARY:Втори преглед
+LOCATION:asdasdas - Онлайн
+DESCRIPTION:Услуга: Втори преглед\nПациент: пац
+ иент 2 пациент 2\nТелефон: +359896626252\nЦена: 22 
+ €\nЛинк за видео консултация: Линк за вид
+ ео консултация
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+BEGIN:VALARM
+TRIGGER:-PT15M
+ACTION:DISPLAY
+DESCRIPTION:Напомняне: Втори преглед
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:appointment-7@supercare
+DTSTAMP:20260219T172526Z
+DTSTART:20260219T083000Z
+DTEND:20260219T090000Z
+SUMMARY:Втори преглед
+LOCATION:asdasdas - Онлайн
+DESCRIPTION:Услуга: Втори преглед\nПациент: Pacien
+ t Pacient\nЦена: 22 €\nЛинк за видео консултаци
+ я: Линк за видео консултация
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+BEGIN:VALARM
+TRIGGER:-PT15M
+ACTION:DISPLAY
+DESCRIPTION:Напомняне: Втори преглед
+END:VALARM
+END:VEVENT
+END:VCALENDAR

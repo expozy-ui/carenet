@@ -1,0 +1,97 @@
+<!-- Main Content -->
+<main class="flex-1 bg-gradient-to-br from-primary-50 via-white to-primary-50 min-h-screen">
+    <div class="flex flex-col items-center justify-center px-4 py-12 mx-auto min-h-screen">
+
+        <!-- Logo/Brand -->
+        <a href="/bg" class="flex items-center gap-3 mb-8">
+            <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30">
+                <i class="fa-solid fa-heart-pulse text-white text-xl"></i>
+            </div>
+            <span class="text-2xl font-bold"><span class="text-primary-500">Super</span><span class="text-accent-400">Care</span></span>
+        </a>
+
+        <!-- Login Card -->
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
+                        <i class="fa-solid fa-right-to-bracket text-primary-600 text-2xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">Добре дошли</h1>
+                    <p class="text-gray-500">Влезте във вашия акаунт</p>
+                </div>
+
+                <!-- Form -->
+                <form class="space-y-5">
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Имейл адрес</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                <i class="fa-solid fa-envelope text-gray-400"></i>
+                            </div>
+                            <input type="email" name="email" id="email" placeholder="name@example.com" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Парола</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                <i class="fa-solid fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" name="password" id="password" placeholder="••••••••" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- Remember & Forgot -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="remember" class="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500">
+                            <span class="text-sm text-gray-600">Запомни ме</span>
+                        </label>
+                        <button type="button" @click="href('/bg/forgotten-password')" class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                            Забравена парола?
+                        </button>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="button" @click="alpineListeners('User.login', $event)" keyName="user" class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Вход
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="relative my-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-4 bg-white text-gray-500">или</span>
+                        </div>
+                    </div>
+
+                    <!-- Register Link -->
+                    <div class="text-center">
+                        <p class="text-gray-600">
+                            Нямате акаунт?
+                            <button type="button" @click="href('/bg/registration')" class="font-semibold text-primary-600 hover:text-primary-700 transition-colors ml-1">
+                                Регистрирайте се
+                            </button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Help Text -->
+            <p class="text-center text-sm text-gray-500 mt-6">
+                Имате проблем?
+                <button type="button" @click="href('/contacts')" class="text-primary-600 hover:text-primary-700 font-medium">
+                    Свържете се с нас
+                </button>
+            </p>
+        </div>
+    </div>
+</main>

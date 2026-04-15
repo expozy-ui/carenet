@@ -9,7 +9,7 @@
 <div id="templatesDiv" style="display:none;" ></div>
 </body>
 
-<!-- <link rel="stylesheet" href="/assets/css/animate.css?v=<?php echo JS_VERSION ?>"> -->
+<link rel="stylesheet" href="/assets/css/animate.css?v=<?php echo JS_VERSION ?>">
 
 
 <?= $core->web['scripts']['footer'];?>

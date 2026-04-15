@@ -11,6 +11,9 @@ if(isset($_GET["order_id"])){
 if(isset($_GET["deposit_id"])){
 	$row['deposit_id'] = (int)$_GET["deposit_id"];
 }
+if(isset($_GET["doctor_id"])){
+	$row['doctor_id'] = (int)$_GET["doctor_id"];
+}
 
 $result = Api::data($row)->post()->payment_confirm();
 

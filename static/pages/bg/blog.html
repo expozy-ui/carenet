@@ -1,0 +1,129 @@
+<!-- Main Content -->
+<main class="flex-1 bg-gray-50" apiData="get.blogPosts_filters">
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-primary-500 to-primary-700 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <h1 class="text-3xl lg:text-4xl font-bold mb-3">Блог</h1>
+            <p class="text-lg text-primary-100">Полезни статии за здравето и медицината</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- Sidebar -->
+            <aside class="lg:w-72 flex-shrink-0">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24" apiData="get.blogCategories" keyName="blogCategories">
+
+                    <!-- Search -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Търсене</h3>
+                        <div class="relative">
+                            <input type="text" @input="alpineListeners('get.blogPosts', $event)" name="search" placeholder="Търсене в блога..." class="w-full px-4 py-2.5 pl-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                            <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Категории</h3>
+                        <div class="space-y-2">
+                            <template x-for="category in data.blogCategories">
+                                <button @click="!window.location.href.includes(category.url) ? href(category.url) : href('/bg/blog')" :class="window.location.href.includes(category.url) ? 'bg-primary-500 text-white' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'" class="w-full px-4 py-2.5 rounded-xl font-medium text-sm text-left transition-colors flex items-center justify-between group">
+                                    <span x-text="category.title"></span>
+                                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Тагове</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-for="tag in data.blogPosts_filters.tags">
+                                <button type="button" @click="alpineListeners('get.blogPosts', $event)" keyname="blogPosts" :data-tag="tag" :class="data.pageUrl.tag == tag ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'" class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors" x-text="tag"></button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="flex-1">
+                <section apiData="get.blogPosts" :data-category_id="data.corePage.target_id != 0 ? data.corePage.target_id : 'empty'" keyname="blogPosts" options-pushurl="true">
+
+                    <!-- Blog Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <template x-for="(blog, index) in data.blogPosts.result" :key="index">
+                            <article :class="index == 0 ? 'md:col-span-2 xl:col-span-3' : '' " class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group">
+                                <!-- Image -->
+                                <div :class="index == 0 ? 'h-64 ' : 'h-48 ' " class="relative overflow-hidden">
+                                    <img :src="blog.images[0] ? blog.images[0].url : Helpers.image('product')" :alt="blog.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <div class="absolute top-4 left-4">
+                                        <span class="bg-primary-500 text-white px-3 py-1 rounded-full text-xs font-semibold" x-text="blog.category.title ?? 'Категория'"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Content -->
+                                <div class="p-5">
+                                    <!-- Meta -->
+                                    <div class="flex items-center gap-3 text-sm text-gray-500 mb-3">
+                                        <span class="flex items-center gap-1">
+                                            <i class="fa-regular fa-calendar"></i>
+                                            <span x-text="Helpers.formatDate(blog.date_created)"></span>
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i class="fa-regular fa-clock"></i>
+                                            <span x-text="(blog.read_time != 0 ? blog.read_time : '1') + ' мин.'"></span>
+                                        </span>
+                                    </div>
+
+                                    <!-- Title -->
+                                    <h3 @click="href(blog.url)" class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 cursor-pointer hover:text-primary-600 transition-colors" x-text="blog.title"></h3>
+
+                                    <!-- Excerpt -->
+                                    <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3" x-text="blog.seo_description"></p>
+
+                                    <!-- Footer -->
+                                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                        <span class="flex items-center gap-1 text-sm text-gray-500">
+                                            <i class="fa-regular fa-eye"></i>
+                                            <span x-text="blog.views"></span>
+                                        </span>
+                                        <a @click.prevent="href(blog.url)" class="inline-flex items-center gap-2 text-primary-600 font-semibold text-sm hover:text-primary-700 transition-colors cursor-pointer">
+                                            Прочети
+                                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        </template>
+                    </div>
+
+                    <!-- Empty State -->
+                    <template x-if="!data.blogPosts.result || data.blogPosts.result.length === 0">
+                        <div class="text-center py-16">
+                            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fa-solid fa-newspaper text-gray-400 text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Няма намерени статии</h3>
+                            <p class="text-gray-500">Опитайте да промените филтрите за търсене</p>
+                        </div>
+                    </template>
+
+                    <!-- Pagination -->
+                    <div class="flex justify-center mt-10" x-show="data.blogPosts.pagination && data.blogPosts.pagination.total_pages > 1">
+                        <nav class="flex items-center gap-2">
+                            <template x-for="(page, index) in data.blogPosts.pagination.total_pages" :key="index">
+                                <button @click="alpineListeners('get.blogPosts', $event)" options-scroll="true" :data-page="page" keyname="blogPosts" :class="page == data.blogPosts.pagination.current_page ? 'bg-primary-500 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'" class="w-10 h-10 flex items-center justify-center rounded-lg font-medium text-sm transition-colors" x-text="page"></button>
+                            </template>
+                        </nav>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+    </div>
+</main>

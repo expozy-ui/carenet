@@ -146,11 +146,12 @@ window.alpineListeners = async function (method, element) {
 
 
     const apiClient = new ApiClient(method, dataCollect);
-
+    ;
     try {
         const responseStatus = await apiClient.request();
         return responseStatus;
     } finally {
+        ;
         cleanup(dataCollect.element); // премахва loading и спинъра
     }
 

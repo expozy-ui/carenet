@@ -1,0 +1,330 @@
+<!-- Main Content -->
+<main class="flex-1">
+
+    <!-- Page Header -->
+    <div class="bg-white border-b border-gray-100">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 lg:px-8 py-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Търсене на специалист</h1>
+                    <p class="text-gray-500 mt-1">Намерете най-добрия специалист за вашите нужди</p>
+                </div>
+                <button @click="data.mobileFilters = true" class="lg:hidden flex items-center gap-2 bg-primary-50 text-primary-600 px-4 py-2 rounded-lg font-medium hover:bg-primary-100 transition-colors">
+                    <i class="fa-solid fa-filter"></i>
+                    Филтри
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 lg:px-8 py-8">
+        <div class="flex gap-8">
+
+            <!-- Filters Sidebar - Desktop -->
+            <aside class="hidden lg:block w-72 flex-shrink-0">
+                <div x-data="{filterRegion: data.pageUrl.region_id || 'empty'}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-24">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-semibold text-gray-900">Филтри</h2>
+                    </div>
+
+                    <!-- Specialty -->
+                    <div class="mb-6" apiData="get.doctors_specialities">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Специалност</h3>
+                        <form>
+                            <select name="speciality_id" @change="alpineListeners('get.doctors', $event)" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                                <option value="empty" keyName="doctors">Избери специалност</option>
+                                <template x-for="specialtity in Object.values(data.doctors_specialities).reverse()">
+                                    <option :selected="specialtity.id  == data.pageUrl.speciality_id " :value="specialtity.id" x-text="specialtity.title" keyName="doctors">Кардиолог</option>
+                                </template>
+                            </select>
+                        </form>
+                    </div>
+
+                    <!-- City -->
+                    <div class="mb-6" apiData="get.regions">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-medium text-gray-700">Населено място</h3>
+                            <button type="button" @click="geoLocateBtn($el)" class="w-10 h-10 rounded-lg text-primary-500 hover:text-primary-700 hover:bg-primary-50 flex items-center justify-center transition-colors" title="Локализирай ме">
+                                <i class="fa-solid fa-location-crosshairs text-lg"></i>
+                            </button>
+                        </div>
+                        <form>
+
+                            <select name="region_id" @change="alpineListeners('get.doctors', $event); filterRegion = $el.value" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                                <option value="empty" keyName="doctors">Избери регион</option>
+                                <template x-for="region in Object.values(data.regions).reverse()">
+                                    <option x-text="region.title" :selected="data.pageUrl.region_id == region.id" :value="region.id" keyName="doctors"></option>
+                                </template>
+                            </select>
+
+                        </form>
+                    </div>
+
+                    <div class="mb-6" apiData="get.cities">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Град</h3>
+                        <form>
+
+                            <select name="city_id" @change="alpineListeners('get.doctors', $event)" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                                <option value="empty" keyName="doctors">Избери град</option>
+                                <template x-for="city in Object.values(data.cities).filter(obj => filterRegion === 'empty' || obj.region_id == filterRegion).reverse()">
+                                    <option x-text="city.title" :selected="data.pageUrl.city_id == city.id" :value="city.id" keyName="doctors"></option>
+                                </template>
+                            </select>
+
+                        </form>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Специалист</h3>
+                        <form>
+                            <input type="text" name="name" @input.debounce.500="alpineListeners('get.doctors', $event); " keyName="doctors" :value="data.pageUrl.name" placeholder="Търси по име на специалист" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+
+                        </form>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-6">
+                        <form>
+                            <!-- <h3 class="text-sm font-medium text-gray-700 mb-3">Тагове</h3> -->
+                            <label for="nzok" class="flex items-center gap-3 cursor-pointer mb-3">
+                                <input id="nzok" type="checkbox" :checked="data.pageUrl.nzok != undefined" @change="alpineListeners('get.doctors', $el)" keyName="doctors" name="nzok" class="w-5 h-5 text-primary-500 rounded border-gray-300 focus:ring-primary-500">
+                                <span class="text-gray-600">Работи с НЗОК</span>
+                            </label>
+                        </form>
+
+                        <form>
+                            <label for="children" class="flex items-center gap-3 cursor-pointer mb-3">
+                                <input id="children" type="checkbox" :checked="data.pageUrl.children != undefined" @change="alpineListeners('get.doctors', $el)" keyName="doctors" name="children" class="w-5 h-5 text-primary-500 rounded border-gray-300 focus:ring-primary-500">
+                                <span class="text-gray-600">Работи с деца</span>
+                            </label>
+                        </form>
+
+                        <form>
+                            <label for="home_visits" class="flex items-center gap-3 cursor-pointer">
+                                <input id="home_visits" type="checkbox" :checked="data.pageUrl.home_visits != undefined" @change="alpineListeners('get.doctors', $el)" keyName="doctors" name="home_visits" class="w-5 h-5 text-primary-500 rounded border-gray-300 focus:ring-primary-500">
+                                <span class="text-gray-600">Домашни посещения</span>
+                            </label>
+                        </form>
+
+                    </div>
+
+                </div>
+            </aside>
+
+            <!-- Results -->
+            <div class="flex-1">
+                <!-- Results Count -->
+                <div class="flex items-center justify-between mb-6">
+                    <p class="text-gray-600">
+                        Намерени <span class="font-semibold text-gray-900" x-text="data.doctors.pagination.total_results"></span> специалиста
+                    </p>
+
+                    <form>
+
+                        <div class="hidden sm:flex items-center gap-2">
+                            <span class="text-sm text-gray-500">Сортирай:</span>
+                            <select @change="alpineListeners('get.doctors', $event)" name="order_by" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                                <option value="id" data-order_direction="asc" keyName="doctors">Най-нови</option>
+                                <option value="id" data-order_direction="desc" keyName="doctors">Най-стари</option>
+                                <option value="popular" data-order_direction="desc" keyName="doctors">Най-популярни</option>
+                                <option value="rating" data-order_direction="desc" keyName="doctors">Най-висок рейтинг</option>
+                            </select>
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Doctor Cards -->
+                <div class="space-y-4">
+                    <template x-for="doctor in data.doctors.result" apiData="get.doctors" keyName="doctors" options-pushurl="true" data-order_direction="asc" data-order_by="id">
+                        <div @click="href(`/doctor?id=${doctor.id}`)" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow cursor-pointer">
+                            <div class="flex flex-col sm:flex-row gap-6">
+                                <!-- Doctor Image -->
+                                <div class="flex-shrink-0">
+                                    <img :src="doctor.avatar.url_10x10 != '' ? doctor.avatar.url_10x10 : Helpers.image('user') " :alt="doctor.name" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover">
+                                </div>
+
+                                <!-- Doctor Info -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-gray-900" x-text="doctor.user_info.names"></h3>
+                                            <p class="text-primary-600 font-medium" x-text="doctor.speciality.title  "></p>
+
+                                            <!-- Rating -->
+                                            <div class="flex items-center gap-2 mt-2">
+                                                <div class="flex items-center gap-1">
+                                                    <i class="fa-solid fa-star text-amber-400"></i>
+                                                    <span class="font-semibold text-gray-900" x-text="doctor.rating_avg"></span>
+                                                </div>
+                                                <!-- <span class="text-gray-400">•</span>
+                                                <span class="text-gray-500 text-sm">
+                                                    <span x-text="doctor.reviews"></span> отзива
+                                                </span> -->
+                                            </div>
+
+                                            <!-- Tags -->
+                                            <div class="flex flex-wrap gap-2 mt-3">
+                                                <template x-if="doctor.nzok">
+                                                    <span class="inline-flex items-center gap-1 bg-primary-50 text-primary-700 px-2 py-1 rounded-md text-xs font-medium">
+                                                        <i class="fa-solid fa-check text-[10px]"></i>
+                                                        <span>Нзок</span>
+                                                    </span>
+                                                </template>
+
+                                                <template x-if="doctor.children">
+                                                    <span class="inline-flex items-center gap-1 bg-primary-50 text-primary-700 px-2 py-1 rounded-md text-xs font-medium">
+                                                        <i class="fa-solid fa-check text-[10px]"></i>
+                                                        <span>Работи с деца</span>
+                                                    </span>
+                                                </template>
+
+                                                <template x-if="doctor.home_visits">
+                                                    <span class="inline-flex items-center gap-1 bg-primary-50 text-primary-700 px-2 py-1 rounded-md text-xs font-medium">
+                                                        <i class="fa-solid fa-check text-[10px]"></i>
+                                                        <span>Домашни посещения</span>
+                                                    </span>
+                                                </template>
+
+                                            </div>
+
+                                        </div>
+
+                                        <button @click="href(`/doctor?id=${doctor.id}`)" class="w-full sm:w-auto bg-accent-500 hover:bg-accent-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                                            <i class="fa-regular fa-calendar-check"></i>
+                                            Запази час
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- No Results -->
+                    <div x-show="data.doctors.result.length === 0" class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-user-doctor text-gray-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Няма намерени резултати</h3>
+                        <p class="text-gray-500 mb-4">Опитайте да промените филтрите за търсене</p>
+                        <button @click="clearFilters()" class="text-primary-600 hover:text-primary-700 font-medium">
+                            Изчисти филтрите
+                        </button>
+                    </div>
+                </div>
+
+                <template x-if="data.doctors.pagination.pagesArray && data.doctors.pagination.total_pages > 1">
+                    <div class="flex justify-center py-8">
+                        <ul class="flex items-center gap-1">
+
+                            <template x-for="(page,index) in data.doctors.pagination.pagesArray" :key="index">
+                                <li>
+                                    <button @click="alpineListeners('get.doctors', $event)" :data-page="page" options-scroll="true" keyname="doctors" x-text="page" :class="page == data.doctors.pagination.current_page ? 'bg-primary-500 text-white' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'" class="w-10 h-10 flex items-center justify-center rounded-lg"></button>
+                                </li>
+                            </template>
+
+                        </ul>
+                    </div>
+                </template>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Mobile Filters Modal -->
+    <div x-show="data.mobileFilters" x-cloak class="fixed inset-0 z-50 lg:hidden">
+        <div class="absolute inset-0 bg-black/50" @click="data.mobileFilters = false"></div>
+        <div class="absolute inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl overflow-y-auto" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
+            <div x-data="{mobileFilterRegion: data.pageUrl.region_id || 'empty'}" class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900">Филтри</h2>
+                    <button @click="data.mobileFilters = false" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+                        <i class="fa-solid fa-xmark text-gray-500"></i>
+                    </button>
+                </div>
+
+                <!-- Specialty -->
+                <div class="mb-6" apiData="get.doctors_specialities">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Специалност</h3>
+                    <form>
+                        <select name="speciality_id" @change="alpineListeners('get.doctors', $event)" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                            <option value="empty" keyName="doctors">Избери специалност</option>
+                            <template x-for="specialtity in Object.values(data.doctors_specialities).reverse()">
+                                <option :selected="specialtity.id == data.pageUrl.speciality_id" :value="specialtity.id" x-text="specialtity.title" keyName="doctors"></option>
+                            </template>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Region -->
+                <div class="mb-6" apiData="get.regions">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-medium text-gray-700">Населено място</h3>
+                        <button type="button" @click="geoLocateBtn($el)" class="w-10 h-10 rounded-lg text-primary-500 hover:text-primary-700 hover:bg-primary-50 flex items-center justify-center transition-colors" title="Локализирай ме">
+                            <i class="fa-solid fa-location-crosshairs text-lg"></i>
+                        </button>
+                    </div>
+                    <form>
+                        <select name="region_id" @change="alpineListeners('get.doctors', $event); mobileFilterRegion = $el.value" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                            <option value="empty" keyName="doctors">Избери регион</option>
+                            <template x-for="region in Object.values(data.regions).reverse()">
+                                <option x-text="region.title" :selected="data.pageUrl.region_id == region.id" :value="region.id" keyName="doctors"></option>
+                            </template>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- City -->
+                <div class="mb-6" apiData="get.cities">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Град</h3>
+                    <form>
+                        <select name="city_id" @change="alpineListeners('get.doctors', $event)" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                            <option value="empty" keyName="doctors">Избери град</option>
+                            <template x-for="city in Object.values(data.cities).filter(obj => mobileFilterRegion === 'empty' || obj.region_id == mobileFilterRegion).reverse()">
+                                <option x-text="city.title" :selected="data.pageUrl.city_id == city.id" :value="city.id" keyName="doctors"></option>
+                            </template>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Doctor Name -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Специалист</h3>
+                    <form>
+                        <input type="text" name="name" @input.debounce.500="alpineListeners('get.doctors', $event);" keyName="doctors" :value="data.pageUrl.name" placeholder="Търси по име на специалист" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white">
+                    </form>
+                </div>
+
+                <!-- Tags -->
+                <div class="mb-6">
+                    <form>
+                        <label for="mobile-nzok" class="flex items-center gap-3 cursor-pointer mb-3">
+                            <input id="mobile-nzok" type="checkbox" :checked="data.pageUrl.nzok != undefined" @change="alpineListeners('get.doctors', $el)" keyName="doctors" name="nzok" class="w-5 h-5 text-primary-500 rounded border-gray-300 focus:ring-primary-500">
+                            <span class="text-gray-600">Работи с НЗОК</span>
+                        </label>
+                    </form>
+
+                    <form>
+                        <label for="mobile-children" class="flex items-center gap-3 cursor-pointer mb-3">
+                            <input id="mobile-children" type="checkbox" :checked="data.pageUrl.children != undefined" @change="alpineListeners('get.doctors', $el)" keyName="doctors" name="children" class="w-5 h-5 text-primary-500 rounded border-gray-300 focus:ring-primary-500">
+                            <span class="text-gray-600">Работи с деца</span>
+                        </label>
+                    </form>
+
+                    <form>
+                        <label for="mobile-home_visits" class="flex items-center gap-3 cursor-pointer">
+                            <input id="mobile-home_visits" type="checkbox" :checked="data.pageUrl.home_visits != undefined" @change="alpineListeners('get.doctors', $el)" keyName="doctors" name="home_visits" class="w-5 h-5 text-primary-500 rounded border-gray-300 focus:ring-primary-500">
+                            <span class="text-gray-600">Домашни посещения</span>
+                        </label>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script src="/assets/plugin/geolocation/geolocation.js?v=2"></script>
+<script>geoAutoLocate();</script>

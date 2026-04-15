@@ -125,7 +125,7 @@ export class PageClass {
 		//seo title
 
 		await this.get();
-		// debugger;
+		// ;
 
 		// GET ALL URL PARAMETERS
 		let parameters = new URL(window.location.href).searchParams;
@@ -158,7 +158,7 @@ export class PageClass {
 
 
 
-		// debugger;
+		// ;
 
 		if (this.slug != 'checkout') {
 			document.getElementById('header').style.removeProperty('display');
@@ -262,7 +262,7 @@ export class PageClass {
 
 
 
-		//debugger;
+		//;
 		if (this.slug === 'product') {
 			await api.get('products/' + this.target_id);
 			let response = api.response;

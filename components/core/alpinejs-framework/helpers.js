@@ -221,10 +221,10 @@ export let Helpers = {
 
     getDayTitleByIndex(dayIndex) {
         // 0 = Monday ... 6 = Sunday
-        let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
         if (LANG === 'bg') {
-            days = ["Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота", "Неделя"];
+            days = ["Неделя", "Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота"];
         }
 
         return days[dayIndex];
@@ -379,6 +379,9 @@ export let Helpers = {
     },
 
     image(size) {
+        if (size == 'user') {
+            return '/static/images/user.webp'
+        }
         if (size == 'product') {
             return '/static/images/product.webp'
         }

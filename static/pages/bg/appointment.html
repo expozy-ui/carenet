@@ -1,0 +1,517 @@
+<template x-if="data.user.logged_in">
+    <form>
+        <div x-init="alpineListeners('get.doctors_appointments', $el)" keyName="appointment" :data-id="data.pageUrl.id"></div>
+    </form>
+</template>
+
+<template x-if="data.appointment && data.appointment.id">
+    <div class="w-full" x-data="{
+        get apt() { return data.appointment; },
+        showCalendarMenu: false,
+        googleCalendarUrl() {
+            const apt = this.apt;
+            const datePart = apt.date.replace(/-/g, '');
+            const startTime = (apt.time_start || '00:00').replace(':', '') + '00';
+            let endTime;
+            if (apt.time_end) {
+                endTime = apt.time_end.replace(':', '') + '00';
+            } else {
+                const interval = parseInt(apt.interval) || 30;
+                const [h, m] = (apt.time_start || '00:00').split(':').map(Number);
+                const totalMin = h * 60 + m + interval;
+                const eh = String(Math.floor(totalMin / 60)).padStart(2, '0');
+                const em = String(totalMin % 60).padStart(2, '0');
+                endTime = eh + em + '00';
+            }
+            const dates = datePart + 'T' + startTime + '/' + datePart + 'T' + endTime;
+            const title = apt.service?.title || 'Медицински час';
+            let location = '';
+            if (apt.cabinet?.online && apt.cabinet?.online_url) {
+                location = apt.cabinet.online_url;
+            } else if (apt.cabinet?.address) {
+                location = apt.cabinet.address;
+            }
+            const nl = String.fromCharCode(10);
+            let details = 'Пациент: ' + (apt.client?.user_info?.names || '');
+            if (apt.client?.user_info?.phone) details += nl + 'Телефон: ' + apt.client.user_info.phone;
+            if (apt.service?.title) details += nl + 'Услуга: ' + apt.service.title;
+            if (apt.price) details += nl + 'Цена: ' + apt.price + ' €.';
+            if (apt.cabinet?.online && apt.cabinet?.online_url) details += nl + 'Онлайн: ' + apt.cabinet.online_url;
+            const params = new URLSearchParams({ action: 'TEMPLATE', text: title, dates: dates, details: details });
+            if (location) params.set('location', location);
+            return 'https://calendar.google.com/calendar/render?' + params.toString();
+        },
+        formatDay(dateStr) {
+            const days = ['Неделя', 'Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота'];
+            return days[new Date(dateStr).getDay()];
+        },
+        formatFullDate(dateStr) {
+            const months = ['Януари', 'Февруари', 'Март', 'Април', 'Май', 'Юни', 'Юли', 'Август', 'Септември', 'Октомври', 'Ноември', 'Декември'];
+            const d = new Date(dateStr);
+            return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+        }
+    }">
+        <main class="bg-gray-50 min-h-screen">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+
+                <!-- Breadcrumb -->
+                <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+                    <a href="/bg/homepage" class="hover:text-primary-600">Начало</a>
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                    <a href="/bg/userpage" class="hover:text-primary-600">Моят профил</a>
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                    <span class="text-gray-900">Час #<span x-text="apt.id"></span></span>
+                </nav>
+
+                <!-- Status Banner -->
+                <div :class="{
+                    'from-accent-400 to-accent-500': apt.status_id == 1,
+                    'from-red-400 to-red-500': apt.status_id == 2 || apt.status_id == 3,
+                    'from-primary-400 to-primary-500': apt.status_id == 5
+                }" class="bg-gradient-to-r rounded-2xl p-5 mb-6 flex items-center justify-between">
+                    <div class="flex items-center gap-3 text-white">
+                        <i :class="{
+                            'fa-solid fa-clock': apt.status_id == 1,
+                            'fa-solid fa-user-doctor': apt.status_id == 2,
+                            'fa-solid fa-user-xmark': apt.status_id == 3,
+                            'fa-solid fa-check-circle': apt.status_id == 5
+                        }" class="text-2xl"></i>
+                        <div>
+                            <p class="font-bold text-lg" x-text="apt.status_id == 1 ? 'Предстоящ час' : (apt.status_id == 2 ? 'Анулиран от специалиста' : (apt.status_id == 3 ? 'Анулиран от пациента' : 'Приключил час'))"></p>
+                            <p class="text-white/80 text-sm" x-text="formatDay(apt.date) + ', ' + formatFullDate(apt.date) + ' в ' + apt.time_start"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <template x-if="apt.status_id == 1">
+                            <button @click="callModal($el)" data-modal="cancel_appointment" :data-obj="JSON.stringify(data.appointment)" class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2">
+                                <i class="fa-solid fa-ban text-sm"></i>
+                                Анулирай
+                            </button>
+                        </template>
+                        <span class="bg-white/20 backdrop-blur-sm text-white font-bold px-4 py-2 rounded-xl text-sm" x-text="'#' + apt.id"></span>
+                    </div>
+                </div>
+
+                <div class="grid gap-6">
+
+                    <!-- Date & Time + Calendar -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="p-6 lg:p-8">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-calendar-day text-primary-500"></i>
+                                    Дата и час
+                                </h2>
+
+                                <!-- Calendar Dropdown -->
+                                <div class="relative" x-data="{ showCal: false }">
+
+                                    <template x-if="apt.status_id == 1">
+                                        <button @click.stop="showCal = !showCal" class="flex items-center gap-2 bg-primary-50 hover:bg-primary-100 text-primary-700 font-medium px-4 py-2.5 rounded-xl transition-colors text-sm">
+                                            <i class="fa-solid fa-calendar-plus"></i>
+                                            <span class="hidden sm:inline">Добави в календар</span>
+                                        </button>
+                                    </template>
+
+                                    <div x-show="showCal" @click.away="showCal = false" x-transition class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                                        <p class="px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Добави в календар</p>
+                                        <button @click.stop="window.open(googleCalendarUrl(), '_blank'); showCal = false" class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-left text-sm">
+                                            <i class="fa-brands fa-google text-red-500 w-5 text-center"></i>
+                                            <span class="text-gray-700">Google Calendar</span>
+                                        </button>
+                                        <button @click.stop="window.open('/cal.php?id=' + apt.id, '_blank'); showCal = false" class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-left text-sm">
+                                            <i class="fa-brands fa-apple text-gray-800 w-5 text-center"></i>
+                                            <span class="text-gray-700">Apple Calendar</span>
+                                        </button>
+                                        <div class="border-t border-gray-100 my-1"></div>
+                                        <button @click.stop="window.open('/cal.php?id=' + apt.id, '_blank'); showCal = false" class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-left text-sm">
+                                            <i class="fa-solid fa-file-arrow-down text-primary-500 w-5 text-center"></i>
+                                            <span class="text-gray-700">ICS Файл</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-6">
+                                <!-- Calendar Visual -->
+                                <div class="flex-shrink-0">
+                                    <div class="w-32 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                                        <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white text-center py-2 px-2">
+                                            <span class="text-xs font-bold uppercase tracking-wider" x-text="formatDay(apt.date)"></span>
+                                        </div>
+                                        <div class="text-center py-3 bg-white">
+                                            <span class="text-4xl font-black text-gray-800 leading-none" x-text="new Date(apt.date).getDate()"></span>
+                                        </div>
+                                        <div class="bg-gray-50 text-center py-2 border-t border-gray-100">
+                                            <span class="text-xs font-semibold text-gray-500" x-text="formatFullDate(apt.date).split(' ').slice(1).join(' ')"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Time Details -->
+                                <div class="flex-1 space-y-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center flex-shrink-0">
+                                            <i class="fa-regular fa-clock text-primary-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500">Начало</p>
+                                            <p class="text-lg font-bold text-gray-900" x-text="apt.time_start"></p>
+                                        </div>
+                                        <div class="mx-4 text-gray-300"><i class="fa-solid fa-arrow-right"></i></div>
+                                        <div>
+                                            <p class="text-sm text-gray-500">Край</p>
+                                            <p class="text-lg font-bold text-gray-900" x-text="apt.time_end || '—'"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                            <i class="fa-solid fa-hourglass-half text-blue-500"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-500">Продължителност</p>
+                                            <p class="font-semibold text-gray-900" x-text="apt.interval + ' мин.'"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Patient Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="p-6 lg:p-8">
+                            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2 mb-5">
+                                <i class="fa-solid fa-user text-primary-500"></i>
+                                Пациент
+                            </h2>
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-full overflow-hidden bg-primary-100 flex items-center justify-center flex-shrink-0">
+                                    <img :src="apt.client?.avatar?.url_10x10 || Helpers.image('user')" class="w-full h-full object-cover" alt="">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xl font-bold text-gray-900" x-text="apt.client?.user_info?.names || '—'"></p>
+                                    <p class="text-sm text-gray-500" x-text="apt.client?.user_info?.email || ''"></p>
+                                </div>
+                            </div>
+
+                            <div class="grid sm:grid-cols-2 gap-4 mt-5 pt-5 border-t border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-phone text-blue-500 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-400">Телефон</p>
+                                        <p class="text-sm font-medium text-gray-900" x-text="apt.client?.user_info?.phone || 'Не е посочен'"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-envelope text-purple-500 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-400">Имейл</p>
+                                        <p class="text-sm font-medium text-gray-900 truncate" x-text="apt.client?.user_info?.email || 'Не е посочен'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="p-6 lg:p-8">
+                            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2 mb-5">
+                                <i class="fa-solid fa-user-doctor text-primary-500"></i>
+                                Специалист
+                            </h2>
+                            <div class="flex items-center gap-4 cursor-pointer" @click="href('/doctor?id=' + apt.doctor?.id)">
+                                <div class="w-16 h-16 rounded-full overflow-hidden bg-primary-100 flex items-center justify-center flex-shrink-0">
+                                    <img :src="apt.doctor?.avatar?.url_10x10 || apt.doctor?.avatar?.url || Helpers.image('user')" class="w-full h-full object-cover" alt="">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xl font-bold text-gray-900" x-text="apt.doctor?.user_info?.names || '—'"></p>
+                                    <p class="text-sm text-primary-600 font-medium" x-text="apt.doctor?.speciality?.title || ''"></p>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        <template x-for="s in 5" :key="s">
+                                            <i :class="s <= (apt.doctor?.rating_avg || 0) ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-gray-300'" class="text-xs"></i>
+                                        </template>
+                                        <span class="text-xs text-gray-500 ml-1" x-text="apt.doctor?.rating_avg || '0'"></span>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service & Location Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="p-6 lg:p-8">
+                            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2 mb-5">
+                                <i class="fa-solid fa-stethoscope text-primary-500"></i>
+                                Детайли
+                            </h2>
+
+                            <div class="space-y-4">
+                                <!-- Service -->
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-briefcase-medical text-purple-500"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Услуга</p>
+                                        <p class="font-semibold text-gray-900" x-text="apt.service?.title || '—'"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-coins text-primary-500"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Цена</p>
+                                        <p class="font-semibold text-gray-900" x-text="apt.price + ' €.'"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Location -->
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                        <i :class="apt.online ? 'fa-solid fa-video text-blue-500' : 'fa-solid fa-location-dot text-blue-500'"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500" x-text="apt.online ? 'Онлайн консултация' : 'Кабинет'"></p>
+                                        <template x-if="apt.online">
+                                            <a :href="apt.online_url" target="_blank" class="font-semibold text-blue-600 hover:text-blue-700 inline-flex items-center gap-1">
+                                                <i class="fa-solid fa-external-link text-xs"></i>
+                                                Линк за видео среща
+                                            </a>
+                                        </template>
+                                        <template x-if="!apt.online">
+                                            <p class="font-semibold text-gray-900" x-text="apt.cabinet?.address || '—'"></p>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+</template>
+
+<!-- ==================== LOGIN MODAL (non-closable) ==================== -->
+<template x-if="data.user.logged_in == false">
+    <div>
+        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+            <!-- Modal -->
+            <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden" @click.stop>
+
+                <!-- Header -->
+                <div class="relative bg-gray-100 px-6 py-4 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-gray-700">Вход в профила</h3>
+                </div>
+
+                <!-- Body -->
+                <div class="px-6 py-6">
+                    <form class="space-y-5">
+                        <input type="hidden" name="same_page" value="1">
+                        <div class="text-center mb-2">
+                            <div class="inline-flex items-center justify-center w-14 h-14 bg-primary-100 rounded-full mb-3">
+                                <i class="fa-solid fa-right-to-bracket text-primary-600 text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-500">Влезте в акаунта си, за да видите детайлите на часа</p>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Имейл адрес</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <i class="fa-solid fa-envelope text-gray-400"></i>
+                                </div>
+                                <input type="email" name="email" placeholder="name@example.com" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Парола</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <i class="fa-solid fa-lock text-gray-400"></i>
+                                </div>
+                                <input type="password" name="password" placeholder="••••••••" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+                        </div>
+
+                        <!-- Remember & Forgot -->
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="remember" class="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500">
+                                <span class="text-sm text-gray-600">Запомни ме</span>
+                            </label>
+                            <button type="button" @click="href('/bg/forgotten-password')" class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                                Забравена парола?
+                            </button>
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="button" @click="alpineListeners('User.login', $event)" keyName="user" class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            Вход
+                        </button>
+
+                        <!-- Divider -->
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-200"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-4 bg-white text-gray-500">или</span>
+                            </div>
+                        </div>
+
+                        <!-- Register -->
+                        <div class="text-center">
+                            <p class="text-gray-600 text-sm">
+                                Нямате акаунт?
+                                <button type="button" @click="href('/bg/registration')" class="font-semibold text-primary-600 hover:text-primary-700 transition-colors ml-1">
+                                    Регистрирайте се
+                                </button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template x-if="data.modals.cancel_appointment">
+    <div x-data="{ cancelled: false }">
+        <form>
+            <input type="hidden" :value="data.modals.cancel_appointment.obj.id" name="record_id">
+            <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="callModal($el)" data-modal="cancel_appointment"></div>
+
+                <!-- Modal -->
+                <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden" @click.stop>
+
+                    <!-- Header -->
+                    <div class="relative px-6 py-4 flex items-center justify-between" :class="cancelled ? 'bg-primary-50' : 'bg-gray-100'">
+                        <h3 class="text-lg font-bold" :class="cancelled ? 'text-primary-700' : 'text-gray-700'" x-text="cancelled ? 'Часът е анулиран' : 'Отказване на час'"></h3>
+                        <button type="button" @click="callModal($el)" data-modal="cancel_appointment" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-500 transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Success State -->
+                    <div x-show="cancelled" x-transition class="px-6 py-10 text-center">
+                        <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-calendar-check text-primary-600 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">Успешно анулиран час</h4>
+                        <p class="text-gray-500 text-sm mb-1">
+                            <span x-text="data.modals.cancel_appointment.obj.date"></span> в <span x-text="data.modals.cancel_appointment.obj.time_start"></span>
+                        </p>
+                        <p class="text-gray-400 text-sm" x-text="data.modals.cancel_appointment.obj.service?.title || ''"></p>
+                    </div>
+
+                    <!-- Confirm State -->
+                    <div x-show="!cancelled">
+                        <!-- Body -->
+                        <div class="px-6 py-6 space-y-5">
+
+                            <!-- Appointment Info -->
+                            <div class="p-4 bg-gray-50 rounded-2xl space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-calendar-day text-red-500"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-400">Дата и час</p>
+                                        <p class="font-semibold text-gray-900" x-text="Helpers.formatDate(data.modals.cancel_appointment.obj.date, 'bg')  + ' в ' + data.modals.cancel_appointment.obj.time_start"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-stethoscope text-purple-500"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-400">Услуга</p>
+                                        <p class="font-semibold text-gray-900" x-text="data.modals.cancel_appointment.obj.service?.title || '—'"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Warning -->
+                            <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+                                <p class="text-sm text-amber-800">Сигурни ли сте, че искате да откажете този час? Действието е необратимо.</p>
+                            </div>
+
+                            <!-- Reason -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Причина <span class="text-gray-400 font-normal">(по желание)</span></label>
+                                <textarea name="note" rows="3" placeholder="Въведете причина за отказване..." class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-red-400 focus:ring-2 focus:ring-red-100 resize-none transition-colors text-sm"></textarea>
+                            </div>
+
+                            <input type="hidden" name="id" :value="data.modals.cancel_appointment.obj.id">
+                        </div>
+
+                        <!-- Footer - Confirm -->
+                        <div class="px-6 pb-6 flex gap-3">
+                            <button type="button" @click="callModal($el)" data-modal="cancel_appointment" class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                                Затвори
+                            </button>
+                            <button @click="alpineListeners('delete.doctors_appointment', $event)" @success="cancelled = true; doctors_appointments()" type="button" class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-red-500/30">
+                                <i class="fa-solid fa-xmark mr-2"></i>Откажи часа
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Footer - Success -->
+                    <div x-show="cancelled" class="px-6 pb-6">
+                        <button type="button" @click="callModal($el);" keyName="appointment" class="w-full px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors">
+                            Затвори
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>
+
+<form>
+    <div id="doctors_appointments" :data-id="data.pageUrl.id"></div>
+</form>
+
+<script>
+    function doctors_appointments() {
+        alpineListeners('get.doctors_appointments', document.getElementById('doctors_appointments'));
+    }
+</script>
+<!-- Empty / Loading State -->
+<!-- <template x-if="!data.appointment || !data.appointment.id">
+    <div class="bg-gray-50 min-h-screen flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-calendar-xmark text-gray-400 text-3xl"></i>
+            </div>
+            <p class="text-gray-500 mb-4">Часът не е намерен</p>
+            <a href="/bg/userpage" class="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors">
+                <i class="fa-solid fa-arrow-left"></i>
+                Към профила
+            </a>
+        </div>
+    </div>
+</template> -->

@@ -72,12 +72,12 @@ export class ApiClient {
                 if ("clear" in this.dataCollect.attributesOptions && this.dataCollect.form.form) {
                     Helpers.clear_form_data(this.dataCollect.form.form);
                 }
-
-                if ('scroll' in this.dataCollect.attributesOptions) {
-                    document.getElementById('main').scrollIntoView(true);
-                }
-
             }
+        }
+
+
+        if ('scroll' in this.dataCollect.attributesOptions) {
+            document.getElementById('main').scrollIntoView(true);
         }
 
         // Ако имаме грешки поставяме отговора в друга променлива за да не счупваме обекта. 

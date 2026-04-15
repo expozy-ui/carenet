@@ -6,7 +6,7 @@ export let Speedy = {
     get_speedy: async function (dataCollect) {
         let response = [];
 
-        debugger;
+        ;
 
         let endpoint = Helpers.combineRequest('speedy', dataCollect.combinedData);
 

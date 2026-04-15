@@ -1,0 +1,111 @@
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-300">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 lg:px-8 py-12">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+
+            <!-- Logo & Description -->
+            <div class="col-span-2 md:col-span-1">
+                <a href="/bg/homepage" class="flex items-center gap-2 mb-4">
+                    <img src="https://r2.expozy.com/supercare/logo.png" alt="SuperCare" class="h-20">
+                </a>
+
+            </div>
+
+            <!-- Страници -->
+            <div>
+                <h4 class="text-white font-semibold mb-4">Страници</h4>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/bg/homepage" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">Начало</a>
+                    </li>
+                    <li>
+                        <a href="/bg/blog" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">Блог</a>
+                    </li>
+                    <li>
+                        <a href="/bg/about" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">За нас</a>
+                    </li>
+                    <li>
+                        <a href="/bg/contacts" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">Контакти</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Специалности -->
+            <div>
+                <h4 class="text-white font-semibold mb-4">Специалности</h4>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/bg/search?speciality_id=41" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">Логопед</a>
+                    </li>
+                    <li>
+                        <a href="/bg/search?speciality_id=73" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">Психолог</a>
+                    </li>
+                    <li>
+                        <a href="/bg/search?speciality_id=99" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">Ерготерапевт</a>
+                    </li>
+                    <li>
+                        <a href="/bg/search?speciality_id=85" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">Физиотерапевт</a>
+                    </li>
+                    <li>
+                        <a href="/bg/search?speciality_id=66" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">Ресурсен учител</a>
+                    </li>
+                    <li>
+                        <a href="/bg/search?speciality_id=102" class="text-gray-400 hover:text-primary-400 transition-colors text-sm">ABA терапевт</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Градове -->
+            <div apidata="get.cities">
+                <h4 class="text-white font-semibold mb-4">Градове</h4>
+                <ul class="space-y-2">
+                    <template x-for="(city, index) in Object.values(data.cities).reverse().slice(0, 6)" :key="city.id">
+                        <li>
+                            <a x-text="city.title" :href=" `/bg/search?city_id=${city.id}` " class="text-gray-400 hover:text-primary-400 transition-colors text-sm">София</a>
+                        </li>
+                    </template>
+
+                </ul>
+            </div>
+
+            <!-- Последвайте ни -->
+            <div>
+                <h4 class="text-white font-semibold mb-4">Последвайте ни</h4>
+                <div class="flex gap-3">
+                    <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i class="fa-brands fa-facebook-f text-white" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i class="fa-brands fa-instagram text-white" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i class="fa-brands fa-linkedin-in text-white" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i class="fa-brands fa-youtube text-white" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="mt-6">
+                    <p class="text-gray-400 text-sm mb-2">Имате въпроси?</p>
+                    <a href="tel:+359 882 212 330" class="text-primary-400 hover:text-primary-300 font-medium transition-colors">
+                        <i class="fa-solid fa-phone mr-2" aria-hidden="true"></i>+359 882 212 330
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500 text-sm">
+                © 2025 SuperCare. Всички права запазени.
+            </p>
+            <div class="flex gap-6">
+                <a href="/bg/terms-conditions" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Общи условия</a>
+                <a href="/bg/gdpr" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Поверителност</a>
+                <a href="/bg/cookies" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Бисквитки</a>
+                <a href="/bg/reziume-na-platformata" class="text-gray-500 hover:text-primary-400 text-sm transition-colors">Резюме на платформата</a>
+            </div>
+        </div>
+    </div>
+</footer>

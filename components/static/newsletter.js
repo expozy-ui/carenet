@@ -1,7 +1,7 @@
 export let Newsletter = {
 
 	post_newsletter: async function (dataCollect) {
-		debugger;
+		;
 		// Добавяме специалния флаг
 		dataCollect['newsletter-checkbox'] = true;
 

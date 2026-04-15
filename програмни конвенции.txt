@@ -1,0 +1,661 @@
+Ти генерираш HTML страници за SPA платформа, базирана на Alpine.js с custom framework layer.
+Спазвай СТРИКТНО описаните програмни конвенции.
+
+═══════════════════════════════════════════════════════════
+1. ТЕХНОЛОГИЧЕН СТАК
+═══════════════════════════════════════════════════════════
+
+- Alpine.js — реактивност, състояние, условен рендер, цикли
+- Tailwind CSS — utility-first стилове (НЕ пиши custom CSS, НЕ ползвай <style>)
+- Font Awesome 6 — икони (fa-solid, fa-regular, fa-brands)
+- Чист HTML фрагмент — без <html>, <head>, <body>
+- Страницата се зарежда в #main контейнер от SPA router-а
+
+═══════════════════════════════════════════════════════════
+2. ГЛОБАЛЕН data ОБЕКТ
+═══════════════════════════════════════════════════════════
+
+Цялото състояние живее в `window.data` (Alpine.reactive).
+Достъпен е навсякъде в HTML чрез Alpine expressions.
+
+Вградени ключове:
+  data.user             — { logged_in: 0|1, email, names, id, avatar: { url, url_10x10 } }
+  data.pageUrl          — обект с URL параметрите (напр. data.pageUrl.id, data.pageUrl.speciality_id)
+  data.modals           — масив/обект с активни модали
+  data.settings         — { logo, social }
+  data.corePage         — метаданни за текущата страница
+  data.mobileFilters    — boolean за мобилен филтър drawer
+
+Динамични ключове се създават от API отговорите чрез keyName атрибут.
+Например: `keyName="doctors"` → `data.doctors` съдържа отговора.
+
+═══════════════════════════════════════════════════════════
+3. ЗАРЕЖДАНЕ НА ДАННИ (apiData)
+═══════════════════════════════════════════════════════════
+
+За автоматично зареждане на данни при рендер, добави `apiData` атрибут
+на ВСЕКИ HTML елемент:
+
+```html
+<div apiData="get.cities">
+    <!-- data.cities е достъпен тук -->
+    <template x-for="city in Object.values(data.cities).reverse()" :key="city.id">
+        <span x-text="city.title"></span>
+    </template>
+</div>
+С custom keyName:
+
+
+<section apiData="get.blogPosts" data-limit="3" keyName="featurePosts">
+    <template x-for="post in data.featurePosts.result" :key="post.id">
+        <div x-text="post.title"></div>
+    </template>
+</section>
+Правила:
+
+Без keyName → ключът е последната част от endpoint ("cities" от "get.cities")
+С keyName → данните се записват в data[keyName]
+data-* атрибути се изпращат като параметри (data-limit, data-page, data-order_by, data-tag и др.)
+Зареждането е автоматично при init на елемента
+═══════════════════════════════════════════════════════════
+4. alpineListeners() — ГЛАВЕН МЕХАНИЗЪМ ЗА ЗАЯВКИ
+═══════════════════════════════════════════════════════════
+
+Сигнатура: alpineListeners(method, element)
+
+Това е ЕДИНСТВЕНАТА функция за API повиквания и локални действия.
+Извиква се при потребителски действия (@click, @change, @submit).
+
+4.1 API заявки (CRUD)
+Методът определя HTTP verb-а чрез префикс:
+
+"get.doctors"              → GET /doctors
+"post.doctors_ratings"     → POST /doctors_ratings
+"put.doctors"              → PUT /doctors
+"delete.doctors_appointment" → DELETE /doctors_appointment
+
+
+<!-- Зареждане при промяна на филтър -->
+<select name="speciality_id"
+        @change="alpineListeners('get.doctors', $el)">
+    <option value="empty">Всички</option>
+</select>
+
+<!-- Изтриване с data атрибут -->
+<button @click="alpineListeners('delete.doctors_appointment', $el)"
+        :data-id="appointment.id">
+    Отмени
+</button>
+
+<!-- POST заявка от форма -->
+<form>
+    <input name="email" type="email">
+    <input name="password" type="password">
+    <button @click="alpineListeners('User.login', $el)">Вход</button>
+</form>
+4.2 Локални методи
+Ако методът НЕ започва с get/post/put/delete, системата импортира
+JS модул от /components/static/:
+
+"User.login"      → import('/components/static/user.js') → User.login(dataCollect)
+"User.post_users"  → import('/components/static/user.js') → User.post_users(dataCollect)
+
+4.3 Как се събират данните
+При извикване DataCollect класът събира данни от 3 източника
+(по приоритет):
+
+data- атрибути* на елемента и родителите:
+data-id="5" → { id: 5 }
+data-page="2" → { page: 2 }
+
+Form полета (ако елементът е в <form>):
+Всички input/select/textarea с name атрибут
+
+Table row данни (ако елементът е в <tr>):
+Събира стойности от клетките
+
+Стойност "empty" се третира като празна и се пропуска.
+
+4.4 options-* атрибути (на формата или елемента)
+options-pushurl="true"   — обновява URL параметрите при заявка
+options-scroll="true"    — скролира до резултатите след отговор
+options-clear="true"     — изчиства формата след успех
+
+
+<form x-init="alpineListeners('get.doctors', $el)"
+      keyName="doctors"
+      options-pushurl="true"
+      options-scroll="true">
+    <select name="speciality_id" @change="alpineListeners('get.doctors', $el)">
+        ...
+    </select>
+</form>
+4.5 data-confirm за потвърждение
+
+<button @click="alpineListeners('delete.doctors_appointment', $el)"
+        data-confirm="Сигурни ли сте, че искате да отмените часа?"
+        :data-id="appointment.id">
+    Отмени
+</button>
+═══════════════════════════════════════════════════════════
+5. ФОРМИ — СЪБИРАНЕ НА ДАННИ
+═══════════════════════════════════════════════════════════
+
+Всяко поле с name атрибут се включва автоматично.
+
+Стандартни полета:
+
+<input name="email" type="email">           → { email: "value" }
+<input name="phone" type="tel">             → { phone: "value" }
+<textarea name="message"></textarea>         → { message: "value" }
+<select name="city_id">...</select>          → { city_id: "value" }
+Checkbox:
+
+<!-- Единичен — изпраща 0 или 1 -->
+<input type="checkbox" name="nzok">          → { nzok: 1 }
+
+<!-- Група (name[]) — масив от стойности -->
+<input type="checkbox" name="services[]" value="1">
+<input type="checkbox" name="services[]" value="2">
+                                              → { services: ["1", "2"] }
+Radio:
+
+<input type="radio" name="type" value="patient">
+<input type="radio" name="type" value="specialist">
+                                              → { type: "patient" }  (само checked)
+File upload:
+
+<input type="file" name="avatar">            → File обект
+<input type="file" name="documents[]" multiple> → File[] масив
+Ако формата съдържа файлове, системата автоматично използва FormData
+вместо JSON.
+
+Индексирани полета:
+
+<input name="schedule[34]" value="09:00">     → { schedule: { 34: "09:00" } }
+<input name="items[1][]" value="a">           → { items: { 1: ["a"] } }
+Стойност "empty":
+Ако поле има стойност "empty", то се пропуска от заявката.
+Използвай за default option:
+
+
+<option value="empty">Избери...</option>
+═══════════════════════════════════════════════════════════
+6. НАВИГАЦИЯ — href()
+═══════════════════════════════════════════════════════════
+
+SPA навигация без презареждане:
+
+
+<!-- Програмна навигация (препоръчително за бутони) -->
+<button @click="href('/search')">Търси</button>
+<button @click="href('/doctor?id=' + doctor.id)">Виж профил</button>
+
+<!-- Стандартни линкове (за footer, static pages) — също работят -->
+<a href="/bg/about">За нас</a>
+href() автоматично:
+
+Добавя езиков префикс (/bg/) ако липсва
+Използва history.pushState() (без reload)
+Зарежда новата страница чрез Page.load()
+Нулира data.pageUrl
+За динамични URL-та в Alpine:
+
+
+<a :href="'/bg/doctor?id=' + doctor.id" x-text="doctor.names"></a>
+<a :href="post.url" x-text="post.title"></a>
+═══════════════════════════════════════════════════════════
+7. МОДАЛИ — callModal()
+═══════════════════════════════════════════════════════════
+
+Отваряне/затваряне:
+
+<button @click="callModal($el)" data-modal="cancel_form">Отвори модал</button>
+callModal() чете data-modal атрибута и toggle-ва стойността в data.modals.
+
+Структура на модал:
+
+<!-- Контейнер — скрит по подразбиране -->
+<div x-show="data.modals.cancel_form" x-cloak
+     class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+
+    <!-- Overlay (затваря при клик) -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+         @click="callModal($el)" data-modal="cancel_form"></div>
+
+    <!-- Модален прозорец -->
+    <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-gray-100 px-6 py-4 flex items-center justify-between">
+            <h3 class="text-lg font-bold text-gray-900">Заглавие</h3>
+            <button @click="callModal($el)" data-modal="cancel_form"
+                    class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-gray-500"></i>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="px-6 py-6">
+            Съдържание тук
+        </div>
+
+        <!-- Footer с бутони -->
+        <div class="px-6 pb-6 flex gap-3">
+            <button @click="callModal($el)" data-modal="cancel_form"
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl">
+                Откажи
+            </button>
+            <button @click="alpineListeners('delete.something', $el)"
+                    class="flex-1 px-4 py-3 bg-red-500 text-white rounded-xl">
+                Потвърди
+            </button>
+        </div>
+    </div>
+</div>
+Модал със стъпки (success state):
+
+<div x-data="{ success: false }">
+    <div x-show="!success">
+        <!-- Форма -->
+        <button @click="alpineListeners('post.something', $el); success = true">
+            Изпрати
+        </button>
+    </div>
+    <div x-show="success">
+        <!-- Success екран -->
+        <i class="fa-solid fa-circle-check text-green-500 text-4xl"></i>
+        <p>Успешно!</p>
+    </div>
+</div>
+═══════════════════════════════════════════════════════════
+8. ПАГИНАЦИЯ
+═══════════════════════════════════════════════════════════
+
+API-то връща pagination обект. Системата го обогатява с pagesArray.
+
+
+<!-- Резултати -->
+<template x-for="doctor in data.doctors.result" :key="doctor.id">
+    <div x-text="doctor.names"></div>
+</template>
+
+<!-- Информация -->
+<span>
+    Показване на <span x-text="data.doctors.pagination.firstElementShown"></span>
+    - <span x-text="data.doctors.pagination.lastElementShown"></span>
+    от <span x-text="data.doctors.pagination.total_results"></span>
+</span>
+
+<!-- Навигация по страници -->
+<div class="flex items-center gap-2">
+    <!-- Предишна -->
+    <button @click="alpineListeners('get.doctors', $event)"
+            :data-page="data.doctors.pagination.current_page - 1"
+            x-show="data.doctors.pagination.prevPage">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <!-- Номера -->
+    <template x-for="(page, index) in data.doctors.pagination.pagesArray" :key="index">
+        <template x-if="page === '...'">
+            <span>...</span>
+        </template>
+        <template x-if="page !== '...'">
+            <button @click="alpineListeners('get.doctors', $event)"
+                    :data-page="page"
+                    :class="page == data.doctors.pagination.current_page
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'"
+                    class="w-10 h-10 rounded-xl font-medium transition-colors"
+                    x-text="page">
+            </button>
+        </template>
+    </template>
+
+    <!-- Следваща -->
+    <button @click="alpineListeners('get.doctors', $event)"
+            :data-page="data.doctors.pagination.current_page + 1"
+            x-show="data.doctors.pagination.nextPage">
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+</div>
+═══════════════════════════════════════════════════════════
+9. УСЛОВЕН РЕНДЕР И ЦИКЛИ (Alpine.js)
+═══════════════════════════════════════════════════════════
+
+x-if (условно показване с DOM премахване):
+
+<template x-if="data.user.logged_in == 1">
+    <div>Здравей, <span x-text="data.user.names"></span></div>
+</template>
+
+<template x-if="doctor.video_url">
+    <iframe :src="doctor.video_url"></iframe>
+</template>
+x-show (CSS toggle, елементът остава в DOM):
+
+<div x-show="searchType === 'specialist'" x-transition>
+    <!-- съдържание -->
+</div>
+x-for (цикъл):
+
+<!-- Масив -->
+<template x-for="item in data.doctors.result" :key="item.id">
+    <div x-text="item.names"></div>
+</template>
+
+<!-- Обект → масив -->
+<template x-for="city in Object.values(data.cities).reverse()" :key="city.id">
+    <option :value="city.id" x-text="city.title"></option>
+</template>
+
+<!-- С филтриране -->
+<template x-for="city in Object.values(data.cities).filter(
+    obj => filterRegion === 'empty' || obj.region_id == filterRegion
+).reverse()">
+    <option :value="city.id" x-text="city.title"></option>
+</template>
+
+<!-- С лимит -->
+<template x-for="(city, index) in Object.values(data.cities).reverse().slice(0, 6)" :key="city.id">
+    ...
+</template>
+x-data (локално състояние):
+
+<div x-data="{ activeTab: 'info', showMore: false }">
+    <button @click="activeTab = 'info'" :class="activeTab === 'info' ? 'active' : ''">Info</button>
+    <button @click="activeTab = 'reviews'" :class="activeTab === 'reviews' ? 'active' : ''">Reviews</button>
+
+    <div x-show="activeTab === 'info'">...</div>
+    <div x-show="activeTab === 'reviews'">...</div>
+</div>
+x-text и x-html:
+
+<span x-text="doctor.names"></span>           <!-- escaped text -->
+<div x-html="post.description"></div>          <!-- raw HTML -->
+Binding с : (shorthand за x-bind):
+
+<img :src="doctor.avatar.url" :alt="doctor.names">
+<a :href="'/bg/doctor?id=' + doctor.id">
+<div :class="isActive ? 'bg-primary-500' : 'bg-gray-100'">
+<input :value="data.pageUrl.name || ''">
+<button :disabled="!formValid">
+Events:
+
+@click="action()"
+@click.prevent="action()"           <!-- preventDefault -->
+@click.stop="action()"              <!-- stopPropagation -->
+@click.away="close()"               <!-- клик извън елемента -->
+@change="alpineListeners(...)"       <!-- select/checkbox промяна -->
+@input.debounce.500="search()"      <!-- текстово поле с забавяне -->
+@submit.prevent="submit()"          <!-- форма -->
+@keydown.enter="submit()"           <!-- Enter клавиш -->
+Transitions:
+
+<!-- Прост fade -->
+<div x-show="open" x-transition>
+
+<!-- Custom transition -->
+<div x-show="open"
+     x-transition:enter="transition ease-out duration-200"
+     x-transition:enter-start="opacity-0 -translate-y-2"
+     x-transition:enter-end="opacity-100 translate-y-0"
+     x-transition:leave="transition ease-in duration-150"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0">
+
+<!-- Accordion collapse -->
+<div x-show="openFaq === 1" x-collapse>
+x-cloak (скрий до init):
+
+<div x-show="condition" x-cloak>
+    <!-- Няма да мигне при зареждане -->
+</div>
+═══════════════════════════════════════════════════════════
+10. HELPER ФУНКЦИИ
+═══════════════════════════════════════════════════════════
+
+Helpers.formatDate(dateString)
+→ Форматирана дата за показване
+
+Helpers.image(type)
+→ Placeholder URL ('user' за аватар, 'product' за продукт)
+Използвай като fallback: :src="doctor.avatar?.url || Helpers.image('user')"
+
+Helpers.show_toast_msg(message, type)
+→ Показва нотификация ('success' или 'error')
+Нотификациите се показват горе вдясно, автоматично изчезват след 3сек.
+
+═══════════════════════════════════════════════════════════
+11. ФИЛТРИРАНЕ НА СВЪРЗАНИ ДАННИ
+═══════════════════════════════════════════════════════════
+
+Каскадни dropdown-и (регион → град):
+
+
+<div x-data="{ filterRegion: 'empty' }">
+
+    <!-- Регион -->
+    <div apiData="get.regions">
+        <select name="region_id" @change="filterRegion = $el.value; alpineListeners('get.doctors', $el)">
+            <option value="empty">Всички региони</option>
+            <template x-for="region in Object.values(data.regions).reverse()">
+                <option :value="region.id" x-text="region.title"></option>
+            </template>
+        </select>
+    </div>
+
+    <!-- Град (филтриран по регион) -->
+    <div apiData="get.cities">
+        <select name="city_id" @change="alpineListeners('get.doctors', $el)">
+            <option value="empty">Всички градове</option>
+            <template x-for="city in Object.values(data.cities).filter(
+                obj => filterRegion === 'empty' || obj.region_id == filterRegion
+            ).reverse()">
+                <option :value="city.id" x-text="city.title"></option>
+            </template>
+        </select>
+    </div>
+</div>
+═══════════════════════════════════════════════════════════
+12. x-init ЗА НАЧАЛНО ЗАРЕЖДАНЕ НА ФОРМА
+═══════════════════════════════════════════════════════════
+
+Когато формата трябва да зареди данни при рендер:
+
+
+<form x-init="alpineListeners('get.doctors', $el)"
+      keyName="doctors"
+      data-limit="20"
+      options-pushurl="true">
+    <!-- филтри -->
+</form>
+x-init се изпълнява веднъж при създаване на елемента.
+Комбинирай с apiData за допълнителни данни (специалности, градове).
+
+═══════════════════════════════════════════════════════════
+13. АВТЕНТИКАЦИЯ — УСЛОВНО СЪДЪРЖАНИЕ
+═══════════════════════════════════════════════════════════
+
+
+<!-- Покажи само за незалогнати -->
+<template x-if="data.user.logged_in == 0">
+    <button @click="href('/login')">Вход</button>
+</template>
+
+<!-- Покажи само за залогнати -->
+<template x-if="data.user.logged_in == 1">
+    <div>
+        <img :src="data.user.avatar?.url || Helpers.image('user')">
+        <span x-text="data.user.names"></span>
+    </div>
+</template>
+
+<!-- Модал-блокер (задължителен login) -->
+<template x-if="data.user.logged_in == 0">
+    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60">
+        <div class="bg-white rounded-3xl p-8 max-w-md text-center">
+            <p>Моля, влезте в профила си</p>
+            <button @click="href('/login')">Вход</button>
+        </div>
+    </div>
+</template>
+═══════════════════════════════════════════════════════════
+14. МОБИЛЕН ФИЛТЪР DRAWER
+═══════════════════════════════════════════════════════════
+
+
+<!-- Бутон за отваряне (мобилен) -->
+<button @click="data.mobileFilters = true" class="lg:hidden">
+    <i class="fa-solid fa-sliders"></i> Филтри
+</button>
+
+<!-- Drawer -->
+<div x-show="data.mobileFilters" x-cloak class="fixed inset-0 z-50 lg:hidden">
+    <div class="absolute inset-0 bg-black/50" @click="data.mobileFilters = false"></div>
+    <div class="absolute inset-y-0 right-0 w-80 bg-white shadow-xl overflow-y-auto"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="translate-x-full"
+         x-transition:enter-end="translate-x-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="translate-x-0"
+         x-transition:leave-end="translate-x-full">
+
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-lg">Филтри</h3>
+                <button @click="data.mobileFilters = false">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <!-- Същите филтри като desktop -->
+        </div>
+    </div>
+</div>
+═══════════════════════════════════════════════════════════
+15. СКРИПТОВЕ И ПЛЪГИНИ
+═══════════════════════════════════════════════════════════
+
+Ако страницата има нужда от допълнителен JS (напр. геолокация):
+
+
+<script src="/assets/plugin/geolocation/geolocation.js?v=2"></script>
+<script>geoAutoLocate();</script>
+Слагай <script> тагове САМО в края на страницата.
+SPA router-ът автоматично ре-изпълнява скриптове в #main.
+
+═══════════════════════════════════════════════════════════
+16. ИЗВЕСТНИ API ENDPOINTS
+═══════════════════════════════════════════════════════════
+
+GET:
+get.doctors                  — списък специалисти (с филтри и пагинация)
+get.doctors_specialities     — всички специалности
+get.doctors_clinics          — клиники/центрове
+get.doctors_clinics_types    — типове клиники
+get.doctors_appointments     — записани часове
+get.doctors_ratings          — отзиви за специалист
+get.blogPosts                — блог постове
+get.blogPosts_filters        — тагове и филтри
+get.blogCategories           — категории на блога
+get.regions                  — региони
+get.cities                   — градове (с region_id)
+
+POST:
+User.login                   — автентикация
+User.post_users              — регистрация
+post.doctors_ratings         — добави отзив
+Reviews.get_blog_comments    — коментари на пост
+
+DELETE:
+delete.doctors_appointment   — отмяна на час
+
+API отговор формат:
+{
+result: [...],              // масив с данни
+pagination: {
+current_page: 1,
+total_pages: 5,
+results_per_page: 20,
+total_results: 100,
+pagesArray: [1, 2, '...', 5],  // добавен от framework-а
+firstElementShown: 1,
+lastElementShown: 20,
+prevPage: false,
+nextPage: true
+}
+}
+
+═══════════════════════════════════════════════════════════
+17. ГРЕШКИ И ВАЛИДАЦИЯ
+═══════════════════════════════════════════════════════════
+
+Грешките идват от API-то в 2 формата:
+
+По полета — показват се до съответния input:
+{ "name=email": "Невалиден имейл" }
+
+Toast съобщения — показват се горе вдясно:
+Системата автоматично ги обработва.
+
+НЕ добавяй ръчна валидация в HTML — използвай native HTML5
+атрибути (required, type="email", minlength) и остави
+сървърната валидация да се погрижи за останалото.
+
+═══════════════════════════════════════════════════════════
+18. CUSTOM DIRECTIVES
+═══════════════════════════════════════════════════════════
+
+x-amount="price"
+→ Форматира число като валута (2 дец. знака + символ)
+
+
+<span x-amount="doctor.price"></span>
+x-tooltip.position="text"
+→ Показва tooltip при hover (позиции: top, bottom, left, right)
+
+
+<button x-tooltip.top="'Натисни за повече информация'">?</button>
+═══════════════════════════════════════════════════════════
+19. DATE PICKER
+═══════════════════════════════════════════════════════════
+
+Използва flatpickr чрез DateHelper:
+
+
+<!-- Единична дата -->
+<div x-data="DateHelper.date()">
+    <input type="text" name="date" placeholder="Избери дата">
+</div>
+
+<!-- Период (range) -->
+<div x-data="DateHelper.dateRange()">
+    <input type="hidden" name="date_from">
+    <input type="hidden" name="date_to">
+    <input type="text" placeholder="От — До">
+</div>
+
+<!-- Дата и час -->
+<div x-data="DateHelper.dateTime()">
+    <input type="text" name="datetime">
+</div>
+
+<!-- Само час -->
+<div x-data="DateHelper.time()">
+    <input type="text" name="time">
+</div>
+═══════════════════════════════════════════════════════════
+20. ПРАВИЛА ЗА ПИСАНЕ НА КОД
+═══════════════════════════════════════════════════════════
+
+НИКОГА не пиши JavaScript логика в <script> тагове освен ако няма друг вариант — ползвай Alpine директиви (x-data, x-show, x-for, @click) и глобалните функции
+Данните ВИНАГИ идват от data обекта — не hardcode-вай
+За навигация ползвай href() или :href binding
+За API повиквания ползвай САМО alpineListeners()
+За модали ползвай САМО callModal() с data-modal атрибут
+x-show за toggle (остава в DOM), x-if за условно рендериране (махa от DOM)
+x-cloak на всичко с x-show за да не мига при load
+Стойност "empty" = празна стойност за select options
+Object.values() при итерация на обекти от API
+$el = текущият елемент, $event = текущият event — ползвай ги в alpineListeners()

@@ -1,0 +1,157 @@
+<!-- Main Content -->
+<main class="flex-1 bg-gradient-to-br from-primary-50 via-white to-primary-50 min-h-screen">
+    <div class="flex flex-col items-center justify-center px-4 py-12 mx-auto min-h-screen">
+
+        <!-- Logo/Brand -->
+        <a href="/bg" class="flex items-center gap-3 mb-8">
+            <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30">
+                <i class="fa-solid fa-heart-pulse text-white text-xl"></i>
+            </div>
+            <span class="text-2xl font-bold"><span class="text-primary-500">Super</span><span class="text-accent-400">Care</span></span>
+        </a>
+
+        <!-- Registration Card -->
+        <div class="w-full max-w-2xl">
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
+                        <i class="fa-solid fa-user-plus text-primary-600 text-2xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">Създайте акаунт</h1>
+                    <p class="text-gray-500">Присъединете се към SuperCare</p>
+                </div>
+
+                <!-- Form -->
+                <form class="space-y-5">
+                    <!-- User Type - Full Width -->
+                    <div>
+                        <label for="user_type" class="block text-sm font-semibold text-gray-700 mb-2">Тип акаунт</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                <i class="fa-solid fa-user-tag text-gray-400"></i>
+                            </div>
+                            <select name="doctor" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors appearance-none cursor-pointer">
+                                <option value="empty">Потребител</option>
+                                <option value="1">Специалист</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                                <i class="fa-solid fa-chevron-down text-gray-400 text-sm"></i>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-gray-500">
+                            <i class="fa-solid fa-circle-info text-primary-500 mr-1"></i>
+                            Изберете "Специалист" ако сте медицински специалист или специалист по детско развитие.
+                        </p>
+                    </div>
+
+                    <!-- Name & Phone - Two Columns -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Name -->
+                        <div>
+                            <label for="first_name" class="block text-sm font-semibold text-gray-700 mb-2">Име </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <i class="fa-solid fa-user text-gray-400"></i>
+                                </div>
+                                <input type="text" name="first_name" id="first_name" placeholder="" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="last_name" class="block text-sm font-semibold text-gray-700 mb-2">Фамилия</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <i class="fa-solid fa-user text-gray-400"></i>
+                                </div>
+                                <input type="text" name="last_name" id="last_name" placeholder="" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div>
+                            <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Телефон</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <i class="fa-solid fa-phone text-gray-400"></i>
+                                </div>
+                                <input type="tel" name="phone" id="phone" placeholder="+359 888 123 456" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email & Password - Two Columns -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Имейл адрес</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <i class="fa-solid fa-envelope text-gray-400"></i>
+                                </div>
+                                <input type="email" name="email" id="email" placeholder="name@example.com" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Парола</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <i class="fa-solid fa-lock text-gray-400"></i>
+                                </div>
+                                <input type="password" name="password" id="password" placeholder="••••••••" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">Минимум 8 символа</p>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" name="terms" id="terms" required class="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500 mt-1">
+                        <label for="terms" class="text-sm text-gray-600 cursor-pointer">
+                            Съгласен/а съм с
+                            <a href="/bg/terms-conditions" class="text-primary-600 hover:text-primary-700 font-medium">Общите условия</a>
+                            и
+                            <a href="/bg/gdpr" class="text-primary-600 hover:text-primary-700 font-medium">Политиката за поверителност</a>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="button" @click="alpineListeners('User.post_users', $event)" class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-user-plus"></i>
+                        Регистрация
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="relative my-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-4 bg-white text-gray-500">или</span>
+                        </div>
+                    </div>
+
+                    <!-- Login Link -->
+                    <div class="text-center">
+                        <p class="text-gray-600">
+                            Вече имате акаунт?
+                            <button type="button" @click="href('/bg/login')" class="font-semibold text-primary-600 hover:text-primary-700 transition-colors ml-1">
+                                Влезте тук
+                            </button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Help Text -->
+            <p class="text-center text-sm text-gray-500 mt-6">
+                Имате въпроси?
+                <button type="button" @click="href('/contacts')" class="text-primary-600 hover:text-primary-700 font-medium">
+                    Свържете се с нас
+                </button>
+            </p>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,12 @@
+[13-Feb-2026 10:05:12 UTC] Blacklisted IP, drop connection 149.62.205.111 to /.
+[24-Feb-2026 14:01:59 UTC] Blacklisted IP, drop connection 149.62.205.190 to /.
+[10-Mar-2026 22:04:14 UTC] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$seo_title of type string in /home/supercare/web/supercare.expozy.net/public_html/core/classes/class.page.php:163
+Stack trace:
+#0 /home/supercare/web/supercare.expozy.net/public_html/index.php(14): Page->load_page()
+#1 {main}
+  thrown in /home/supercare/web/supercare.expozy.net/public_html/core/classes/class.page.php on line 163
+[11-Mar-2026 14:51:30 UTC] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$seo_title of type string in /home/supercare/web/supercare.expozy.net/public_html/core/classes/class.page.php:163
+Stack trace:
+#0 /home/supercare/web/supercare.expozy.net/public_html/index.php(14): Page->load_page()
+#1 {main}
+  thrown in /home/supercare/web/supercare.expozy.net/public_html/core/classes/class.page.php on line 163

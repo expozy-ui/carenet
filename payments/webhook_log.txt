@@ -1,0 +1,27 @@
+2026-02-19 15:07:29
+<pre>StripeAccounts Object
+(
+    [id] => 0
+    [user_id] => 0
+    [stripe_id] => 
+    [test_mode] => 
+    [date_created] => 
+)
+</pre>
+
+2026-02-19 15:09:03
+<pre>cus_U0SqsSgoDB30hK</pre>
+
+2026-02-19 15:10:24
+<pre>2026-03-19 17:10:19</pre><pre>2026-02-19 17:10:19</pre><br />
+<b>Fatal error</b>:  Uncaught TypeError: Cannot assign int to property Doctor::$status of type DoctorStatus in /home/devcore/web/devcore.myexpozy.com/public_html/projects/supercare/lib/classes/stripe/class.stripe.webhook.php:85
+Stack trace:
+#0 /home/devcore/web/devcore.myexpozy.com/public_html/projects/supercare/lib/classes/stripe/class.stripe.webhook.php(49): StripeWebHook::customer_subscription_updated()
+#1 /home/devcore/web/devcore.myexpozy.com/public_html/core/v4/api/front/Post.php(1059): StripeWebHook::stripe_webhook()
+#2 /home/devcore/web/devcore.myexpozy.com/public_html/core/v4/api/front/Base.php(179): Api\Post-&gt;stripe_webhook()
+#3 /home/devcore/web/devcore.myexpozy.com/public_html/core/v4/api/front/index.php(48): Api\Base-&gt;execute_method()
+#4 /home/devcore/web/devcore.myexpozy.com/public_html/index/front.php(8): require_once('...')
+#5 {main}
+  thrown in <b>/home/devcore/web/devcore.myexpozy.com/public_html/projects/supercare/lib/classes/stripe/class.stripe.webhook.php</b> on line <b>85</b><br />
+
+

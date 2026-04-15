@@ -89,7 +89,7 @@ export class DataTable {
                     el.value = value;
                 } else if (el.tagName === "SELECT") {
                     window.el = el;
-                    debugger;
+                    ;
                     el.value = value;
                     // el.dispatchEvent(new Event("change"));
                 }

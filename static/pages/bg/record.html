@@ -1,0 +1,934 @@
+<!-- Patient Record Page - Doctor-Patient Medical History -->
+<div apiData="get.doctors_records" :data-id="data.pageUrl.id" x-data="{showAddNote: false, selectedAppointment: new URLSearchParams(window.location.search).get('apt_id') ? parseInt(new URLSearchParams(window.location.search).get('apt_id')) : null, newNote: '',}" class="bg-gray-50 min-h-screen py-8 w-full">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 lg:px-8">
+
+        <!-- Header -->
+        <div class="mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">Досие</h1>
+
+                    <p class="text-gray-600 mt-2">Видимо за: </p>
+                    <div class="flex flex-wrap items-center gap-1 mt-1 ">
+                        <template x-for="doctor in data.doctors_records.doctors">
+                            <div>
+                                <img :title="doctor.user_info.names" class="w-10 h-10 rounded-full overflow-hidden" :src="doctor.avatar.url_10x10 != '' ? doctor.avatar.url_10x10  : Helpers.image('user') " alt="">
+                            </div>
+                        </template>
+                    </div>
+                    <template x-if="data.doctors_records.date_updated && data.doctors_records.date_updated != '0000-00-00 00:00:00'">
+                        <p class="text-xs text-gray-400 mt-2">
+                            <i class="fa-regular fa-clock mr-1"></i>
+                            Последна редакция: <span x-text="data.doctors_records.date_updated.split(' ')[0]"></span>
+                        </p>
+                    </template>
+                </div>
+                <template x-if="data.user.userlevel != 1">
+                    <button @click="data.editMode = !data.editMode" :class="data.editMode ? 'bg-gray-500 hover:bg-gray-600' : 'bg-accent-500 hover:bg-accent-600'" class="text-white font-semibold px-4 py-2 rounded-xl transition-colors flex items-center gap-2">
+                        <i :class="data.editMode ? 'fa-solid fa-xmark' : 'fa-solid fa-pen'"></i>
+                        <span x-text="data.editMode ? 'Откажи' : 'Редактирай'"></span>
+                    </button>
+                </template>
+
+            </div>
+        </div>
+
+        <!-- Patient Info Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+            <div class="flex flex-wrap items-center gap-6">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-user text-primary-600 text-2xl"></i>
+                </div>
+                <div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-500">Имена</p>
+                        <p class="font-semibold text-gray-900" x-text="data.doctors_records.client_info.names"></p>
+                        <template x-if="data.doctors_appointments?.result?.find(a => a.pacient_names)">
+                            <p class="text-sm text-amber-600 font-medium mt-1">
+                                <i class="fa-solid fa-user-tag mr-1"></i>
+                                <span x-text="'За: ' + data.doctors_appointments.result.find(a => a.pacient_names)?.pacient_names"></span>
+                            </p>
+                        </template>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Телефон</p>
+                        <p class="font-semibold text-gray-900" x-text="data.doctors_records.client_info.phone"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Имейл</p>
+                        <p class="font-semibold text-gray-900" x-text="data.doctors_records.client_info.email"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column - Main Info -->
+
+            <div class="lg:col-span-2 space-y-6">
+                <form class="space-y-6">
+                    <input type="hidden" :value="data.pageUrl.id" name="id">
+                    <!-- Visit Reason -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                                    <i class="fa-solid fa-clipboard-question text-blue-600"></i>
+                                </div>
+                                <h2 class="text-lg font-bold text-gray-900">Причина за посещение</h2>
+                            </div>
+                            <template x-if="data.user.userlevel != 1 && !data.editMode">
+                                <button @click="data.editMode = true" class="w-8 h-8 rounded-lg text-gray-400 hover:text-primary-600 hover:bg-primary-50 flex items-center justify-center transition-colors" title="Редактирай">
+                                    <i class="fa-solid fa-pen-to-square text-sm"></i>
+                                </button>
+                            </template>
+                        </div>
+                        <template x-if="!data.editMode">
+                            <p class="text-gray-700 leading-relaxed whitespace-pre-line" x-text="data.doctors_records.reason"></p>
+                        </template>
+                        <template x-if="data.editMode">
+                            <textarea :value="data.doctors_records.reason" name="reason" rows="3" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none"></textarea>
+                        </template>
+                    </div>
+
+                    <!-- Goals -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                                    <i class="fa-solid fa-bullseye text-primary-600"></i>
+                                </div>
+                                <h2 class="text-lg font-bold text-gray-900">Цели</h2>
+                            </div>
+                            <template x-if="data.user.userlevel != 1 && !data.editMode">
+                                <button @click="data.editMode = true" class="w-8 h-8 rounded-lg text-gray-400 hover:text-primary-600 hover:bg-primary-50 flex items-center justify-center transition-colors" title="Редактирай">
+                                    <i class="fa-solid fa-pen-to-square text-sm"></i>
+                                </button>
+                            </template>
+                        </div>
+                        <template x-if="!data.editMode">
+                            <p class="text-gray-700 leading-relaxed whitespace-pre-line" x-text="data.doctors_records.goals"></p>
+                        </template>
+                        <template x-if="data.editMode">
+                            <textarea :value="data.doctors_records.goals" name="goals" rows="3" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none"></textarea>
+                        </template>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                                    <i class="fa-solid fa-lightbulb text-amber-600"></i>
+                                </div>
+                                <h2 class="text-lg font-bold text-gray-900">Препоръки</h2>
+                            </div>
+                            <template x-if="data.user.userlevel != 1 && !data.editMode">
+                                <button @click="data.editMode = true" class="w-8 h-8 rounded-lg text-gray-400 hover:text-primary-600 hover:bg-primary-50 flex items-center justify-center transition-colors" title="Редактирай">
+                                    <i class="fa-solid fa-pen-to-square text-sm"></i>
+                                </button>
+                            </template>
+                        </div>
+                        <template x-if="!data.editMode">
+                            <p class="text-gray-700 leading-relaxed whitespace-pre-line" x-text="data.doctors_records.recommendations"></p>
+                        </template>
+                        <template x-if="data.editMode">
+                            <textarea :value="data.doctors_records.recommendations" name="recommendations" rows="4" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none"></textarea>
+                        </template>
+                    </div>
+
+                    <!-- Save Button (Edit Mode) -->
+                    <template x-if="data.editMode">
+                        <div class="flex justify-end">
+                            <button @click="alpineListeners('post.doctors_records', $event); data.editMode = false" keyName="doctors_records" class="bg-accent-500 hover:bg-accent-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors shadow-lg shadow-accent-500/30">
+                                <i class="fa-solid fa-save mr-2"></i>
+                                Запази промените
+                            </button>
+                        </div>
+                    </template>
+                </form>
+
+                <!-- Appointments History with Notes -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6" apiData="get.doctors_appointments" data-limit="1000" :data-record_id="data.pageUrl.id">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                                <i class="fa-solid fa-clock-rotate-left text-purple-600"></i>
+                            </div>
+                            <h2 class="text-lg font-bold text-gray-900">История на посещенията</h2>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <template x-for="apt in data.doctors_appointments.result">
+                            <div class="border border-gray-200 rounded-xl overflow-hidden" x-init="if(apt.id == new URLSearchParams(window.location.search).get('apt_id')) { $nextTick(() => $el.scrollIntoView({behavior: 'smooth', block: 'center'})) }">
+                                <!-- Appointment Header -->
+                                <div @click="selectedAppointment = selectedAppointment === apt.id ? null : apt.id" class="flex items-center justify-between p-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-white rounded-xl border border-gray-200 flex flex-col items-center justify-center">
+                                            <span class="text-xs text-gray-500" x-text="apt.date.split('-')[2]"></span>
+                                            <span class="text-xs font-bold text-gray-900" x-text="apt.date.split('-')[1] + '/' + apt.date.split('-')[0].slice(2)"></span>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-gray-900" x-text="apt.service.title"></p>
+                                            <p class="text-sm text-gray-500">
+                                                <i class="fa-regular fa-clock mr-1"></i>
+                                                <span x-text="apt.time_start"></span>
+                                                <span class="mx-2">•</span>
+                                                <span x-text="apt.notes.length + ' бележки'"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+
+                                        <template x-if="apt.status_id == 1">
+                                            <span class="bg-accent-100 text-accent-700 px-3 py-1 rounded-full text-sm font-medium">Предстоящ</span>
+                                        </template>
+
+                                        <template x-if="apt.status_id == 2">
+                                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">Анулиран от специалиста</span>
+                                        </template>
+
+                                        <template x-if="apt.status_id == 3">
+                                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">Анулиран от пациента</span>
+                                        </template>
+
+                                        <template x-if="apt.status_id == 5">
+                                            <span class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">Приключил</span>
+                                        </template>
+
+                                        <template x-if="apt.status_id == 1">
+                                            <button @click.stop="callModal($el)" data-modal="cancel_appointment" :data-obj="JSON.stringify(apt)" class="w-8 h-8 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition-colors" title="Анулирай часа">
+                                                <i class="fa-solid fa-ban text-sm"></i>
+                                            </button>
+                                        </template>
+
+                                        <i :class="selectedAppointment === apt.id ? 'fa-chevron-up' : 'fa-chevron-down'" class="fa-solid text-gray-400"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Notes Section (Expandable) -->
+                                <div x-show="selectedAppointment === apt.id" x-transition class="border-t border-gray-200">
+                                    <div class="p-4 space-y-3">
+                                        <template x-for="note in apt.notes.reverse()" :key="note.id">
+                                            <div x-data="{ editing: false }" class="flex gap-3">
+                                                <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                                    <i class="fa-solid fa-note-sticky text-primary-600 text-sm"></i>
+                                                </div>
+                                                <div class="flex-1 bg-gray-50 rounded-xl p-3">
+                                                    <!-- View mode -->
+                                                    <template x-if="!editing">
+                                                        <div>
+                                                            <p class="text-gray-700 whitespace-pre-line" x-text="note.note"></p>
+                                                            <div class="flex items-center justify-between mt-2">
+                                                                <div class="flex items-center gap-2 text-xs text-gray-400">
+                                                                    <span x-text="note.doctor_info.names"></span>
+                                                                    <span>•</span>
+                                                                    <span x-text="Helpers.formatDate(note.date_created, 'long' , true) "></span>
+                                                                </div>
+                                                                <template x-if="data.user.userlevel != 1">
+                                                                    <button @click="editing = true" class="text-xs text-gray-400 hover:text-primary-600 transition-colors flex items-center gap-1">
+                                                                        <i class="fa-solid fa-pen text-[10px]"></i>
+                                                                        <span>Редактирай</span>
+                                                                    </button>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                    <!-- Edit mode -->
+                                                    <template x-if="editing">
+                                                        <form>
+                                                            <input type="hidden" :value="note.id" name="id">
+                                                            <input type="hidden" :value="apt.id" name="appointment_id">
+                                                            <textarea :value="note.note" name="note" rows="2" class="w-full px-3 py-2 bg-white rounded-lg border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none text-sm"></textarea>
+                                                            <div class="flex justify-end gap-2 mt-2">
+                                                                <button type="button" @click="editing = false" class="px-3 py-1.5 text-gray-600 hover:text-gray-800 font-medium text-xs">
+                                                                    Откажи
+                                                                </button>
+                                                                <button @click="alpineListeners('post.doctors_appointments_notes', $event); " keyName="dummy" @success="get_doctors_appointments(); editing = false" class="px-3 py-1.5 bg-accent-500 hover:bg-accent-600 text-white rounded-lg font-medium text-xs transition-colors">
+                                                                    Запази
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- Add Note Form -->
+                                        <div x-show="showAddNote && selectedAppointment === apt.id" x-transition class="mt-4 pt-4 border-t border-gray-200">
+                                            <div class="flex gap-3">
+                                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                                    <i class="fa-solid fa-plus text-blue-600 text-sm"></i>
+                                                </div>
+                                                <form class="w-full">
+                                                    <input type="hidden" :value="apt.id" name="appointment_id">
+
+                                                    <div class="flex-1">
+                                                        <textarea name="note" rows="2" placeholder="Добавете бележка..." class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none text-sm"></textarea>
+                                                        <div class="flex justify-end gap-2 mt-2">
+                                                            <button type="button" @click="showAddNote = false; newNote = ''" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium text-sm">
+                                                                Откажи
+                                                            </button>
+                                                            <button @click="alpineListeners('post.doctors_appointments_notes', $event);showAddNote = false; newNote = ''" keyName="dummy" @success="get_doctors_appointments()" class="px-4 py-2 bg-accent-500 hover:bg-accent-600 text-white rounded-lg font-medium text-sm transition-colors">
+                                                                Добави
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+
+                                            </div>
+                                        </div>
+
+                                        <!-- Add Note Button -->
+                                        <button x-show="!showAddNote || selectedAppointment !== apt.id" @click="showAddNote = true" class="w-full mt-2 py-2 text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2">
+                                            <i class="fa-solid fa-plus"></i>
+                                            Добави бележка
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Files -->
+            <div class="space-y-6">
+                <!-- Files Section -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center">
+                                <i class="fa-solid fa-folder-open text-rose-600"></i>
+                            </div>
+                            <h2 class="text-lg font-bold text-gray-900">Файлове</h2>
+                        </div>
+                        <!-- <button class="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center gap-1">
+                            <i class="fa-solid fa-plus"></i>
+                            Добави
+                        </button> -->
+                    </div>
+
+                    <div class="space-y-3">
+                        <template x-for="file in data.doctors_records.files" :key="file.id">
+                            <div @click="alpineListeners(`get.${file.path}`, $event)" class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group cursor-pointer">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center" :class="file.type === 'pdf' ? 'bg-red-100' : 'bg-blue-100'">
+                                    <i :class="file.type === 'pdf' ? 'fa-solid fa-file-pdf text-red-600' : 'fa-solid fa-file-image text-blue-600'"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-gray-900 truncate text-sm" x-text="file.filename"></p>
+                                    <p class="text-xs text-gray-500">
+                                        <span x-text="Helpers.formatDate(file.date_created, 'bg') "></span>
+                                        <span class="mx-1">•</span>
+                                        <span x-text="file.size"></span>
+                                    </p>
+                                </div>
+                                <button @click="alpineListeners(`get.${file.path}`, $event)" class="p-2 text-gray-400 hover:text-primary-600 opacity-0 group-hover:opacity-100 transition-all">
+                                    <i class="fa-solid fa-download"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+
+                    <template x-if="data.user.userlevel != 1">
+                        <div x-data="{loading: false}" class="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-primary-500 transition-colors cursor-pointer">
+                            <form>
+                                <input type="hidden" name="record_id" :value="data.pageUrl.id" id="">
+                                <input @change="loading = true; await alpineListeners('post.doctors_record_files', $event); loading = false;" @success="get_record()" keyName="my_doctor" name="files" type="file" class="hidden" id="video-upload" multiple>
+                            </form>
+                            <label for="video-upload" class="cursor-pointer">
+                                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <template x-if="!loading">
+                                        <i class="fa-solid fa-cloud-arrow-up text-primary-600 text-2xl"></i>
+                                    </template>
+                                    <template x-if="loading">
+                                        <i class="fa-regular fa-spinner text-primary-600 text-2xl animate-spin duration-3000"></i>
+                                    </template>
+                                </div>
+                                <p class="text-gray-900 font-medium mb-1">Добавете файлове</p>
+                            </label>
+                            <p class="text-xs text-gray-400 mt-3">Файловете трябва да са свързани само с подкрепата на терапията и работата вкъщи. Не качвайте медицинска документация и диагнози.</p>
+                        </div>
+                    </template>
+
+                </div>
+
+                <!-- Actions -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4">Действия</h2>
+                    <div class="space-y-3">
+                        <button @click="callModal($el)" data-modal="add_appointment" class="w-full flex items-center gap-3 p-3 bg-primary-50 hover:bg-primary-100 text-primary-700 rounded-xl transition-colors">
+                            <i class="fa-solid fa-calendar-plus w-5"></i>
+                            <span class="font-medium">Добави час</span>
+                        </button>
+
+                        <!-- <template x-if="data.user.userlevel == 1">
+                            <button @click="callModal($el)" data-modal="share_colleague" class="w-full flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors">
+                                <i class="fa-solid fa-user-doctor w-5"></i>
+                                <span class="font-medium">Сподели с колега</span>
+                            </button>
+                        </template> -->
+                    </div>
+
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-calendar-days text-primary-600"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-gray-900">Серия часове</h2>
+                    </div>
+
+                    <div apiData="get.my_doctors_appointments_series" :data-record_id="data.pageUrl.id" class="space-y-3">
+                        <template x-for="series in data.my_doctors_appointments_series" :key="series.id">
+                            <div class="border rounded-xl p-4" :class="series.status_id == 0 ? 'border-red-200 bg-red-50/30' : 'border-gray-200'">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex-1 space-y-2">
+                                        <!-- Time + badges -->
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <span class="font-bold text-lg" :class="series.status_id == 0 ? 'text-gray-400' : 'text-primary-600'" x-text="series.time_start"></span>
+                                            <span class="bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full text-xs font-medium" x-text="series.appointments.length + ' часа'"></span>
+                                            <template x-if="series.status_id == 0">
+                                                <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-medium">Анулирана</span>
+                                            </template>
+                                        </div>
+
+                                        <!-- Info -->
+                                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
+                                            <span>
+                                                <i class="fa-regular fa-calendar mr-1"></i>
+                                                От: <span class="text-gray-700 font-medium" x-text="Helpers.formatDate(series.date)"></span>
+                                            </span>
+                                            <span>
+                                                <i class="fa-solid fa-repeat mr-1"></i>
+                                                <span class="text-gray-700 font-medium" x-text="seriesDayName(series)"></span>
+                                            </span>
+                                            <span>
+                                                <i class="fa-regular fa-calendar-check mr-1"></i>
+                                                До: <span class="text-gray-700 font-medium" x-text="Helpers.formatDate(series.appointments[0]?.date)"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cancel button (only if active) -->
+                                    <template x-if="series.status_id != 0">
+                                        <button @click="callModal($el)" data-modal="cancel_series" :data-obj="JSON.stringify({id: series.id, time_start: series.time_start, date: series.date, count: series.appointments.length})" class="w-8 h-8 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition-colors flex-shrink-0" title="Анулирай серията">
+                                            <i class="fa-solid fa-ban text-sm"></i>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Empty state -->
+                        <template x-if="!data.my_doctors_appointments_series || data.my_doctors_appointments_series.length === 0">
+                            <p class="text-sm text-gray-400 text-center py-4">Няма активни серии</p>
+                        </template>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== ADD APPOINTMENT MODAL ==================== -->
+<template x-if="data.modals.add_appointment">
+    <div x-data="{visitType: 'in_person', selectedCabinetIndex : 0, selectedTime: null, date: '', mode: 'single' }">
+        <form>
+            <input type="hidden" :value="data.doctors_records.client_id" name="client_id">
+            <input type="hidden" :value="date" name="date">
+            <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="callModal($el)" data-modal="add_appointment"></div>
+
+                <!-- Modal -->
+                <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden max-h-[90vh] flex flex-col" @click.stop>
+
+                    <!-- Header -->
+                    <div class="relative bg-gray-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
+                        <h3 class="text-lg font-bold text-gray-700">Добави час</h3>
+                        <button type="button" @click="callModal($el)" data-modal="add_appointment" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-500 transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Mode Switch -->
+                    <div class="px-6 pt-4 flex-shrink-0">
+                        <div class="flex bg-gray-100 rounded-xl p-1">
+                            <button type="button" @click="mode = 'single'" :class="mode === 'single' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500'" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-regular fa-calendar-check text-xs"></i>
+                                Единичен час
+                            </button>
+                            <button type="button" @click="mode = 'series'" :class="mode === 'series' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500'" class="flex-1 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-calendar-days text-xs"></i>
+                                Серия от часове
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="px-6 py-6 space-y-5 overflow-y-auto">
+
+                        <!-- Cabinet Select -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Кабинет</label>
+                            <select @change="selectedCabinetIndex = $event.target.selectedIndex" name="cabinet_id" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
+                                <template x-for="(cabinet,index) in data.doctors_records.doctors[0].cabinet_ids" :key="index">
+                                    <option x-text="cabinet.address" :value="cabinet.id"></option>
+                                </template>
+                            </select>
+                        </div>
+
+                        <!-- Service Select -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Услуга</label>
+                            <select name="service_id" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
+                                <template x-for="service in data.doctors_records.doctors[0].cabinet_ids[selectedCabinetIndex].services">
+                                    <option x-text="service.service.title" :value="service.service_id"></option>
+                                </template>
+                            </select>
+                        </div>
+
+                        <!-- ===== SINGLE MODE ===== -->
+                        <div x-show="mode === 'single'" x-transition class="space-y-5">
+
+                            <!-- Visit Type -->
+                            <template x-if="data.doctors_records.doctors[0].cabinet_ids[selectedCabinetIndex].online">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Тип на посещение</label>
+                                    <div class="flex gap-3">
+                                        <button type="button" @click="visitType = 'in_person'" :class="visitType === 'in_person' ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all">
+                                            <i class="fa-solid fa-hospital"></i>
+                                            Присъствено
+                                        </button>
+                                        <button type="button" @click="visitType = 'online'" :class="visitType === 'online' ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all">
+                                            <i class="fa-solid fa-video"></i>
+                                            Онлайн
+                                        </button>
+                                        <input type="hidden" name="online" :value="visitType === 'online' ? 1 : 0">
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Date -->
+                            <div x-data="DateHelper.date()">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Избери дата</label>
+                                <input @change="alpineListeners('get.doctors_timeslots', $event); date = $el.value" id="doctors_timeslots" keyName="openSlots" type="text" name="date_from" class="form-control !bg-white !text-[#333] w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm" placeholder="Избери дата">
+                            </div>
+
+                            <!-- Available Times (from API) -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Свободни часове</label>
+                                <template x-if="data.openSlots">
+                                    <div class="grid grid-cols-4 gap-2">
+                                        <template x-for="slot in data.openSlots[0].time_slots">
+                                            <button type="button" x-text="slot.time_start" @click="selectedTime = slot.time_start" class="px-3 py-2 rounded-lg border text-sm font-medium transition-all text-center" :class="slot.status_id != 1
+                                                                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed line-through'
+                                                                : (selectedTime === slot.time_start ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-primary-50')" :disabled="slot.status_id != 1"></button>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- ===== SERIES MODE ===== -->
+                        <div x-show="mode === 'series'" x-transition class="space-y-5">
+
+                            <!-- Начална дата -->
+                            <div x-data="DateHelper.date()">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Начална дата</label>
+                                <input @change="date = $el.value" type="text" class="form-control !bg-white !text-[#333] w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm" placeholder="Избери начална дата">
+                            </div>
+
+                            <!-- Период -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Период</label>
+                                <select name="period" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
+                                    <option value="1">1 месец</option>
+                                    <option value="2">2 месеца</option>
+                                    <option value="3">3 месеца</option>
+                                    <option value="4">4 месеца</option>
+                                    <option value="5">5 месеца</option>
+                                    <option value="6">6 месеца</option>
+                                </select>
+                            </div>
+
+                            <!-- Ден от седмицата -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Ден от седмицата</label>
+                                <select name="day" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
+                                    <template x-for="d in data.doctors_records.doctors[0].cabinet_ids[selectedCabinetIndex].schedule.dayOfWeek">
+                                        <option :value="d.id" x-text="d.title" :class="d.status_id == 0 ? 'text-gray-400' : ''"></option>
+                                    </template>
+                                </select>
+                            </div>
+
+                            <!-- Час (от работното време на кабинета) -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Час</label>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <template x-for="time in generateTimeSlots(data.doctors_records.doctors[0].cabinet_ids[selectedCabinetIndex].schedule)">
+                                        <button type="button" x-text="time" @click="selectedTime = time" class="px-3 py-2 rounded-lg border text-sm font-medium transition-all text-center" :class="selectedTime === time ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-primary-50'"></button>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="time_start" :value="selectedTime">
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="px-6 pb-6 flex gap-3 flex-shrink-0">
+                        <button type="button" @click="callModal($el)" data-modal="add_appointment" class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                            Отказ
+                        </button>
+
+                        <!-- Single appointment -->
+                        <button x-show="mode === 'single'" type="button" @click="alpineListeners('post.doctors_appointment', $event)" @success="get_doctors_appointments(); get_openSlots(); if(data.user.userlevel == 1){ callModal($el)}" class="flex-1 px-4 py-3 bg-accent-500 hover:bg-accent-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-accent-500/30">
+                            <i class="fa-solid fa-calendar-check mr-2"></i>Добави
+                        </button>
+
+                        <!-- Series -->
+                        <button x-show="mode === 'series'" type="button" @click="alpineListeners('post.doctors_appointment_series', $event)" @success="get_doctors_appointments(); get_series(); callModal($el)" class="flex-1 px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-primary-500/30">
+                            <i class="fa-solid fa-calendar-days mr-2"></i>Създай серия
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>
+
+<!-- ==================== SHARE WITH COLLEAGUE MODAL ==================== -->
+<template x-if="data.modals.share_colleague">
+    <div x-data="{
+        selectedColleague: null,
+    }">
+        <form>
+            <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="callModal($el)" data-modal="share_colleague"></div>
+
+                <!-- Modal -->
+                <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col" @click.stop>
+
+                    <!-- Header -->
+
+                    <div class="relative bg-gray-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
+                        <h3 class="text-lg font-bold text-gray-700">Сподели с колега</h3>
+                        <button type="button" @click="callModal($el)" data-modal="share_colleague" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-500 transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="px-6 py-6 space-y-5 overflow-y-auto">
+
+                        <p class="text-sm text-gray-500">Потърсете колега по име, за да споделите това досие.</p>
+
+                        <!-- Search -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Търсене по име</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                    <i class="fa-solid fa-search text-gray-400"></i>
+                                </div>
+                                <form>
+
+                                    <input type="text" name="name" keyName="colleagues" @input.debounce.500="alpineListeners('get.doctors', $event)" placeholder="Въведете име на колега..." class="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Results -->
+                        <div x-show="data.colleagues.result.length > 0" class="space-y-2">
+                            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Резултати</p>
+                            <template x-for="colleague in data.colleagues.result" :key="colleague.id">
+                                <div @click="selectedColleague = colleague" :class="selectedColleague?.id === colleague.id ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'" class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all">
+                                    <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-user-doctor text-primary-500"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="font-semibold text-gray-900 text-sm" x-text="colleague.user_info.names"></p>
+                                        <p class="text-xs text-gray-500" x-text="colleague.speciality.title"></p>
+                                    </div>
+                                    <div x-show="selectedColleague?.id === colleague.id" class="w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-check text-white text-xs"></i>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <input type="hidden" :value="data.pageUrl.id" name="record_id">
+                        <input type="hidden" :value="selectedColleague.id" name="doctor_id">
+
+                        <!-- No results -->
+                        <div x-show="data.colleagues.result.length == 0 && data.colleagues" class="text-center py-4">
+                            <i class="fa-solid fa-user-slash text-gray-300 text-3xl mb-2"></i>
+                            <p class="text-sm text-gray-400">Няма намерени колеги</p>
+                        </div>
+
+                        <!-- Selected info -->
+                        <div x-show="selectedColleague" class="flex items-center gap-3 p-3 bg-primary-50 border border-primary-200 rounded-xl">
+                            <i class="fa-solid fa-circle-check text-primary-500"></i>
+                            <p class="text-sm text-primary-800">Избран: <span class="font-semibold" x-text="selectedColleague.user_info.names"></span></p>
+                        </div>
+
+                        <input type="hidden" name="colleague_id" :value="selectedColleague?.id || ''">
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="px-6 pb-6 flex gap-3 flex-shrink-0">
+                        <button type="button" @click="callModal($el)" data-modal="share_colleague" @success="get_record()" class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                            Отказ
+                        </button>
+                        <button type="button" @click="alpineListeners('post.doctors_records_share', $event)" keyName="dummy" @success="callModal($el)" :disabled="!selectedColleague" :class="selectedColleague ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'bg-gray-200 text-gray-400 cursor-not-allowed'" class="flex-1 px-4 py-3 font-semibold rounded-xl transition-all">
+                            <i class="fa-solid fa-share mr-2"></i>Сподели
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>
+
+<!-- ==================== CANCEL APPOINTMENT MODAL ==================== -->
+<template x-if="data.modals.cancel_appointment">
+    <div x-data="{ cancelled: false }">
+        <form>
+            <input type="hidden" :value="data.modals.cancel_appointment.obj.id" name="record_id">
+            <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="callModal($el)" data-modal="cancel_appointment"></div>
+
+                <!-- Modal -->
+                <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden" @click.stop>
+
+                    <!-- Header -->
+                    <div class="relative px-6 py-4 flex items-center justify-between" :class="cancelled ? 'bg-primary-50' : 'bg-gray-100'">
+                        <h3 class="text-lg font-bold" :class="cancelled ? 'text-primary-700' : 'text-gray-700'" x-text="cancelled ? 'Часът е анулиран' : 'Отказване на час'"></h3>
+                        <button type="button" @click="callModal($el)" data-modal="cancel_appointment" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-500 transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Success State -->
+                    <div x-show="cancelled" x-transition class="px-6 py-10 text-center">
+                        <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-calendar-check text-primary-600 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">Успешно анулиран час</h4>
+                        <p class="text-gray-500 text-sm mb-1">
+                            <span x-text="data.modals.cancel_appointment.obj.date"></span> в <span x-text="data.modals.cancel_appointment.obj.time_start"></span>
+                        </p>
+                        <p class="text-gray-400 text-sm" x-text="data.modals.cancel_appointment.obj.service?.title || ''"></p>
+                    </div>
+
+                    <!-- Confirm State -->
+                    <div x-show="!cancelled">
+                        <!-- Body -->
+                        <div class="px-6 py-6 space-y-5">
+
+                            <!-- Appointment Info -->
+                            <div class="p-4 bg-gray-50 rounded-2xl space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-calendar-day text-red-500"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-400">Дата и час</p>
+                                        <p class="font-semibold text-gray-900" x-text="data.modals.cancel_appointment.obj.date + ' в ' + data.modals.cancel_appointment.obj.time_start"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-stethoscope text-purple-500"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-400">Услуга</p>
+                                        <p class="font-semibold text-gray-900" x-text="data.modals.cancel_appointment.obj.service?.title || '—'"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Warning -->
+                            <div class="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+                                <p class="text-sm text-amber-800">Сигурни ли сте, че искате да откажете този час? Действието е необратимо.</p>
+                            </div>
+
+                            <!-- Reason -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Причина <span class="text-gray-400 font-normal">(по желание)</span></label>
+                                <textarea name="note" rows="3" placeholder="Въведете причина за отказване..." class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-red-400 focus:ring-2 focus:ring-red-100 resize-none transition-colors text-sm"></textarea>
+                            </div>
+
+                            <input type="hidden" name="id" :value="data.modals.cancel_appointment.obj.id">
+                        </div>
+
+                        <!-- Footer - Confirm -->
+                        <div class="px-6 pb-6 flex gap-3">
+                            <button type="button" @click="callModal($el)" data-modal="cancel_appointment" class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                                Затвори
+                            </button>
+                            <button @click="alpineListeners('delete.doctors_appointment', $event)" @success="cancelled = true; get_doctors_appointments()" type="button" class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-red-500/30">
+                                <i class="fa-solid fa-xmark mr-2"></i>Откажи часа
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Footer - Success -->
+                    <div x-show="cancelled" class="px-6 pb-6">
+                        <button type="button" @click="callModal($el)" data-modal="cancel_appointment" class="w-full px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors">
+                            Затвори
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>
+
+<!-- ==================== CANCEL SERIES MODAL ==================== -->
+<template x-if="data.modals.cancel_series">
+    <div x-data="{ cancelled: false }">
+        <form>
+            <input type="hidden" :value="data.modals.cancel_series.obj.id" name="id">
+            <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="callModal($el)" data-modal="cancel_series"></div>
+
+                <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden" @click.stop>
+
+                    <!-- Header -->
+                    <div class="relative px-6 py-4 flex items-center justify-between" :class="cancelled ? 'bg-primary-50' : 'bg-gray-100'">
+                        <h3 class="text-lg font-bold" :class="cancelled ? 'text-primary-700' : 'text-gray-700'" x-text="cancelled ? 'Серията е анулирана' : 'Анулиране на серия'"></h3>
+                        <button type="button" @click="callModal($el)" data-modal="cancel_series" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-500 transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Success -->
+                    <div x-show="cancelled" x-transition class="px-6 py-8 text-center">
+                        <div class="w-14 h-14 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa-solid fa-check text-primary-600 text-xl"></i>
+                        </div>
+                        <p class="text-gray-700 font-medium">Серията беше анулирана успешно.</p>
+                    </div>
+
+                    <!-- Confirm -->
+                    <div x-show="!cancelled">
+                        <div class="px-6 py-6 space-y-4">
+                            <!-- Series info -->
+                            <div class="p-4 bg-gray-50 rounded-2xl space-y-2 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-regular fa-calendar text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">От:</span>
+                                    <span class="font-medium text-gray-900" x-text="Helpers.formatDate(data.modals.cancel_series.obj.date)"></span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-regular fa-clock text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Час:</span>
+                                    <span class="font-medium text-gray-900" x-text="data.modals.cancel_series.obj.time_start"></span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-regular fa-calendar-check text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Часове:</span>
+                                    <span class="font-medium text-gray-900" x-text="data.modals.cancel_series.obj.count"></span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+                                <p class="text-sm text-amber-800">Всички предстоящи часове от тази серия ще бъдат анулирани.</p>
+                            </div>
+                        </div>
+
+                        <div class="px-6 pb-6 flex gap-3">
+                            <button type="button" @click="callModal($el)" data-modal="cancel_series" class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                                Затвори
+                            </button>
+                            <button @click="alpineListeners('delete.doctors_appointment_series', $event)" @success="cancelled = true; get_doctors_appointments(); get_series()" type="button" class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-red-500/30">
+                                <i class="fa-solid fa-ban mr-2"></i>Анулирай
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Footer - Success -->
+                    <div x-show="cancelled" class="px-6 pb-6">
+                        <button type="button" @click="callModal($el)" data-modal="cancel_series" class="w-full px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors">
+                            Затвори
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>
+
+<form>
+    <div id="record" :data-id="data.pageUrl.id"></div>
+</form>
+
+<form>
+    <div id="doctors_appointments" data-limit="1000" :data-record_id="data.pageUrl.id"></div>
+</form>
+
+<form>
+    <div id="series" :data-record_id="data.pageUrl.id"></div>
+</form>
+
+<script>
+    function get_record() {
+        alpineListeners('get.doctors_records', document.getElementById('record'));
+    }
+    function get_doctors_appointments() {
+        alpineListeners('get.doctors_appointments', document.getElementById('doctors_appointments'));
+    }
+    function get_openSlots() {
+        alpineListeners('get.doctors_timeslots', document.getElementById('doctors_timeslots'));
+    }
+
+    function get_series() {
+        alpineListeners('get.my_doctors_appointments_series', document.getElementById('series'));
+    }
+
+    /**
+     * Извлича деня от седмицата от последния час в серията
+     */
+    var _dayNames = ['Неделя', 'Понеделник', 'Вторник', 'Сряда', 'Четвъртък', 'Петък', 'Събота'];
+    function seriesDayName(series) {
+        if (series.appointments && series.appointments.length > 0) {
+            var lastApt = series.appointments[series.appointments.length - 1];
+            var d = new Date(lastApt.date);
+            return _dayNames[d.getDay()];
+        }
+        return '—';
+    }
+
+    /**
+     * Генерира масив с часове от работното време на кабинета.
+     * schedule: { time_start: "08:00", time_end: "18:00", interval: 30 }
+     * Връща: ["08:00", "08:30", "09:00", ..., "17:30"]
+     */
+    function generateTimeSlots(schedule) {
+        if (!schedule || !schedule.time_start || !schedule.time_end || !schedule.interval) return [];
+        var slots = [];
+        var sp = schedule.time_start.split(':');
+        var ep = schedule.time_end.split(':');
+        var startMin = parseInt(sp[0]) * 60 + parseInt(sp[1]);
+        var endMin = parseInt(ep[0]) * 60 + parseInt(ep[1]);
+        var interval = parseInt(schedule.interval);
+        for (var m = startMin; m < endMin; m += interval) {
+            var h = Math.floor(m / 60);
+            var min = m % 60;
+            slots.push((h < 10 ? '0' + h : '' + h) + ':' + (min < 10 ? '0' + min : '' + min));
+        }
+        return slots;
+    }
+
+
+</script>

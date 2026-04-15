@@ -11,7 +11,7 @@ if (!defined("_VALID_PHP")) { die('Direct access to this location is not allowed
 function get($var)
 {
 	if (isset($_GET[$var]))
-		return $_GET[$var];
+		return htmlspecialchars($_GET[$var], ENT_QUOTES | ENT_HTML5, 'UTF-8');;
 }
 
 

@@ -37,3 +37,6 @@ Disallow: /
 
 User-agent: Omgili
 Disallow: /
+
+Allow: /llms.txt
+Allow: /llms-full.txt

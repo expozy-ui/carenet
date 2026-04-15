@@ -82,30 +82,51 @@ export class FormDataCollector {
             // добавяме в масива с детайли
             rawData.push({ name, type, value, included, checked });
             if (included) {
+                // FILE (оставям твоята логика отделно)
                 if (type === 'file') {
-
                     if (name.endsWith('[]')) {
                         if (!data[name]) data[name] = [];
 
-                        if (Array.isArray(value)) {
-                            data[name].push(...value); // 🔑 ключовото
-                        } else {
-                            data[name].push(value);
-                        }
-
+                        if (Array.isArray(value)) data[name].push(...value);
+                        else data[name].push(value);
                     } else {
                         data[name] = value;
                     }
+                }
 
-                } else if (name.endsWith('[]')) {
+                // 1) array[34][]
+                else if (/^([^\[]+)\[(\d+)\]\[\]$/.test(name)) {
+                    const [, rootKey, indexStr] = name.match(/^([^\[]+)\[(\d+)\]\[\]$/);
+                    const index = Number(indexStr);
 
-                    if (!data[name]) data[name] = [];
-                    data[name].push(value);
+                    if (!data[rootKey]) data[rootKey] = {};      // или [] ако предпочиташ
+                    if (!Array.isArray(data[rootKey][index])) data[rootKey][index] = [];
+                    data[rootKey][index].push(value);
+                }
 
-                } else {
+                // 2) array[34]
+                else if (/^([^\[]+)\[(\d+)\]$/.test(name)) {
+                    const [, rootKey, indexStr] = name.match(/^([^\[]+)\[(\d+)\]$/);
+                    const index = Number(indexStr);
+
+                    if (!data[rootKey]) data[rootKey] = {};      // или []
+                    data[rootKey][index] = value;
+                }
+
+                // 3) array[]
+                else if (/^([^\[]+)\[\]$/.test(name)) {
+                    const [, rootKey] = name.match(/^([^\[]+)\[\]$/);
+
+                    if (!Array.isArray(data[rootKey])) data[rootKey] = [];
+                    data[rootKey].push(value);
+                }
+
+                // 4) обикновени полета: title, price и т.н.
+                else {
                     data[name] = value;
                 }
             }
+
         });
         return { data, rawData };
     }

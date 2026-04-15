@@ -87,6 +87,12 @@
 		
 			
 		<?= $core->web['scripts']['header'] ?? '' ?>
+		
+		<?php 
+			require_once(BASEPATH.'core/classes/class.geo_optimizer.php');
+			$geo = new GeoOptimizer();
+			$geo->headTags();
+		?>
 	</head>
 
 	<!-- CSS FOR CURRENT PAGE GENERATOR FROM ALPINE -->
@@ -120,33 +126,77 @@
 			</div>
 
 
-<?php if($user->logged_in && $user->is_superAdmin()) { ?>
-	
-	<div style="display: none;" id="tailwindCss"></div>
-	<div style="width:100px;height: 50px;position: fixed;right: 100px;bottom: 60px;background-color: red;z-index: 1000;display: flex;justify-content: center;align-items: center;border-radius: 25px;color: white;font-weight: bold;letter-spacing: 1.2px;font-size: 18px;cursor: pointer;" id="dev_save">Save</div>
-	<script src="/assets/plugins/tailwindcss.3.3.1.js"></script>
 
 
-	<script>
 
-		 const allSizes = Array.from({ length: 401 }, (_, i) => `size-${i}`);
 
-		  tailwind.config = {
-		    darkMode: 'class',
-			    content: [
-    				  './src/**/*.{html,js,jsx,ts,tsx}',
-    			],
+	<?php if(defined('DEV_MODE') && DEV_MODE) { ?>
 
-   			 // Блокваме размерите заради едитора. 
-   			 blocklist: allSizes,
+		<div style="display: none;" id="tailwindCss"></div>
+			<script src="/assets/plugins/tailwindcss.3.3.1.js"></script>
+
+				<script>
+				const allSizes = Array.from({ length: 401 }, (_, i) => `size-${i}`);
+
+				tailwind.config = {
+					darkMode: 'class',
+						content: [
+							'./src/**/*.{html,js,jsx,ts,tsx}',
+						],
+
+					// Блокваме размерите заради едитора.
+					blocklist: allSizes,
+
+					theme: {
+						extend: {
+							colors: {
+								primary: {
+									50: '#eff6ff',
+									100: '#dbeafe',
+									200: '#bfdbfe',
+									300: '#93c5fd',
+									400: '#60a5fa',
+									500: '#3b82f6',
+									600: '#2563eb',
+									700: '#1d4ed8',
+									800: '#1e40af',
+									900: '#1e3a8a',
+								},
+								accent: {
+									50: '#fff7ed',
+									100: '#ffedd5',
+									200: '#fed7aa',
+									300: '#fdba74',
+									400: '#fb923c',
+									500: '#ee8236',
+									600: '#ea580c',
+									700: '#c2410c',
+									800: '#9a3412',
+									900: '#7c2d12',
+								},
+							},
+						},
+					},
+					}
+			</script>
+
+
+			<?php if($user->logged_in && $user->is_superAdmin()) { ?>
+
+			<div style="width:100px;height: 50px;position: fixed;right: 100px;bottom: 60px;background-color: red;z-index: 1000;display: flex;justify-content: center;align-items: center;border-radius: 25px;color: white;font-weight: bold;letter-spacing: 1.2px;font-size: 18px;cursor: pointer;" id="dev_save">Save</div>
+			<div style="width:120px;height: 50px;position: fixed;right: 100px;bottom: 120px;background-color: #7c3aed;z-index: 1000;display: flex;justify-content: center;align-items: center;border-radius: 25px;color: white;font-weight: bold;letter-spacing: 1.2px;font-size: 14px;cursor: pointer;" id="dev_scan_all">Scan All</div>
+
+			<script type="module" src="/components/core/dev_save.js?v=<?php echo JS_VERSION ?>" ></script>
+
+			<?php } ?>
+
+	<?php } ?>
+
+
+
 			
-		 	 }
-	</script>
-
-	<script type="module" src="\components\core\dev_save.js?v=<?php echo JS_VERSION ?>" ></script>
 
 
-<?php } ?>
 
 
 

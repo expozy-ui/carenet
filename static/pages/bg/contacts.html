@@ -1,0 +1,214 @@
+<!-- Main Content -->
+<main class="flex-1">
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-primary-500 to-primary-700 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 lg:px-8 py-16 lg:py-20">
+            <div class="max-w-3xl">
+                <h1 class="text-3xl lg:text-5xl font-bold mb-6">Свържете се с нас</h1>
+                <p class="text-xl text-primary-100 leading-relaxed">
+                    Имате въпроси или нужда от помощ? Екипът на SuperCare е тук, за да ви помогне.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 lg:px-8 py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+            <!-- Contact Info -->
+            <div class="lg:col-span-1">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Информация за контакт</h2>
+
+                <div class="space-y-6">
+                    <!-- Email -->
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-envelope text-primary-600 text-xl" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-1">Имейл</h3>
+                            <a href="mailto:info@supercare.bg" class="text-primary-600 hover:text-primary-700">info@supercare.bg</a>
+                            <p class="text-sm text-gray-500 mt-1">Отговаряме в рамките на 24 часа</p>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-phone text-primary-600 text-xl" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-1">Телефон</h3>
+                            <a href="tel:+359 882 212 330" class="text-primary-600 hover:text-primary-700">+359 882 212 330</a>
+                            <p class="text-sm text-gray-500 mt-1">Пон - Пет: 09:00 - 18:00</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Social Links -->
+                <div class="mt-10">
+                    <h3 class="font-semibold text-gray-900 mb-4">Последвайте ни</h3>
+                    <div class="flex items-center gap-3">
+                        <a href="#" class="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-pink-600 hover:bg-pink-700 text-white rounded-xl flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-sky-500 hover:bg-sky-600 text-white rounded-xl flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-blue-700 hover:bg-blue-800 text-white rounded-xl flex items-center justify-center transition-colors">
+                            <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Изпратете ни съобщение</h2>
+
+                    <form>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <!-- Name -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Вашето име *</label>
+                                <input type="text" name="name" required="" placeholder="Иван Иванов" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Имейл адрес *</label>
+                                <input type="email" name="email" required="" placeholder="ivan@example.com" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Телефон (по желание)</label>
+                            <input type="tel" name="phone" placeholder="+359 888 123 456" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Тема *</label>
+                            <select name="subject" required="" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                                <option value="">Изберете тема</option>
+                                <option value="general">Общо запитване</option>
+                                <option value="support">Техническа поддръжка</option>
+                                <option value="doctor">Регистрация на специалист</option>
+                                <option value="clinic">Регистрация на клиника</option>
+                                <option value="feedback">Обратна връзка</option>
+                                <option value="partnership">Партньорство</option>
+                                <option value="other">Друго</option>
+                            </select>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Вашето съобщение *</label>
+                            <textarea name="message" rows="5" required="" placeholder="Напишете вашето съобщение тук..." class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors resize-none"></textarea>
+                        </div>
+
+                        <!-- Privacy -->
+                        <div class="mb-6">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="checkbox" name="privacy" required="" class="w-5 h-5 text-primary-500 rounded border-gray-300 focus:ring-primary-500 mt-0.5">
+                                <span class="text-sm text-gray-600">
+                                    Съгласен/а съм с <a href="/bg/gdpr" class="text-primary-600 hover:text-primary-700 underline">Политиката за поверителност</a> и обработката на личните ми данни.
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="submit" class="w-full sm:w-auto bg-accent-500 hover:bg-accent-600 text-white font-semibold px-8 py-4 rounded-xl transition-colors shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                            Изпрати съобщение
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="mt-20">
+            <div class="text-center mb-12">
+                <span class="inline-block bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">ЧЗВ</span>
+                <h2 class="text-3xl font-bold text-gray-900">Често задавани въпроси</h2>
+            </div>
+
+            <div class="max-w-3xl mx-auto" x-data="{ openFaq: null }">
+                <!-- FAQ 1 -->
+                <div class="border-b border-gray-200">
+                    <button @click="openFaq = openFaq === 1 ? null : 1" class="w-full py-5 flex items-center justify-between text-left">
+                        <span class="font-semibold text-gray-900">Как да си запазя час при специалист?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform openFaq === 1 ?  rotate-180  :    openFaq === 2 ?  rotate-180  :    openFaq === 3 ?  rotate-180  :    openFaq === 4 ?  rotate-180  :    openFaq === 5 ?  rotate-180  :    openFaq === 6 ?  rotate-180  :    openFaq === 1 ?  rotate-180  :    openFaq === 2 ?  rotate-180  :    openFaq === 3 ?  rotate-180  :    openFaq === 4 ?  rotate-180  :    openFaq === 5 ?  rotate-180  :    openFaq === 6 ?  rotate-180  :    openFaq === 1 ?  rotate-180  :    openFaq === 2 ?  rotate-180  :    openFaq === 3 ?  rotate-180  :    openFaq === 4 ?  rotate-180  :    openFaq === 5 ?  rotate-180  :    openFaq === 6 ?  rotate-180  :    openFaq === 1 ?  rotate-180  :    openFaq === 2 ?  rotate-180  :    openFaq === 3 ?  rotate-180  :    openFaq === 4 ?  rotate-180  :    openFaq === 5 ?  rotate-180  :    openFaq === 6 ?  rotate-180  :    openFaq === 1 ?  rotate-180  :    openFaq === 2 ?  rotate-180  :    openFaq === 3 ?  rotate-180  :    openFaq === 4 ?  rotate-180  :    openFaq === 5 ?  rotate-180  :    openFaq === 6 ?  rotate-180  :   " :class="openFaq === 1 ? 'rotate-180' : ''" aria-hidden="true"></i>
+                    </button>
+                    <div x-show="openFaq === 1" x-collapse="" class="pb-5">
+                        <p class="text-gray-600">Използвайте търсачката, за да намерите специалист по специалност или име. След това изберете удобен за вас ден и час от календара на специалиста — часът се запазва директно. Ще получите потвърждение по имейл.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border-b border-gray-200">
+                    <button @click="openFaq = openFaq === 2 ? null : 2" class="w-full py-5 flex items-center justify-between text-left">
+                        <span class="font-semibold text-gray-900">Безплатна ли е услугата за потребители?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform" :class="openFaq === 2 ? 'rotate-180' : ''" aria-hidden="true"></i>
+                    </button>
+                    <div x-show="openFaq === 2" x-collapse="" class="pb-5">
+                        <p class="text-gray-600">Да, регистрацията и записването на часове през SuperCare е напълно безплатно за потребители. Използването на платформата от специалистите е възможно чрез абонамент. Повече информация за абонамента ще откриете в секция Резюме на платформата.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border-b border-gray-200">
+                    <button @click="openFaq = openFaq === 3 ? null : 3" class="w-full py-5 flex items-center justify-between text-left">
+                        <span class="font-semibold text-gray-900">Как мога да отменя или променя резервация?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform" :class="openFaq === 3 ? 'rotate-180' : ''" aria-hidden="true"></i>
+                    </button>
+                    <div x-show="openFaq === 3" x-collapse="" class="pb-5">
+                        <p class="text-gray-600">Влезте в профила си и отидете на "Моите часове". Там можете да видите всичките си резервации и да отмените или промените всяка от тях. Промените са възможни до 24 часа преди часа.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border-b border-gray-200">
+                    <button @click="openFaq = openFaq === 4 ? null : 4" class="w-full py-5 flex items-center justify-between text-left">
+                        <span class="font-semibold text-gray-900">Как мога да се регистрирам като специалист?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform" :class="openFaq === 4 ? 'rotate-180' : ''" aria-hidden="true"></i>
+                    </button>
+                    <div x-show="openFaq === 4" x-collapse="" class="pb-5">
+                        <p class="text-gray-600">Натиснете бутона "Регистрация" и изберете "Регистрация като специалист". Попълнете формуляра с вашите данни. Нашият екип ще прегледа заявката ви и ще се свърже с вас. Първият месец е напълно безплатен! След изтичането на безплатния период използването на платформата от специалистите е възможно чрез абонамент. Повече информация за абонамента ще откриете в секция Резюме на платформата. Абонаментът може да се прекрати по всяко време.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="border-b border-gray-200">
+                    <button @click="openFaq = openFaq === 5 ? null : 5" class="w-full py-5 flex items-center justify-between text-left">
+                        <span class="font-semibold text-gray-900">Мога ли да се свържа директно със специалист през платформата?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform" :class="openFaq === 5 ? 'rotate-180' : ''" aria-hidden="true"></i>
+                    </button>
+                    <div x-show="openFaq === 5" x-collapse="" class="pb-5">
+                        <p class="text-gray-600">Да, след като имате записан час при даден специалист, можете да му изпратите съобщение през вградената система за съобщения в платформата.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="border-b border-gray-200">
+                    <button @click="openFaq = openFaq === 6 ? null : 6" class="w-full py-5 flex items-center justify-between text-left">
+                        <span class="font-semibold text-gray-900">Как се защитават личните ми данни?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform" :class="openFaq === 6 ? 'rotate-180' : ''" aria-hidden="true"></i>
+                    </button>
+                    <div x-show="openFaq === 6" x-collapse="" class="pb-5">
+                        <p class="text-gray-600">SuperCare спазва всички изисквания на GDPR и използва криптиране на данните. Вашата терапевтична информация е достъпна само за вас и избраните от вас специалисти. За повече информация прочетете нашата Политика за поверителност.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

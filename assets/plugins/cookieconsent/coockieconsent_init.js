@@ -1,4 +1,6 @@
 var lang = localStorage.getItem('lang');
+lang = 'bg';
+
 if (lang != 'bg' && lang != 'en') {
     lang = 'en';
 }

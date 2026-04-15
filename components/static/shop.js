@@ -108,7 +108,7 @@ export let Shop = {
 	},
 
 	delete_wishlist: async function (dataCollect) {
-		debugger;
+		;
 		let api = new ApiClass();
 		await api.delete(`wishlist/${dataCollect.combinedData.id}`);
 		return api.response;

@@ -1,0 +1,293 @@
+<!-- Load cities data -->
+<div apiData="get.cities"></div>
+
+<!-- Main Content -->
+<main class="flex-1" apiData="get.doctors_clinics" :data-id="data.pageUrl.id" keyName="clinic">
+
+    <!-- Page Header -->
+    <div class="bg-white border-b border-gray-100">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <!-- Back Button -->
+            <a href="/bg/clinics" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium mb-4 transition-colors">
+                <i class="fa-solid fa-arrow-left"></i>
+                Обратно към заведения
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Clinic Header Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8" x-data="{
+                activeImage: 0,
+                lightbox: false,
+                lightboxIdx: 0,
+                get images() { return data.clinic.images && data.clinic.images.length ? data.clinic.images : null; },
+                openLightbox(idx) { this.lightboxIdx = idx; this.lightbox = true; },
+                prevImg() { this.lightboxIdx = (this.lightboxIdx - 1 + this.images.length) % this.images.length; },
+                nextImg() { this.lightboxIdx = (this.lightboxIdx + 1) % this.images.length; }
+             }" @keydown.escape.window="lightbox = false" @keydown.arrow-left.window="if(lightbox) prevImg()" @keydown.arrow-right.window="if(lightbox) nextImg()">
+
+            <!-- Layout: image left + info right on md+ -->
+            <div class="flex flex-col md:flex-row">
+
+                <!-- Image Panel -->
+                <div class="relative md:w-2/5 lg:w-[420px] flex-shrink-0 bg-gray-100 min-h-[260px] md:min-h-0">
+
+                    <!-- Main Image -->
+                    <div class="relative h-64 md:h-full cursor-zoom-in" @click="images && openLightbox(activeImage)">
+                        <img :src="images ? images[activeImage].url : Helpers.image('product')" :alt="data.clinic.title" class="w-full h-full object-cover">
+
+                        <!-- Zoom hint -->
+                        <template x-if="images">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20">
+                                <div class="bg-white/80 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                    <span>Увеличи</span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Type badge -->
+                        <template x-if="data.clinic.type && data.clinic.type.title">
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-primary-700 px-2.5 py-1 rounded-full text-xs font-semibold shadow" x-text="data.clinic.type.title"></span>
+                        </template>
+
+                        <!-- Image counter -->
+                        <template x-if="images && images.length > 1">
+                            <span class="absolute top-3 right-3 bg-black/40 backdrop-blur-sm text-white px-2 py-1 rounded-lg text-xs font-medium">
+                                <i class="fa-solid fa-images mr-1 text-[10px]"></i>
+                                <span x-text="activeImage + 1"></span>/<span x-text="images.length"></span>
+                            </span>
+                        </template>
+                    </div>
+
+                    <!-- Thumbnail strip -->
+                    <template x-if="images && images.length > 1">
+                        <div class="flex gap-1.5 p-2 bg-gray-50 border-t border-gray-100 overflow-x-auto">
+                            <template x-for="(img, idx) in images" :key="img.id">
+                                <button type="button" :title="'Снимка ' + (idx+1)" @click="activeImage = idx" :class="activeImage === idx ? 'ring-2 ring-primary-500' : 'opacity-60 hover:opacity-100'" class="flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden transition-all">
+                                    <img :src="img.url_10x10 || img.url" :alt="'Снимка ' + (idx+1)" class="w-full h-full object-cover">
+                                </button>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="flex-1 p-6 lg:p-8 flex flex-col justify-center">
+                    <!-- Type Badge (mobile — only if no image panel shows it) -->
+                    <template x-if="data.clinic.type && data.clinic.type.title">
+                        <span class="md:hidden inline-block bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-xs font-semibold mb-3 self-start" x-text="data.clinic.type.title"></span>
+                    </template>
+
+                    <!-- Name -->
+                    <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-5" x-text="data.clinic.title"></h1>
+
+                    <!-- Contact Info -->
+                    <div class="space-y-3">
+                        <!-- City + Address -->
+                        <template x-if="data.clinic.address || data.clinic.city_id">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-location-dot text-primary-500"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Адрес</p>
+                                    <span class="text-gray-700 text-sm leading-snug" x-text="(Object.values(data.cities).find(obj => obj.id == data.clinic.city_id)?.title ? Object.values(data.cities).find(obj => obj.id == data.clinic.city_id).title + ', ' : '') + (data.clinic.address || '')"></span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Phone -->
+                        <template x-if="data.clinic.phone">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-phone text-blue-500"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Телефон</p>
+                                    <a :href="'tel:' + data.clinic.phone" class="text-gray-700 text-sm hover:text-primary-600 transition-colors" x-text="data.clinic.phone"></a>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Email -->
+                        <template x-if="data.clinic.email">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-envelope text-purple-500"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Имейл</p>
+                                    <a :href="'mailto:' + data.clinic.email" class="text-gray-700 text-sm hover:text-primary-600 transition-colors" x-text="data.clinic.email"></a>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Website -->
+                        <template x-if="data.clinic.url">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 bg-teal-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-globe text-teal-500"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Уебсайт</p>
+                                    <a :href="data.clinic.url" target="_blank" class="text-gray-700 text-sm hover:text-primary-600 transition-colors" x-text="data.clinic.url.replace(/^https?:\/\//, '')"></a>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Working Time -->
+                        <template x-if="data.clinic.working_time">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-clock text-amber-500"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Работно време</p>
+                                    <span class="text-gray-700 text-sm" x-text="data.clinic.working_time"></span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lightbox -->
+            <div x-show="lightbox" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90" @click.self="lightbox = false">
+
+                <!-- Close -->
+                <button type="button" title="Затвори" @click="lightbox = false" class="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors z-10">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+
+                <!-- Counter -->
+                <template x-if="images">
+                    <span class="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 text-sm font-medium">
+                        <span x-text="lightboxIdx + 1"></span> / <span x-text="images.length"></span>
+                    </span>
+                </template>
+
+                <!-- Prev -->
+                <template x-if="images && images.length > 1">
+                    <button type="button" title="Предишна снимка" @click="prevImg()" class="absolute left-3 md:left-6 w-11 h-11 bg-white/10 hover:bg-white/25 rounded-full flex items-center justify-center text-white transition-colors">
+                        <i class="fa-solid fa-chevron-left text-lg"></i>
+                    </button>
+                </template>
+
+                <!-- Image -->
+                <template x-if="images">
+                    <img :src="images[lightboxIdx].url" :alt="'Снимка ' + (lightboxIdx + 1)" class="max-w-[90vw] max-h-[88vh] object-contain rounded-xl shadow-2xl select-none">
+                </template>
+
+                <!-- Next -->
+                <template x-if="images && images.length > 1">
+                    <button type="button" title="Следваща снимка" @click="nextImg()" class="absolute right-3 md:right-6 w-11 h-11 bg-white/10 hover:bg-white/25 rounded-full flex items-center justify-center text-white transition-colors">
+                        <i class="fa-solid fa-chevron-right text-lg"></i>
+                    </button>
+                </template>
+
+                <!-- Dot indicators -->
+                <template x-if="images && images.length > 1">
+                    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+                        <template x-for="(img, idx) in images" :key="idx">
+                            <button type="button" :title="'Снимка ' + (idx + 1)" @click="lightboxIdx = idx" :class="lightboxIdx === idx ? 'bg-white w-5' : 'bg-white/40 w-2'" class="h-2 rounded-full transition-all duration-300">
+                            </button>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <template x-if="data.clinic.description">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 mb-8">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-primary-500"></i>
+                    Описание
+                </h2>
+                <p class="text-gray-600 leading-relaxed" x-text="data.clinic.description"></p>
+            </div>
+        </template>
+
+        <!-- Google Maps -->
+        <template x-if="data.clinic.address">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+                <div class="px-6 lg:px-8 pt-6 pb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-primary-500"></i>
+                    <h2 class="text-xl font-bold text-gray-900">Местоположение</h2>
+                </div>
+                <iframe :src="'https://maps.google.com/maps?q=' + encodeURIComponent((Object.values(data.cities).find(obj => obj.id == data.clinic.city_id)?.title ? Object.values(data.cities).find(obj => obj.id == data.clinic.city_id).title + ', ' : '') + (data.clinic.address || '')) + '&output=embed&hl=bg'" title="Местоположение на заведението в Google Maps" class="w-full h-72 border-0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </template>
+
+        <!-- Doctors Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-user-doctor text-primary-500"></i>
+                    Специалисти в това заведение
+                    <span class="text-gray-400 font-normal text-base">(<span x-text="data.doctors.pagination.total_results"></span>)</span>
+                </h2>
+            </div>
+
+            <!-- Doctors Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" apiData="get.doctors" :data-clinic_id="data.pageUrl.id" keyName="doctors">
+                <template x-for="doctor in data.doctors.result" :key="doctor.id">
+                    <div @click="href('/bg/doctor?id=' + doctor.id)" class="bg-gray-50 rounded-2xl p-4 hover:bg-gray-100 hover:shadow-md transition-all cursor-pointer">
+                        <div class="flex gap-4">
+                            <!-- Doctor Avatar -->
+                            <img :src="doctor.avatar.url ? doctor.avatar.url : Helpers.image('user')" :alt="doctor.user_info.names" class="w-16 h-16 rounded-xl object-cover flex-shrink-0">
+
+                            <!-- Doctor Info -->
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 truncate" x-text="doctor.user_info.names"></h3>
+                                <p class="text-primary-600 text-sm font-medium" x-text="doctor.speciality.title"></p>
+
+                                <!-- Rating -->
+                                <template x-if="doctor.rating_avg > 0">
+                                    <div class="flex items-center gap-1 mt-1">
+                                        <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+                                        <span class="font-semibold text-gray-900 text-sm" x-text="doctor.rating_avg"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-1.5 mt-3" x-show="doctor.nzok || doctor.children || doctor.home_visits">
+                            <template x-if="doctor.nzok">
+                                <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">НЗОК</span>
+                            </template>
+                            <template x-if="doctor.children">
+                                <span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded text-xs font-medium">Деца</span>
+                            </template>
+                            <template x-if="doctor.home_visits">
+                                <span class="bg-orange-50 text-orange-700 px-2 py-0.5 rounded text-xs font-medium">Домашни посещения</span>
+                            </template>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="flex items-center justify-end mt-3 pt-3 border-t border-gray-200">
+                            <span class="text-primary-600 text-sm font-medium flex items-center gap-1">
+                                Профил
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Empty State -->
+            <div x-show="data.doctors.result.length === 0" class="text-center py-12">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-user-doctor text-gray-400 text-2xl"></i>
+                </div>
+                <p class="text-gray-500">Няма намерени специалисти в това заведение</p>
+            </div>
+        </div>
+    </div>
+</main>
