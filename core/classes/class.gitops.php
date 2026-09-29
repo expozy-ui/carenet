@@ -64,15 +64,15 @@ class GitOps
 				global $core;
 				
 				$owner =  self::get_current_repo_owner();
-				Api::data(['github_token'=> $github_token,'github_route' => 'create_repo', 'owner' =>$owner])->post()->git();
- 
-				
-				$r1 = shell_exec("git add ."); 
-				$r2 = shell_exec('git commit -m "new commit"');
-				$r3 = shell_exec("git remote set-url origin https://{$github_token}@github.com/{$owner}/{$core->site_name}.git");
-				$r4 = shell_exec('git push -u origin main');
-				
-				return "{$r1}</br>{$r2}</br>{$r3}</br>{$r4}</br>";
+				$create = Api::data(['github_token'=> $github_token,'github_route' => 'create_repo', 'owner' =>$owner, 'repo_name' => $core->site_name])->post()->git();
+				$r0 = htmlspecialchars(print_r($create, true));
+
+				$r1 = shell_exec("git add . 2>&1");
+				$r2 = shell_exec('git commit -m "new commit" 2>&1');
+				$r3 = shell_exec("git remote set-url origin https://{$github_token}@github.com/{$owner}/{$core->site_name}.git 2>&1");
+				$r4 = shell_exec('git push -u origin main 2>&1');
+
+				return str_replace($github_token, '***', "create_repo: {$r0}</br>{$r1}</br>{$r2}</br>{$r3}</br>push: {$r4}</br>");
 		}
 		
 		private static function deleteFiles($target) {
