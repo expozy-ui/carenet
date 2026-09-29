@@ -13,6 +13,7 @@ class FrontCore
 	{
 		$this->get_settings();
 		$this->get_id();
+		$this->site_name = 'carenet';
 	}
 
 

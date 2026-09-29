@@ -2,6 +2,13 @@
 # -MultiViews: Turns off multiviews -Indexes: Stop directory listings +FollowSymlinks: Let out rewrite rules work
 Options -MultiViews -Indexes +FollowSymlinks
 
+
+# ===== Password Protection =====
+#AuthType Basic
+#AuthName "Supercare - Restricted Access"
+#AuthUserFile /home/supercare/web/supercare.bg/public_html/.htpasswd
+#Require valid-user
+
 # Error Documents
 #ErrorDocument 404 /error_404.php
 
@@ -34,15 +41,6 @@ Options -MultiViews -Indexes +FollowSymlinks
  ExpiresByType text/x-javascript "access plus 1 month"
  ExpiresByType application/x-javascript "access plus 1 month"
  ExpiresByType application/javascript "access plus 1 month"
- #ExpiresByType text/html "access 1 month"
- #ExpiresByType application/pdf "access 1 month"
- #ExpiresByType application/x-shockwave-flash "access 1 month"
- #ExpiresByType image/x-icon "access 1 year"
- #ExpiresDefault "access 1 month"
- #ExpiresByType image/jpg "access 1 year"
- #ExpiresByType image/jpeg "access 1 year"
- #ExpiresByType image/gif "access 1 year"
- #ExpiresByType image/png "access 1 year"
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -79,3 +77,4 @@ Options -MultiViews -Indexes +FollowSymlinks
 
 
 </IfModule>
+

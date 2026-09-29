@@ -1,3 +1,6 @@
+<!-- Виж коментара в search.html — "id" от /clinic?id=X изтича при навигация Назад -->
+<div x-init="delete data.pageUrl.id"></div>
+
 <!-- Main Content -->
 <main class="flex-1">
 
@@ -92,9 +95,7 @@
                         <div @click="href(`/clinic?id=${clinic.id}`)" class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col">
                             <!-- Main Image -->
                             <div class="relative h-44 overflow-hidden flex-shrink-0">
-                                <img :src="clinic.images && clinic.images.length > 0 ? clinic.images[0].url : Helpers.image('product')"
-                                     :alt="clinic.title"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <img :src="clinic.images && clinic.images.length > 0 ? clinic.images[0].url : Helpers.image('product')" :alt="clinic.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 <!-- Overlay gradient for readability -->
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                                 <!-- Type badge -->

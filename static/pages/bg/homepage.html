@@ -1,7 +1,8 @@
 <div class="w-full">
 
     <!-- Hero Section with Search -->
-    <section class="bg-gradient-to-br from-primary-50 via-white to-primary-50 py-16 lg:py-24 w-full" x-data="{ searchType: 'specialist' }">
+    <section class="bg-gradient-to-br from-primary-50 via-white to-primary-50 py-16 lg:py-24 w-full"
+        x-data="{ searchType: 'specialist' }">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-10">
                 <!-- Brand Logo -->
@@ -17,24 +18,31 @@
             <!-- Search Toggle -->
             <div class="flex justify-center mb-6">
                 <div class="bg-white rounded-full p-1 shadow-md inline-flex">
-                    <button @click="searchType = 'specialist'" :class="searchType === 'specialist' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:text-primary-600'" class="px-6 py-2 rounded-full font-medium transition-all">
+                    <button @click="searchType = 'specialist'"
+                        :class="searchType === 'specialist' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:text-primary-600'"
+                        class="px-6 py-2 rounded-full font-medium transition-all">
                         <i class="fa-solid fa-user-doctor mr-2"></i>Специалист
                     </button>
-                    <button @click="searchType = 'clinic'" :class="searchType === 'clinic' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:text-primary-600'" class="px-6 py-2 rounded-full font-medium transition-all">
+                    <button @click="searchType = 'clinic'"
+                        :class="searchType === 'clinic' ? 'bg-primary-500 text-white' : 'text-gray-600 hover:text-primary-600'"
+                        class="px-6 py-2 rounded-full font-medium transition-all">
                         <i class="fa-solid fa-hospital mr-2"></i>Центрове и кабинети
                     </button>
                 </div>
             </div>
 
             <!-- Search Form - Specialist -->
-            <div x-show="searchType === 'specialist'" x-transition class="bg-white rounded-2xl shadow-xl p-6 lg:p-8 max-w-6xl mx-auto" apiData="get.doctors_specialities">
+            <div x-show="searchType === 'specialist'" x-transition
+                class="bg-white rounded-2xl shadow-xl p-6 lg:p-8 max-w-6xl mx-auto" apiData="get.doctors_specialities">
                 <form action="/bg/search">
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4" x-data="{ filterRegion : 'empty'}">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4" x-data="{ filterRegion : 'empty'}">
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Специалност</label>
                             <div class="relative">
-                                <i class="fa-solid fa-stethoscope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <select name="speciality_id" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
+                                <i
+                                    class="fa-solid fa-stethoscope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <select name="speciality_id"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
                                     <option value="empty">Избери специалност</option>
                                     <template x-for="specialtity in Object.values(data.doctors_specialities).reverse()">
                                         <option :value="specialtity.id" x-text="specialtity.title">Кардиолог</option>
@@ -46,13 +54,17 @@
                         <div class="md:col-span-1" apiData="get.regions">
                             <div class="flex items-center justify-between mb-2">
                                 <label class="block text-sm font-medium text-gray-700">Населено място</label>
-                                <button type="button" @click="geoLocateAndRedirect($el)" class="w-9 h-9 -my-2 rounded-lg text-primary-500 hover:text-primary-700 hover:bg-primary-50 flex items-center justify-center transition-colors" title="Локализирай ме">
+                                <button type="button" @click="geoLocateAndRedirect($el)"
+                                    class="w-9 h-9 -my-2 rounded-lg text-primary-500 hover:text-primary-700 hover:bg-primary-50 flex items-center justify-center transition-colors"
+                                    title="Локализирай ме">
                                     <i class="fa-solid fa-location-crosshairs text-base"></i>
                                 </button>
                             </div>
                             <div class="relative">
-                                <i class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <select @change="filterRegion = $el.value" name="region_id" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
+                                <i
+                                    class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <select @change="filterRegion = $el.value" name="region_id"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
                                     <option value="empty">Избери Регион</option>
                                     <template x-for="region in Object.values(data.regions).reverse()">
                                         <option x-text="region.title" :value="region.id"></option>
@@ -64,10 +76,13 @@
                         <div class="md:col-span-1" apiData="get.cities">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Град</label>
                             <div class="relative">
-                                <i class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <select name="city_id" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
+                                <i
+                                    class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <select name="city_id"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
                                     <option value="empty">Избери град</option>
-                                    <template x-for="city in Object.values(data.cities).filter(obj => filterRegion === 'empty' || obj.region_id == filterRegion).reverse()">
+                                    <template
+                                        x-for="city in Object.values(data.cities).filter(obj => filterRegion === 'empty' || obj.region_id == filterRegion).reverse()">
                                         <option :value=" city.id" x-text="city.title"></option>
                                     </template>
                                 </select>
@@ -77,12 +92,86 @@
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Име на специалист</label>
                             <div class="relative">
-                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" name="name" placeholder="Въведи име..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50">
+                                <i
+                                    class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" name="name" placeholder="Въведи име..."
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50">
                             </div>
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                        <!-- Tags -->
+                        <div class="md:col-span-3" apiData="get.doctors_tags" x-data="{
+                                open: false,
+                                search: '',
+                                selected: [],
+                                get all() { return Object.values(data.doctors_tags || {}) },
+                                get available() {
+                                    const q = this.search.trim().toLowerCase();
+                                    return this.all.filter(t => !this.selected.includes(Number(t.id))
+                                        && (q === '' || (t.title || '').toLowerCase().includes(q)));
+                                },
+                                title(id) { return this.all.find(t => Number(t.id) === Number(id))?.title || ''; },
+                                add(id) {
+                                    id = Number(id);
+                                    if (!this.selected.includes(id)) this.selected.push(id);
+                                    this.search = '';
+                                    this.open = false;
+                                },
+                                remove(id) { this.selected = this.selected.filter(x => x !== Number(id)); }
+                            }" @click.outside="open = false">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Специализации</label>
+                            <div class="relative">
+                                <div @click="open = true; $refs.homeTagSearch.focus()"
+                                    :class="open ? 'border-primary-500 ring-2 ring-primary-500' : 'border-gray-200'"
+                                    class="w-full min-h-[3.25rem] flex flex-wrap items-center gap-2 pl-10 pr-3 py-2 bg-gray-50 rounded-xl border transition-all cursor-text relative">
+                                    <i
+                                        class="fa-solid fa-tags absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+                                    <template x-for="id in selected" :key="id">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 bg-primary-50 text-primary-700 border border-primary-200 rounded-md text-sm font-medium">
+                                            <span x-text="title(id)"></span>
+                                            <button type="button" title="Премахни" @click.stop="remove(id)"
+                                                class="w-4 h-4 flex items-center justify-center rounded-full text-primary-500 hover:bg-primary-500 hover:text-white transition-colors">
+                                                <i class="fa-solid fa-xmark text-[10px]"></i>
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <input type="text" x-ref="homeTagSearch" x-model="search" @focus="open = true"
+                                        @keydown.enter.prevent="available[0] && add(available[0].id)"
+                                        @keydown.backspace="search === '' && selected.length && remove(selected[selected.length - 1])"
+                                        @keydown.escape="open = false" title="Търсене на специализации"
+                                        placeholder="Избери специализации"
+                                        :placeholder="selected.length ? '' : 'Избери специализации'"
+                                        class="flex-1 min-w-[8rem] py-1 bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-700 placeholder-gray-400">
+                                </div>
+
+                                <div x-show="open" x-cloak x-transition.opacity.duration.150ms
+                                    class="absolute z-30 left-0 right-0 mt-2 max-h-60 overflow-y-auto bg-white rounded-xl border border-gray-200 shadow-lg">
+                                    <template x-for="tag in available" :key="tag.id">
+                                        <button type="button" @click="add(tag.id)"
+                                            class="w-full text-left px-4 py-2.5 text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
+                                            x-text="tag.title"></button>
+                                    </template>
+                                    <template x-if="available.length === 0">
+                                        <div class="px-4 py-3 text-sm text-gray-400"
+                                            x-text="all.length === 0 ? 'Няма налични специализации' : (search ? 'Няма намерени специализации' : 'Всички специализации са избрани')">
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <template x-for="id in selected" :key="'tag-' + id">
+                                <input type="hidden" name="tag_ids[]" :value="id">
+                            </template>
+                        </div>
+
                         <div class="md:col-span-1 flex items-end">
-                            <button type="submit" class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30">
+                            <button type="submit"
+                                class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30">
                                 <i class="fa-solid fa-search mr-2"></i>Търси
                             </button>
                         </div>
@@ -91,15 +180,18 @@
             </div>
 
             <!-- Search Form - Centers & Offices -->
-            <div x-show="searchType === 'clinic'" x-transition x-cloak class="bg-white rounded-2xl shadow-xl p-6 lg:p-8 max-w-6xl mx-auto" x-data="{ filterRegion : 'empty'}">
+            <div x-show="searchType === 'clinic'" x-transition x-cloak
+                class="bg-white rounded-2xl shadow-xl p-6 lg:p-8 max-w-6xl mx-auto" x-data="{ filterRegion : 'empty'}">
                 <form action="/bg/clinics">
 
                     <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Тип център</label>
                             <div class="relative">
-                                <i class="fa-solid fa-hospital absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <select name="type_id" apiData="get.doctors_clinics_types" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
+                                <i
+                                    class="fa-solid fa-hospital absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <select name="type_id" apiData="get.doctors_clinics_types"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
                                     <option value="">Избери тип</option>
                                     <template x-for="type in data.doctors_clinics_types">
                                         <option :value="type.id" x-text="type.title"></option>
@@ -110,8 +202,10 @@
                         <div class="md:col-span-1" apiData="get.regions">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Населено място</label>
                             <div class="relative">
-                                <i class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <select name="region_id" @change="filterRegion = $el.value" name="region_id" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
+                                <i
+                                    class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <select name="region_id" @change="filterRegion = $el.value" name="region_id"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
                                     <option value="empty">Избери Регион</option>
                                     <template x-for="region in Object.values(data.regions).reverse()">
                                         <option x-text="region.title" :value="region.id"></option>
@@ -123,10 +217,13 @@
                         <div class="md:col-span-1" apiData="get.cities">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Град</label>
                             <div class="relative">
-                                <i class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <select name="city_id" name="region_id" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
+                                <i
+                                    class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <select name="city_id" name="region_id"
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50 appearance-none">
                                     <option value="empty">Избери град</option>
-                                    <template x-for="city in Object.values(data.cities).filter(obj => filterRegion === 'empty' || obj.region_id == filterRegion).reverse()">
+                                    <template
+                                        x-for="city in Object.values(data.cities).filter(obj => filterRegion === 'empty' || obj.region_id == filterRegion).reverse()">
                                         <option :value=" city.id" x-text="city.title"></option>
                                     </template>
                                 </select>
@@ -136,12 +233,15 @@
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Име на заведение</label>
                             <div class="relative">
-                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" name="title" placeholder="Въведи име..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50">
+                                <i
+                                    class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" name="title" placeholder="Въведи име..."
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50">
                             </div>
                         </div>
                         <div class="md:col-span-1 flex items-end">
-                            <button class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30">
+                            <button
+                                class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30">
                                 <i class="fa-solid fa-search mr-2"></i>Търси
                             </button>
                         </div>
@@ -152,27 +252,33 @@
         </div>
     </section>
 
-    <!-- What is SuperCare Section -->
+    <!-- What is CareNet Section -->
     <section class="py-16 bg-white w-full">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
                     <span class="text-primary-600 font-semibold text-sm uppercase tracking-wide">За платформата</span>
                     <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mt-2 mb-6">
-                        Какво е SuperCare.bg?
+                        Какво е CareNet.bg?
                     </h2>
                     <div class="space-y-4 text-gray-600 text-lg leading-relaxed">
                         <p>
-                            <strong>SuperCare.bg</strong> е първата по рода си дигитална платформа, която свързва родители и специалисти по детско развитие в една интегрирана среда за цялостна грижа.
+                            <strong>CareNet.bg</strong> е първата по рода си дигитална платформа, която свързва родители
+                            и специалисти по детско развитие в една интегрирана среда за цялостна грижа.
                         </p>
                         <p>
-                            Родителите могат бързо и лесно да открият подходящ логопед, психолог, ерготерапевт, рехабилитатор и други специалисти, да запазят час онлайн и да комуникират директно с тях – всичко на едно място.
+                            Родителите могат бързо и лесно да открият подходящ логопед, психолог, ерготерапевт,
+                            рехабилитатор и други специалисти, да запазят час онлайн и да комуникират директно с тях –
+                            всичко на едно място.
                         </p>
                         <p>
-                            Специалистите получават удобен инструмент за управление на графици, водене на бележки, обмен на материали и директна комуникация с родителите.
+                            Специалистите получават удобен инструмент за управление на графици, водене на бележки, обмен
+                            на материали и директна комуникация с родителите.
                         </p>
                         <p>
-                            <strong>SuperCare.bg</strong> не е просто платформа за онлайн резервации на часове – това е цялостно решение за управление на терапевтичния процес, което прави грижата за детското развитие по-лесна, организирана и ефективна.
+                            <strong>CareNet.bg</strong> не е просто платформа за онлайн резервации на часове – това е
+                            цялостно решение за управление на терапевтичния процес, което прави грижата за детското
+                            развитие по-лесна, организирана и ефективна.
                         </p>
                     </div>
                 </div>
@@ -192,51 +298,62 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <span class="text-accent-500 font-semibold text-sm uppercase tracking-wide">За родителите</span>
-                <h2 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Платформата спестява време и създава структура в грижата за детето</h2>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Платформата спестява време и създава структура в
+                    грижата за детето</h2>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Benefit 1 -->
-                <div class="bg-accent-500 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                <div
+                    class="bg-accent-500 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                     <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-4">
                         <i class="fa-solid fa-users text-accent-500 text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-white mb-2">Всички специалисти на едно място</h3>
-                    <p class="text-white/80 text-sm">Логопеди, психолози, ерготерапевти, рехабилитатори и много други — достъпни в една платформа.</p>
+                    <p class="text-white/80 text-sm">Логопеди, психолози, ерготерапевти, рехабилитатори и много други —
+                        достъпни в една платформа.</p>
                 </div>
 
                 <!-- Benefit 2 -->
-                <div class="bg-accent-500 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                <div
+                    class="bg-accent-500 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                     <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-4">
                         <i class="fa-solid fa-calendar-check text-accent-500 text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-white mb-2">Бързо онлайн записване</h3>
-                    <p class="text-white/80 text-sm">Запазете час лесно и бързо онлайн, без излишни обаждания и чакане.</p>
+                    <p class="text-white/80 text-sm">Запазете час лесно и бързо онлайн, без излишни обаждания и чакане.
+                    </p>
                 </div>
 
                 <!-- Benefit 3 -->
-                <div class="bg-accent-500 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                <div
+                    class="bg-accent-500 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                     <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-4">
                         <i class="fa-solid fa-file-arrow-up text-accent-500 text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-white mb-2">Обмен на файлове и материали</h3>
-                    <p class="text-white/80 text-sm">Домашни задания, терапевтични материали и документи — споделяни лесно между родител и специалист.</p>
+                    <p class="text-white/80 text-sm">Домашни задания, терапевтични материали и документи — споделяни
+                        лесно между родител и специалист.</p>
                 </div>
 
                 <!-- Benefit 4 -->
-                <div class="bg-accent-500 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                <div
+                    class="bg-accent-500 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                     <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-4">
                         <i class="fa-solid fa-comments text-accent-500 text-2xl"></i>
                     </div>
                     <h3 class="font-bold text-white mb-2">Централизирана комуникация</h3>
-                    <p class="text-white/80 text-sm">Директен чат със специалистите без излишни обаждания — всичко на едно място.</p>
+                    <p class="text-white/80 text-sm">Директен чат със специалистите без излишни обаждания — всичко на
+                        едно място.</p>
                 </div>
             </div>
 
             <!-- Free for parents + CTA -->
             <div class="text-center mt-10">
-                <p class="text-gray-700 text-lg font-semibold mb-4"><i class="fa-solid fa-circle-check text-accent-500 mr-2"></i>Напълно безплатна за родителите</p>
-                <a href="/bg/registration" class="inline-flex items-center gap-2 px-8 py-3 bg-accent-500 hover:bg-accent-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <p class="text-gray-700 text-lg font-semibold mb-4"><i
+                        class="fa-solid fa-circle-check text-accent-500 mr-2"></i>Напълно безплатна за родителите</p>
+                <a href="/bg/registration"
+                    class="inline-flex items-center gap-2 px-8 py-3 bg-accent-500 hover:bg-accent-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                     <i class="fa-solid fa-user-plus"></i>
                     Регистрирай се безплатно
                 </a>
@@ -255,95 +372,129 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
 
                 <!-- Логопед -->
-                <a href="/bg/search?speciality_id=41" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-teal-100 group-hover:bg-teal-200">
+                <a href="/bg/search?speciality_id=41"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-teal-100 group-hover:bg-teal-200">
                         <i class="fa-solid fa-comment-dots text-2xl text-teal-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Логопед</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Логопед</h3>
                 </a>
 
                 <!-- Психолог -->
-                <a href="/bg/search?speciality_id=73" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-purple-100 group-hover:bg-purple-200">
+                <a href="/bg/search?speciality_id=73"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-purple-100 group-hover:bg-purple-200">
                         <i class="fa-solid fa-brain text-2xl text-purple-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Психолог</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Психолог</h3>
                 </a>
 
                 <!-- Ерготерапевт -->
-                <a href="/bg/search?speciality_id=99" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-cyan-100 group-hover:bg-cyan-200">
+                <a href="/bg/search?speciality_id=99"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-cyan-100 group-hover:bg-cyan-200">
                         <i class="fa-solid fa-hands text-2xl text-cyan-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Ерготерапевт</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Ерготерапевт</h3>
                 </a>
 
                 <!-- Физиотерапевт -->
-                <a href="/bg/search?speciality_id=85" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-blue-100 group-hover:bg-blue-200">
+                <a href="/bg/search?speciality_id=85"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-blue-100 group-hover:bg-blue-200">
                         <i class="fa-solid fa-person-walking text-2xl text-blue-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Физиотерапевт</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Физиотерапевт</h3>
                 </a>
 
                 <!-- Арт терапевт -->
-                <a href="/bg/search?speciality_id=100" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-pink-100 group-hover:bg-pink-200">
+                <a href="/bg/search?speciality_id=100"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-pink-100 group-hover:bg-pink-200">
                         <i class="fa-solid fa-palette text-2xl text-pink-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Арт терапевт</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Арт
+                        терапевт</h3>
                 </a>
 
                 <!-- Музикален терапевт -->
-                <a href="/bg/search?speciality_id=101" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-indigo-100 group-hover:bg-indigo-200">
+                <a href="/bg/search?speciality_id=101"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-indigo-100 group-hover:bg-indigo-200">
                         <i class="fa-solid fa-music text-2xl text-indigo-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Музикален терапевт</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Музикален терапевт</h3>
                 </a>
 
                 <!-- Поведенчески терапевт -->
-                <a href="/bg/search?speciality_id=102" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-orange-100 group-hover:bg-orange-200">
+                <a href="/bg/search?speciality_id=102"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-orange-100 group-hover:bg-orange-200">
                         <i class="fa-solid fa-puzzle-piece text-2xl text-orange-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">ABA терапевт</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">ABA
+                        терапевт</h3>
                 </a>
 
                 <!-- Сензорен терапевт -->
-                <a href="/bg/search?speciality_id=103" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-rose-100 group-hover:bg-rose-200">
+                <a href="/bg/search?speciality_id=103"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-rose-100 group-hover:bg-rose-200">
                         <i class="fa-solid fa-fingerprint text-2xl text-rose-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Сензорен терапевт</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Сензорен терапевт</h3>
                 </a>
 
                 <!-- Педиатър -->
-                <a href="/bg/search?speciality_id=66" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-sky-100 group-hover:bg-sky-200">
+                <a href="/bg/search?speciality_id=66"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-sky-100 group-hover:bg-sky-200">
                         <i class="fa-solid fa-baby text-2xl text-sky-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Педиатър</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Педиатър</h3>
                 </a>
 
                 <!-- Хипотерапевт -->
-                <a href="/bg/search?speciality_id=104" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-amber-100 group-hover:bg-amber-200">
+                <a href="/bg/search?speciality_id=104"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-amber-100 group-hover:bg-amber-200">
                         <i class="fa-solid fa-horse text-2xl text-amber-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Хипотерапевт</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Хипотерапевт</h3>
                 </a>
 
                 <!-- Диетолог -->
-                <a href="/bg/search?speciality_id=25" class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-green-100 group-hover:bg-green-200">
+                <a href="/bg/search?speciality_id=25"
+                    class="group bg-gray-50 hover:bg-primary-50 border border-gray-100 hover:border-primary-200 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                    <div
+                        class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors bg-green-100 group-hover:bg-green-200">
                         <i class="fa-solid fa-apple-whole text-2xl text-green-500"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">Диетолог</h3>
+                    <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors text-sm">
+                        Диетолог</h3>
                 </a>
 
                 <!-- Всички специалности -->
-                <a href="/bg/search" class="group bg-accent-500 hover:bg-accent-600 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
+                <a href="/bg/search"
+                    class="group bg-accent-500 hover:bg-accent-600 rounded-2xl p-6 text-center transition-all hover:shadow-lg">
                     <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
                         <i class="fa-solid fa-arrow-right text-2xl text-white"></i>
                     </div>
@@ -358,25 +509,32 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">Търсете по градове</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Намерете специалисти и центрове за детско развитие във вашия град</p>
+                <p class="text-gray-600 max-w-2xl mx-auto">Намерете специалисти и центрове за детско развитие във вашия
+                    град</p>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 <template x-for="(city, index) in Object.values(data.cities).reverse().slice(0, 11)" :key="city.id">
-                    <a :href="'/bg/search?city_id=' + city.id" class="group relative overflow-hidden rounded-2xl aspect-square bg-white border border-gray-200 hover:border-primary-400 hover:shadow-xl transition-all duration-300">
+                    <a :href="'/bg/search?city_id=' + city.id"
+                        class="group relative overflow-hidden rounded-2xl aspect-square bg-white border border-gray-200 hover:border-primary-400 hover:shadow-xl transition-all duration-300">
                         <!-- Content -->
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-center transform group-hover:-translate-y-1 transition-transform duration-300">
-                                <div class="w-14 h-14 mx-auto mb-3 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-primary-500 transition-colors duration-300">
-                                    <i class="fa-solid fa-location-dot text-2xl text-gray-400 group-hover:text-white transition-colors duration-300"></i>
+                            <div
+                                class="text-center transform group-hover:-translate-y-1 transition-transform duration-300">
+                                <div
+                                    class="w-14 h-14 mx-auto mb-3 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-primary-500 transition-colors duration-300">
+                                    <i
+                                        class="fa-solid fa-location-dot text-2xl text-gray-400 group-hover:text-white transition-colors duration-300"></i>
                                 </div>
-                                <h3 class="text-gray-700 font-bold group-hover:text-primary-600 transition-colors duration-300" x-text="city.title"></h3>
+                                <h3 class="text-gray-700 font-bold group-hover:text-primary-600 transition-colors duration-300"
+                                    x-text="city.title"></h3>
                             </div>
                         </div>
                     </a>
                 </template>
 
-                <a href="/bg/search" class="group flex flex-col items-center justify-center rounded-2xl aspect-square bg-accent-500 hover:bg-accent-600 hover:shadow-xl hover:shadow-accent-500/25 transition-all duration-300">
+                <a href="/bg/search"
+                    class="group flex flex-col items-center justify-center rounded-2xl aspect-square bg-accent-500 hover:bg-accent-600 hover:shadow-xl hover:shadow-accent-500/25 transition-all duration-300">
                     <div class="transform group-hover:-translate-y-1 transition-transform duration-300">
                         <i class="fa-solid fa-map-location-dot text-4xl text-white mb-3"></i>
                     </div>
@@ -386,75 +544,87 @@
         </div>
     </section>
 
-    <!-- Become a SuperCare Specialist Section -->
+    <!-- Become a CareNet Specialist Section -->
     <section class="py-16 bg-gradient-to-r from-primary-600 to-primary-400 w-full">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="text-white">
-                    <span class="bg-white/20 text-white text-sm font-semibold px-4 py-1 rounded-full">За специалисти</span>
+                    <span class="bg-white/20 text-white text-sm font-semibold px-4 py-1 rounded-full">За
+                        специалисти</span>
                     <h2 class="text-3xl lg:text-4xl font-bold mt-4 mb-6">
-                        Станете SuperCare специалист
+                        Станете CareNet специалист
                     </h2>
                     <p class="text-primary-100 text-lg leading-relaxed mb-8">
-                        SuperCare.bg предоставя професионални инструменти, които улесняват ежедневната практика:
+                        CareNet.bg предоставя професионални инструменти, които улесняват ежедневната практика:
                     </p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
                             <span>Онлайн резервации</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
-                            <span>Модерен работен панел с календар, график и преглед на предстоящи часове в реално време</span>
+                            <span>Модерен работен панел с календар, график и преглед на предстоящи часове в реално
+                                време</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
                             <span>Организиране на терапевтични серии</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
                             <span>Създаване на план на часа и водене на записки</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
                             <span>Лесен обмен на материали и обратна връзка с родители</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
                             <span>Онлайн присъствие и нишов маркетинг</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
                             <span>Имейл известия</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
                             <span>Рейтинг и обратна връзка</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div
+                                class="w-6 h-6 bg-accent-400/30 rounded-full flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-check text-accent-400 text-xs"></i>
                             </div>
                             <span>Обявен ценоразпис</span>
                         </li>
                     </ul>
-                    <button @click="href('/registration')" class="inline-flex items-center gap-2 bg-accent-500 text-white hover:bg-accent-600 px-8 py-4 rounded-xl font-bold transition-colors shadow-lg">
+                    <button @click="href('/registration')"
+                        class="inline-flex items-center gap-2 bg-accent-500 text-white hover:bg-accent-600 px-8 py-4 rounded-xl font-bold transition-colors shadow-lg">
                         <i class="fa-solid fa-user-doctor"></i>
                         Регистрация за специалисти
                     </button>
@@ -466,7 +636,8 @@
                         <div class="bg-white/10 backdrop-blur-sm rounded-3xl p-10">
                             <div class="space-y-6">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <div
+                                        class="w-14 h-14 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
                                         <i class="fa-solid fa-calendar-days text-2xl text-primary-600"></i>
                                     </div>
                                     <div>
@@ -475,7 +646,8 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <div
+                                        class="w-14 h-14 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
                                         <i class="fa-solid fa-file-pen text-2xl text-primary-600"></i>
                                     </div>
                                     <div>
@@ -484,7 +656,8 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <div
+                                        class="w-14 h-14 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
                                         <i class="fa-solid fa-comments text-2xl text-primary-600"></i>
                                     </div>
                                     <div>
@@ -500,6 +673,134 @@
         </div>
     </section>
 
+    <!-- Testimonials -->
+    <section class="bg-white w-full overflow-hidden text-primary-900" id="otzivi">
+        <svg class="absolute w-0 h-0 overflow-hidden" aria-hidden="true" focusable="false">
+            <defs>
+                <linearGradient id="cnGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#4069b2" />
+                    <stop offset=".35" stop-color="#7959a6" />
+                    <stop offset=".7" stop-color="#ef5da2" />
+                    <stop offset="1" stop-color="#f47e52" />
+                </linearGradient>
+            </defs>
+        </svg>
+        <div class="container mx-auto px-5 sm:px-8 py-16 lg:py-28" x-data="{ s: false }"
+            x-init="(window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.IntersectionObserver) ? s = true : new IntersectionObserver((e, o) => { if (e[0].isIntersecting) { s = true; o.disconnect() } }, { threshold: 0.12 }).observe($el)">
+            <p class="inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-accent-600 transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]"
+                :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"><span
+                    class="w-6 h-0.5 flex-none bg-[linear-gradient(90deg,#4069b2,#7959a6,#ef5da2,#f47e52)]"></span>Думи
+                от кабинетите</p>
+            <h2 class="mt-5 max-w-3xl text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] !tracking-[-0.02em] text-primary-900 transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] delay-100"
+                :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">Какво казват специалистите, които
+                вече работят с CareNet</h2>
+
+            <div class="mt-12 grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+                <figure class="transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] delay-200"
+                    :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                    <svg class="w-12 h-10" viewBox="0 0 48 40" fill="none" aria-hidden="true">
+                        <path
+                            d="M6 30 C 4 20, 8 8, 20 6 C 14 12, 13 18, 15 20 C 20 20, 22 24, 21 29 C 19 35, 8 36, 6 30 Z"
+                            pathLength="1"
+                            class="[stroke-dasharray:1] [stroke-dashoffset:1] transition-[stroke-dashoffset] duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] [transition-delay:300ms] motion-reduce:transition-none"
+                            :class="s ? '![stroke-dashoffset:0]' : ''" stroke="url(#cnGrad)" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path
+                            d="M28 30 C 26 20, 30 8, 42 6 C 36 12, 35 18, 37 20 C 42 20, 44 24, 43 29 C 41 35, 30 36, 28 30 Z"
+                            pathLength="1"
+                            class="[stroke-dasharray:1] [stroke-dashoffset:1] transition-[stroke-dashoffset] duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] [transition-delay:600ms] motion-reduce:transition-none"
+                            :class="s ? '![stroke-dashoffset:0]' : ''" stroke="url(#cnGrad)" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <blockquote
+                        class="mt-5 text-2xl sm:text-3xl font-medium leading-snug !tracking-[-0.02em] text-primary-900 [text-wrap:balance]">
+                        „Платформата е изключително удобна, с интуитивен и лесен за използване интерфейс. Работата с нея
+                        е бърза, приятна и ефективна. Отличава се с отлична функционалност, надеждност, достъпност.“
+                    </blockquote>
+                    <figcaption class="mt-7 flex items-center gap-4">
+                        <span
+                            class="p-[2px] rounded-full bg-[linear-gradient(135deg,#4069b2,#7959a6,#ef5da2,#f47e52)] shrink-0"><span
+                                class="w-12 h-12 rounded-full bg-white text-primary-900 font-bold flex items-center justify-center">Г</span></span>
+                        <span><span class="block font-bold text-primary-900">Логопедичен кабинет
+                                „Говориниче“</span><span class="block text-sm text-slate-500">Логопедичен кабинет в
+                                платформата</span></span>
+                    </figcaption>
+                </figure>
+
+                <figure class="transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] delay-300"
+                    :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                    <svg class="w-12 h-10" viewBox="0 0 48 40" fill="none" aria-hidden="true">
+                        <path
+                            d="M6 30 C 4 20, 8 8, 20 6 C 14 12, 13 18, 15 20 C 20 20, 22 24, 21 29 C 19 35, 8 36, 6 30 Z"
+                            pathLength="1"
+                            class="[stroke-dasharray:1] [stroke-dashoffset:1] transition-[stroke-dashoffset] duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] [transition-delay:500ms] motion-reduce:transition-none"
+                            :class="s ? '![stroke-dashoffset:0]' : ''" stroke="url(#cnGrad)" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path
+                            d="M28 30 C 26 20, 30 8, 42 6 C 36 12, 35 18, 37 20 C 42 20, 44 24, 43 29 C 41 35, 30 36, 28 30 Z"
+                            pathLength="1"
+                            class="[stroke-dasharray:1] [stroke-dashoffset:1] transition-[stroke-dashoffset] duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] [transition-delay:800ms] motion-reduce:transition-none"
+                            :class="s ? '![stroke-dashoffset:0]' : ''" stroke="url(#cnGrad)" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <blockquote
+                        class="mt-5 text-2xl sm:text-3xl font-medium leading-snug !tracking-[-0.02em] text-primary-900 [text-wrap:balance]">
+                        „Изключително коректни, с разбиране към проблемите на родители и специалисти. Изключително
+                        подкрепящи.“</blockquote>
+                    <p
+                        class="mt-5 inline-flex items-start gap-2 max-w-sm rounded-2xl rounded-tl-md bg-[#f8f7f4] ring-1 ring-slate-900/5 px-4 py-3 text-slate-600">
+                        <i class="fa-regular fa-comment-dots text-primary-600 mt-1"></i><span>„Супер сте. Много удобна
+                            платформа.“</span>
+                    </p>
+                    <figcaption class="mt-7 flex items-center gap-4">
+                        <span
+                            class="p-[2px] rounded-full bg-[linear-gradient(135deg,#4069b2,#7959a6,#ef5da2,#f47e52)] shrink-0"><span
+                                class="w-12 h-12 rounded-full bg-white text-primary-900 font-bold flex items-center justify-center">С</span></span>
+                        <span><span class="block font-bold text-primary-900">Стефка Николова</span><span
+                                class="block text-sm text-slate-500">Ресурсен учител, специален педагог,
+                                логопед</span></span>
+                    </figcaption>
+                </figure>
+            </div>
+
+            <div class="mt-12 lg:mt-16 grid lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+                <figure
+                    class="rounded-3xl bg-white ring-1 ring-slate-900/5 shadow-sm p-8 flex flex-col transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] delay-500 hover:ring-primary-900/20"
+                    :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                    <i class="fa-solid fa-quote-left text-2xl text-accent-500" aria-hidden="true"></i>
+                    <blockquote class="mt-4 text-xl font-medium leading-snug text-primary-900">„Супер, много ми харесва
+                        платформата. Много иновативно!“</blockquote>
+                    <figcaption class="mt-auto pt-6 flex items-center gap-4 border-t border-primary-900/10">
+                        <span
+                            class="p-[2px] rounded-full bg-[linear-gradient(135deg,#4069b2,#7959a6,#ef5da2,#f47e52)] shrink-0"><span
+                                class="w-12 h-12 rounded-full bg-white text-primary-900 font-bold flex items-center justify-center">М</span></span>
+                        <span><span class="block font-bold text-primary-900">Мария Колева</span><span
+                                class="block text-sm text-slate-500">Логопед</span></span>
+                    </figcaption>
+                </figure>
+
+                <figure
+                    class="lg:col-span-2 rounded-3xl bg-[#f8f7f4] ring-1 ring-slate-900/5 p-8 lg:p-10 flex flex-col transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] delay-700 hover:ring-primary-900/20"
+                    :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                    <i class="fa-solid fa-quote-left text-2xl text-accent-500" aria-hidden="true"></i>
+                    <blockquote class="mt-4 text-lg leading-relaxed text-primary-900">„Щастливи сме да споделим, че
+                        Vesta Help – Център за психологична подкрепа и логопедична терапия вече е част от новата
+                        дигитална платформа CareNet.bg! Приветстваме и подкрепяме подобни инициативи, които улесняват
+                        връзката между родителите и специалистите в областта на детското развитие. Вярваме, че с добра
+                        подкрепа и информираност помагаме на децата и семействата по най-добрия начин.“</blockquote>
+                    <figcaption class="mt-auto pt-6 flex items-center gap-4 border-t border-primary-900/10">
+                        <span
+                            class="p-[2px] rounded-full bg-[linear-gradient(135deg,#4069b2,#7959a6,#ef5da2,#f47e52)] shrink-0"><span
+                                class="w-12 h-12 rounded-full bg-white text-primary-900 text-sm font-bold flex items-center justify-center">VH</span></span>
+                        <span><span class="block font-bold text-primary-900">Vesta Help</span><span
+                                class="block text-sm text-slate-500">Център за психологична подкрепа и логопедична
+                                терапия</span></span>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
     <!-- Latest News / Blog -->
     <section class="py-16 bg-white w-full" apiData="get.blogPosts" data-limit="3" keyName="featurePosts">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -508,29 +809,35 @@
                     <h2 class="text-3xl font-bold text-gray-900 mb-2">Актуални новини</h2>
                     <p class="text-gray-600">Полезни статии и съвети за вашето здраве</p>
                 </div>
-                <button @click="href('/blog')" class="text-primary-600 hover:text-primary-700 font-semibold flex items-center gap-2">
+                <button @click="href('/blog')"
+                    class="text-primary-600 hover:text-primary-700 font-semibold flex items-center gap-2">
                     Виж всички <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <template x-for="post in data.featurePosts.result" :key="post.id">
-                    <article @click="href(post.url)" class="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                    <article @click="href(post.url)"
+                        class="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
                         <div class="aspect-video overflow-hidden">
                             <template x-if="post.images && post.images.length > 0">
-                                <img :src="post.images[0].url" :alt="post.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <img :src="post.images[0].url" :alt="post.title"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             </template>
                             <template x-if="!post.images || post.images.length === 0">
-                                <div class="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                                <div
+                                    class="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
                                     <i class="fa-solid fa-newspaper text-white/50 text-4xl"></i>
                                 </div>
                             </template>
                         </div>
                         <div class="p-5">
                             <template x-if="post.category">
-                                <span class="text-primary-600 text-xs font-semibold uppercase tracking-wide" x-text="post.category.title"></span>
+                                <span class="text-primary-600 text-xs font-semibold uppercase tracking-wide"
+                                    x-text="post.category.title"></span>
                             </template>
-                            <h3 class="font-bold text-gray-900 mt-2 mb-3 line-clamp-2 group-hover:text-primary-600 transition-colors" x-text="post.title"></h3>
+                            <h3 class="font-bold text-gray-900 mt-2 mb-3 line-clamp-2 group-hover:text-primary-600 transition-colors"
+                                x-text="post.title"></h3>
                             <template x-if="post.description_short">
                                 <p class="text-gray-600 text-sm line-clamp-2 mb-4" x-text="post.description_short"></p>
                             </template>

@@ -16,19 +16,19 @@ setlocale(LC_ALL,					'bg_BG.utf8');
 
 /* Directoires
 ========================================== */
-define('CORE_URL',				'https://devcore.myexpozy.com/');
+define('CORE_URL',				'https://core.expozy.com/');
 
 define('API_DIR',					'core/');
 define('CLASSES_DIR',				'core/classes/');
 define('HELPERS_DIR',				'core/helpers/');
 define('PLUGINS_DIR',				'core/plugins/');
 define('PAGES_DIR',					'pages/');
-define('JS_VERSION',				'70');
+define('JS_VERSION',				'88');
 
 
 /* DEV MODE
 ========================================== */
-define('DEV_MODE', false);
+define('DEV_MODE', true);
 
 
 /* SAAS

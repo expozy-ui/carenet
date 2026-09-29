@@ -7,7 +7,7 @@
             <div class="max-w-3xl">
                 <h1 class="text-3xl lg:text-5xl font-bold mb-6">Свържете се с нас</h1>
                 <p class="text-xl text-primary-100 leading-relaxed">
-                    Имате въпроси или нужда от помощ? Екипът на SuperCare е тук, за да ви помогне.
+                    Имате въпроси или нужда от помощ? Екипът на CareNet е тук, за да ви помогне.
                 </p>
             </div>
         </div>
@@ -29,7 +29,7 @@
                         </div>
                         <div>
                             <h3 class="font-semibold text-gray-900 mb-1">Имейл</h3>
-                            <a href="mailto:info@supercare.bg" class="text-primary-600 hover:text-primary-700">info@supercare.bg</a>
+                            <a href="mailto:info@CareNet.bg" class="text-primary-600 hover:text-primary-700">info@CareNet.bg</a>
                             <p class="text-sm text-gray-500 mt-1">Отговаряме в рамките на 24 часа</p>
                         </div>
                     </div>
@@ -52,16 +52,10 @@
                 <div class="mt-10">
                     <h3 class="font-semibold text-gray-900 mb-4">Последвайте ни</h3>
                     <div class="flex items-center gap-3">
-                        <a href="#" class="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center transition-colors">
+                        <a href="https://www.facebook.com/profile.php?id=61568862541983" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center transition-colors">
                             <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-pink-600 hover:bg-pink-700 text-white rounded-xl flex items-center justify-center transition-colors">
-                            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-sky-500 hover:bg-sky-600 text-white rounded-xl flex items-center justify-center transition-colors">
-                            <i class="fa-brands fa-twitter" aria-hidden="true"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-blue-700 hover:bg-blue-800 text-white rounded-xl flex items-center justify-center transition-colors">
+                        <a href="https://www.linkedin.com/company/carenet-bg/about/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="w-10 h-10 bg-blue-700 hover:bg-blue-800 text-white rounded-xl flex items-center justify-center transition-colors">
                             <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -126,7 +120,7 @@
                         </div>
 
                         <!-- Submit -->
-                        <button type="submit" class="w-full sm:w-auto bg-accent-500 hover:bg-accent-600 text-white font-semibold px-8 py-4 rounded-xl transition-colors shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
+                        <button type="button" @click="alpineListeners('Contacts.post_contacts', $event)" options-clear="true" class="w-full sm:w-auto bg-accent-500 hover:bg-accent-600 text-white font-semibold px-8 py-4 rounded-xl transition-colors shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
                             Изпрати съобщение
                         </button>
@@ -161,7 +155,7 @@
                         <i class="fa-solid fa-chevron-down text-gray-400 transition-transform" :class="openFaq === 2 ? 'rotate-180' : ''" aria-hidden="true"></i>
                     </button>
                     <div x-show="openFaq === 2" x-collapse="" class="pb-5">
-                        <p class="text-gray-600">Да, регистрацията и записването на часове през SuperCare е напълно безплатно за потребители. Използването на платформата от специалистите е възможно чрез абонамент. Повече информация за абонамента ще откриете в секция Резюме на платформата.</p>
+                        <p class="text-gray-600">Да, регистрацията и записването на часове през CareNet е напълно безплатно за потребители. Използването на платформата от специалистите е възможно чрез абонамент. Повече информация за абонамента ще откриете в секция Резюме на платформата.</p>
                     </div>
                 </div>
 
@@ -205,7 +199,7 @@
                         <i class="fa-solid fa-chevron-down text-gray-400 transition-transform" :class="openFaq === 6 ? 'rotate-180' : ''" aria-hidden="true"></i>
                     </button>
                     <div x-show="openFaq === 6" x-collapse="" class="pb-5">
-                        <p class="text-gray-600">SuperCare спазва всички изисквания на GDPR и използва криптиране на данните. Вашата терапевтична информация е достъпна само за вас и избраните от вас специалисти. За повече информация прочетете нашата Политика за поверителност.</p>
+                        <p class="text-gray-600">CareNet спазва всички изисквания на GDPR и използва криптиране на данните. Вашата терапевтична информация е достъпна само за вас и избраните от вас специалисти. За повече информация прочетете нашата Политика за поверителност.</p>
                     </div>
                 </div>
             </div>

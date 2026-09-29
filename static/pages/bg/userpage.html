@@ -2,6 +2,7 @@
 <div x-init="!data.user.logged_in ? href('/bg/login') : ''"></div>
 
 <div apiData="get.doctors_specialities"></div>
+<div apiData="get.doctors_tags"></div>
 <div apiData="get.cities"></div>
 <div apiData="get.messages_rooms"></div>
 <div apiData="get.doctors_records"></div>
@@ -467,6 +468,14 @@
                                     <i class="fa-solid fa-lock"></i>
                                     <span>Парола</span>
                                 </button>
+                                <button type="button" @click="profileSection = 'invoice'" :class="profileSection === 'invoice' ? 'bg-accent-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'" class="px-4 py-2 rounded-xl font-medium text-sm transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                    <span>Фактури</span>
+                                </button>
+                                <button type="button" @click="profileSection = 'legal'" :class="profileSection === 'legal' ? 'bg-accent-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'" class="px-4 py-2 rounded-xl font-medium text-sm transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-file-shield"></i>
+                                    <span>Документи</span>
+                                </button>
                             </div>
                         </div>
 
@@ -507,15 +516,72 @@
                                         <input :value="data.my_doctor.user_info.last_name" name="last_name" type="text" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all">
                                     </div>
 
-                                    <!-- Specialty -->
+                                    <!-- Specialty (multi-select) -->
                                     <template x-if="data.my_doctor && data.doctors_specialities">
-                                        <div class="md:col-span-2">
-                                            <label class="block text-sm font-semibold text-gray-700 mb-2"><i class="fa-solid fa-stethoscope text-accent-500 mr-2"></i>Специалност</label>
-                                            <select name="speciality_id" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all">
-                                                <template x-for="speciality in data.doctors_specialities">
-                                                    <option :selected="data.my_doctor.speciality.id == speciality.id" :value="speciality.id" x-text="speciality.title">Изберете специалност</option>
-                                                </template>
-                                            </select>
+                                        <div class="md:col-span-2" x-data="{
+                                                open: false,
+                                                search: '',
+                                                selected: (data.my_doctor.speciality_ids?.length
+                                                        ? data.my_doctor.speciality_ids
+                                                        : (data.my_doctor.speciality?.id ? [data.my_doctor.speciality.id] : [])
+                                                    ).map(Number),
+                                                get all() { return Object.values(data.doctors_specialities || {}) },
+                                                get available() {
+                                                    const q = this.search.trim().toLowerCase();
+                                                    return this.all.filter(s => !this.selected.includes(Number(s.id))
+                                                        && (q === '' || (s.title || '').toLowerCase().includes(q)));
+                                                },
+                                                title(id) { return this.all.find(s => Number(s.id) === Number(id))?.title || ''; },
+                                                add(id) {
+                                                    id = Number(id);
+                                                    if (!this.selected.includes(id)) this.selected.push(id);
+                                                    this.search = '';
+                                                    this.open = false;
+                                                },
+                                                remove(id) { this.selected = this.selected.filter(x => x !== Number(id)); }
+                                            }" @click.outside="open = false">
+
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2"><i class="fa-solid fa-stethoscope text-accent-500 mr-2"></i>Специалности</label>
+
+                                            <div class="relative">
+                                                <!-- Control: chips + search -->
+                                                <div @click="open = true; $refs.specSearch.focus()" :class="open ? 'border-primary-500 ring-2 ring-primary-200' : 'border-gray-200'" class="w-full min-h-[3.25rem] flex flex-wrap items-center gap-2 px-3 py-2 bg-white rounded-xl border transition-all cursor-text">
+
+                                                    <template x-for="id in selected" :key="id">
+                                                        <span class="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 bg-accent-50 text-accent-700 border border-accent-200 rounded-lg text-sm font-medium">
+                                                            <span x-text="title(id)"></span>
+                                                            <button type="button" @click.stop="remove(id)" class="w-5 h-5 flex items-center justify-center rounded-full text-accent-500 hover:bg-accent-500 hover:text-white transition-colors">
+                                                                <i class="fa-solid fa-xmark text-xs"></i>
+                                                            </button>
+                                                        </span>
+                                                    </template>
+
+                                                    <input type="text" x-ref="specSearch" x-model="search" @focus="open = true" @keydown.enter.prevent="available[0] && add(available[0].id)" @keydown.backspace="search === '' && selected.length && remove(selected[selected.length - 1])" @keydown.escape="open = false" :placeholder="selected.length ? 'Добави още...' : 'Изберете специалности'" class="flex-1 min-w-[8rem] py-1.5 bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-700 placeholder-gray-400">
+
+                                                    <i class="fa-solid fa-chevron-down text-gray-400 text-sm transition-transform" :class="open ? 'rotate-180' : ''"></i>
+                                                </div>
+
+                                                <!-- Dropdown -->
+                                                <div x-show="open" x-cloak x-transition.opacity.duration.150ms class="absolute z-30 left-0 right-0 mt-2 max-h-64 overflow-y-auto bg-white rounded-xl border border-gray-200 shadow-lg">
+                                                    <template x-for="speciality in available" :key="speciality.id">
+                                                        <button type="button" @click="add(speciality.id)" class="w-full text-left px-4 py-2.5 text-gray-700 hover:bg-accent-50 hover:text-accent-700 transition-colors flex items-center gap-2">
+                                                            <i class="fa-solid fa-plus text-xs text-gray-300"></i>
+                                                            <span x-text="speciality.title"></span>
+                                                        </button>
+                                                    </template>
+                                                    <template x-if="available.length === 0">
+                                                        <div class="px-4 py-3 text-sm text-gray-400" x-text="search ? 'Няма намерени специалности' : 'Всички специалности са избрани'"></div>
+                                                    </template>
+                                                </div>
+                                            </div>
+
+                                            <p class="mt-2 text-xs text-gray-400">Може да изберете повече от една специалност.</p>
+
+                                            <!-- Стойности към API -->
+                                            <template x-for="id in selected" :key="'spec-' + id">
+                                                <input type="hidden" name="speciality_ids[]" :value="id">
+                                            </template>
+                                            <input type="hidden" name="speciality_id" :value="selected[0] || 'empty'">
                                         </div>
                                     </template>
                                 </div>
@@ -540,6 +606,67 @@
                                                 <span class="ml-2 text-gray-700">Домашни посещения</span>
                                             </label>
                                         </div>
+
+                                        <!-- Специализации -->
+                                        <template x-if="data.doctors_tags">
+                                            <div class="mt-6" x-data="{
+                                                    open: false,
+                                                    search: '',
+                                                    selected: (data.my_doctor.tag_ids || []).map(t => Number(t?.id ?? t)),
+                                                    get all() { return Object.values(data.doctors_tags || {}) },
+                                                    get available() {
+                                                        const q = this.search.trim().toLowerCase();
+                                                        return this.all.filter(t => !this.selected.includes(Number(t.id))
+                                                            && (q === '' || (t.title || '').toLowerCase().includes(q)));
+                                                    },
+                                                    title(id) { return this.all.find(t => Number(t.id) === Number(id))?.title || ''; },
+                                                    add(id) {
+                                                        id = Number(id);
+                                                        if (!this.selected.includes(id)) this.selected.push(id);
+                                                        this.search = '';
+                                                        this.open = false;
+                                                    },
+                                                    remove(id) { this.selected = this.selected.filter(x => x !== Number(id)); }
+                                                }" @click.outside="open = false">
+
+                                                <label class="block text-sm font-semibold text-gray-700 mb-2">Специализации</label>
+
+                                                <div class="relative">
+                                                    <div @click="open = true; $refs.tagSearch.focus()" :class="open ? 'border-primary-500 ring-2 ring-primary-200' : 'border-gray-200'" class="w-full min-h-[3.25rem] flex flex-wrap items-center gap-2 px-3 py-2 bg-white rounded-xl border transition-all cursor-text">
+
+                                                        <template x-for="id in selected" :key="id">
+                                                            <span class="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 bg-primary-50 text-primary-700 border border-primary-200 rounded-lg text-sm font-medium">
+                                                                <span x-text="title(id)"></span>
+                                                                <button type="button" @click.stop="remove(id)" class="w-5 h-5 flex items-center justify-center rounded-full text-primary-500 hover:bg-primary-500 hover:text-white transition-colors">
+                                                                    <i class="fa-solid fa-xmark text-xs"></i>
+                                                                </button>
+                                                            </span>
+                                                        </template>
+
+                                                        <input type="text" x-ref="tagSearch" x-model="search" @focus="open = true" @keydown.enter.prevent="available[0] && add(available[0].id)" @keydown.backspace="search === '' && selected.length && remove(selected[selected.length - 1])" @keydown.escape="open = false" :placeholder="selected.length ? 'Добави още...' : 'Изберете специализации'" class="flex-1 min-w-[8rem] py-1.5 bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-700 placeholder-gray-400">
+
+                                                        <i class="fa-solid fa-chevron-down text-gray-400 text-sm transition-transform" :class="open ? 'rotate-180' : ''"></i>
+                                                    </div>
+
+                                                    <div x-show="open" x-cloak x-transition.opacity.duration.150ms class="absolute z-30 left-0 right-0 mt-2 max-h-64 overflow-y-auto bg-white rounded-xl border border-gray-200 shadow-lg">
+                                                        <template x-for="tag in available" :key="tag.id">
+                                                            <button type="button" @click="add(tag.id)" class="w-full text-left px-4 py-2.5 text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors flex items-center gap-2">
+                                                                <i class="fa-solid fa-plus text-xs text-gray-300"></i>
+                                                                <span x-text="tag.title"></span>
+                                                            </button>
+                                                        </template>
+                                                        <template x-if="available.length === 0">
+                                                            <div class="px-4 py-3 text-sm text-gray-400" x-text="search ? 'Няма намерени специализации' : 'Всички специализации са избрани'"></div>
+                                                        </template>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Стойности към API -->
+                                                <template x-for="id in selected" :key="'tag-' + id">
+                                                    <input type="hidden" name="tag_ids[]" :value="id">
+                                                </template>
+                                            </div>
+                                        </template>
                                     </div>
                                 </template>
 
@@ -562,20 +689,20 @@
                                 <div class="space-y-6">
                                     <!-- Full Description -->
                                     <div>
-                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Професионалния опит</label>
-                                        <textarea name="description" :value="data.my_doctor.description" rows="6" placeholder="Опишете подробно вашия опит, професионални интереси, специализации и подход към пациентите" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none"></textarea>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Професионален опит</label>
+                                        <textarea name="description" :value="data.my_doctor.description" rows="6" placeholder="Опишете подробно вашия опит, професионални интереси, специализации и подход към пациентите" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none whitespace-pre-line"></textarea>
                                     </div>
 
                                     <!-- Professional Experience Description -->
                                     <!-- <div>
                                         <label class="block text-sm font-semibold text-gray-700 mb-2">Подробно описание на професионалния опит</label>
-                                        <textarea name="biography" :value="data.my_doctor.biography" rows="3" placeholder="Опишете вашия професионален опит..." class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none"></textarea>
+                                        <textarea name="biography" :value="data.my_doctor.biography" rows="3" placeholder="Опишете вашия професионален опит..." class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none whitespace-pre-line"></textarea>
                                     </div> -->
 
                                     <!-- Education & Qualifications -->
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-700 mb-2">Образование и квалификации</label>
-                                        <textarea name="education" :value="data.my_doctor.education" rows="6" placeholder="Университет, специализации, курсове, сертификати..." class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none"></textarea>
+                                        <textarea name="education" :value="data.my_doctor.education" rows="6" placeholder="Университет, специализации, курсове, сертификати..." class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all resize-none whitespace-pre-line"></textarea>
                                     </div>
                                 </div>
 
@@ -738,13 +865,161 @@
                             </form>
                         </div>
 
+                        <!-- Invoice Section -->
+                        <div x-show="profileSection === 'invoice'" x-transition class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8" x-data="{ invoiceSent: false }">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                <i class="fa-solid fa-file-invoice text-accent-500"></i>
+                                Заявка за фактура
+                            </h2>
+
+                            <div x-show="!invoiceSent">
+                                <p class="text-gray-600 mb-6">Попълнете данните на фирмата, за да заявите издаване на фактура.</p>
+
+                                <form>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="sm:col-span-2">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">Фирма</label>
+                                            <input type="text" name="company" placeholder="Наименование на фирмата" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 text-sm">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">ЕИК / Булстат</label>
+                                            <input type="text" name="vat" placeholder="напр. BG123456789" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 text-sm font-mono">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">Регистрация по ДДС</label>
+                                            <select name="vat_registered" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 text-sm">
+                                                <option value="0">Не</option>
+                                                <option value="1">Да</option>
+                                            </select>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">Адрес</label>
+                                            <input type="text" name="address" placeholder="Адрес по регистрация на фирмата" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 text-sm">
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-8">
+                                        <button type="button" @click="alpineListeners('post.doctors_want_invoce', $event)" @success="invoiceSent = true" class="bg-accent-500 hover:bg-accent-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors shadow-lg shadow-accent-500/30">
+                                            <i class="fa-solid fa-paper-plane mr-2"></i>Изпрати заявка
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div x-show="invoiceSent" x-transition class="text-center py-8">
+                                <i class="fa-solid fa-circle-check text-green-500 text-5xl mb-4"></i>
+                                <p class="text-lg font-semibold text-gray-900 mb-2">Заявката е изпратена успешно!</p>
+                                <p class="text-gray-600">Ще получите фактурата на имейла си.</p>
+                                <button type="button" @click="invoiceSent = false" class="mt-6 px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors">
+                                    <i class="fa-solid fa-plus mr-2"></i>Нова заявка
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Legal Documents Section (Specialist) -->
+                        <div x-show="profileSection === 'legal'" x-transition class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+                                <i class="fa-solid fa-file-shield text-accent-500"></i>
+                                Правни документи
+                            </h2>
+                            <p class="text-gray-500 text-sm mb-6">При регистрацията сте приели следните документи. Можете да ги прегледате по всяко време.</p>
+
+                            <div class="bg-green-50 border border-green-100 rounded-xl px-5 py-4 mb-6 flex items-start gap-3">
+                                <div class="w-9 h-9 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-check text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-green-900">Съгласието е регистрирано</p>
+                                    <p class="text-sm text-green-700">Всички правни документи са приети успешно при регистрацията ви в платформата.</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <!-- Общи условия -->
+                                <a href="/bg/terms-conditions" class="group flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                                    <div class="w-11 h-11 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-file-lines text-primary-500 text-lg"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
+                                            <p class="font-semibold text-gray-900 truncate">Общи условия</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 truncate">Правила за използване на платформата</p>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-primary-600 text-sm font-medium flex-shrink-0">
+                                        <span class="hidden sm:inline">Виж</span>
+                                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </a>
+
+                                <!-- Политика за поверителност -->
+                                <a href="/bg/gdpr" class="group flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                                    <div class="w-11 h-11 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-shield-halved text-primary-500 text-lg"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
+                                            <p class="font-semibold text-gray-900 truncate">Политика за поверителност</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 truncate">Защита на личните данни съгласно GDPR</p>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-primary-600 text-sm font-medium flex-shrink-0">
+                                        <span class="hidden sm:inline">Виж</span>
+                                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </a>
+
+                                <!-- Уведомление за специалисти -->
+                                <a href="/bg/privacy-specialists" class="group flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                                    <div class="w-11 h-11 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-user-doctor text-primary-500 text-lg"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
+                                            <p class="font-semibold text-gray-900 truncate">Уведомление за поверителност за Специалисти</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 truncate">Информация за обработване на данните ви</p>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-primary-600 text-sm font-medium flex-shrink-0">
+                                        <span class="hidden sm:inline">Виж</span>
+                                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </a>
+
+                                <!-- DPA Споразумение -->
+                                <a href="/bg/dpa" class="group flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                                    <div class="w-11 h-11 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-file-contract text-primary-500 text-lg"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
+                                            <p class="font-semibold text-gray-900 truncate">Споразумение за обработка на лични данни</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 truncate">DPA съгласно чл. 28 от GDPR</p>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-primary-600 text-sm font-medium flex-shrink-0">
+                                        <span class="hidden sm:inline">Виж</span>
+                                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
                         <!-- Deactivate Account Section -->
                         <div x-show="profileSection === 'password'" x-transition class="bg-white rounded-2xl shadow-sm border border-red-100 p-6 lg:p-8 mt-6">
                             <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center gap-3">
                                 <i class="fa-solid fa-user-slash text-red-500"></i>
                                 Деактивация на акаунт
                             </h2>
-                            <p class="text-gray-600 mb-6">След деактивация профилът ви няма да бъде видим в платформата и няма да може да приемате нови часове. Можете да се свържете с нас, ако желаете да възстановите акаунта си.</p>
+                            <p class="text-gray-600 mb-4">След деактивация профилът ви няма да бъде видим в платформата и няма да може да приемате нови часове. Можете да се свържете с нас, ако желаете да възстановите акаунта си.</p>
+                            <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-800 flex items-start gap-3 mb-6">
+                                <i class="fa-solid fa-triangle-exclamation mt-0.5 flex-shrink-0"></i>
+                                <span>С деактивирането на акаунта всички ваши лични и терапевтични данни в профила ще бъдат изтрити от платформата.</span>
+                            </div>
                             <button type="button" @click="callModal($el)" data-modal="deactivate_account" class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors">
                                 <i class="fa-solid fa-user-slash mr-2"></i>Деактивирай акаунта
                             </button>
@@ -778,6 +1053,11 @@
                                 durations.push({ value: m, label: label.trim() });
                             }
                             return durations;
+                        },
+                        onlineSlotsCount(cabinet) {
+                            const slots = cabinet?.schedule?.online_slots;
+                            if (!slots) return 0;
+                            return Object.values(slots).reduce((sum, day) => sum + (Array.isArray(day) ? day.length : 0), 0);
                         }
                     }">
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8" apiData="get.regions">
@@ -794,7 +1074,7 @@
 
                             <!-- Add Office Form -->
                             <form x-data="{filterRegion: 1}">
-                                <div x-data="{private_cabinet : 0, online:false}" x-show="data.showAddOffice" x-transition class="mb-6 p-6 bg-primary-50 rounded-2xl border border-primary-200">
+                                <div x-data="{private_cabinet : 0}" x-show="data.showAddOffice" x-transition class="mb-6 p-6 bg-primary-50 rounded-2xl border border-primary-200">
                                     <h3 class="font-semibold text-gray-900 mb-4">Добави нов кабинет</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div class="md:col-span-2">
@@ -832,7 +1112,7 @@
                                                         <option :value="clinic.id" x-text="clinic.title"></option>
                                                     </template>
                                                 </select>
-                                                <p class="text-xs text-gray-400 mt-2 flex items-start gap-1.5"><i class="fa-solid fa-circle-info mt-0.5"></i>Ако вашето лечебно заведение не фигурира в списъка, моля свържете се с нас, за да бъде добавено в платформата.</p>
+                                                <p class="text-xs text-gray-400 mt-2 flex items-start gap-1.5"><i class="fa-solid fa-circle-info mt-0.5"></i>Ако вашия център не фигурира в списъка, моля свържете се с нас, за да бъде добавен в платформата.</p>
                                             </div>
                                         </template>
 
@@ -917,20 +1197,10 @@
                                                 </div>
                                             </div>
 
-                                            <div class="mb-4">
-                                                <label class="block text-sm font-medium text-gray-700 mb-3">Работи с онлайн консултация</label>
-                                                <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                    <input type="checkbox" x-model="online" name="online" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
-                                                    <span class="ml-2 text-gray-700">Онлайн консултация</span>
-                                                </label>
-                                            </div>
-
-                                            <template x-if="online">
-                                                <div class="">
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Линк за видео консултация</label>
-                                                    <input type="text" value="" name="online_url" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500">
-                                                </div>
-                                            </template>
+                                            <p class="text-xs text-gray-500 flex items-start gap-1.5">
+                                                <i class="fa-solid fa-circle-info mt-0.5 text-accent-500"></i>
+                                                След като запазите кабинета, ще можете да маркирате кои от часовете могат да се провеждат онлайн.
+                                            </p>
 
                                         </div>
                                     </div>
@@ -973,7 +1243,7 @@
                                         <template x-if="data.cities">
 
                                             <div x-show="editingOffice === cabinet.id" x-transition class="p-4 bg-white border-t border-gray-200">
-                                                <form x-data="{private_cabinet: cabinet.private_cabinet, online : cabinet.online, filterRegion : Object.values(data.cities).find(obj=>obj.id == cabinet.city_id).region_id}">
+                                                <form x-data="{private_cabinet: cabinet.private_cabinet, filterRegion : Object.values(data.cities).find(obj=>obj.id == cabinet.city_id).region_id}">
                                                     <input type="hidden" :value="cabinet.id" name="id">
                                                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                                         <i class="fa-solid fa-clock text-accent-500"></i>
@@ -1017,7 +1287,7 @@
                                                                         <option :selected="clinic.id == cabinet.clinic_id" :value="clinic.id" x-text="clinic.title"></option>
                                                                     </template>
                                                                 </select>
-                                                                <p class="text-xs text-gray-400 mt-2 flex items-start gap-1.5"><i class="fa-solid fa-circle-info mt-0.5"></i>Ако вашето лечебно заведение не фигурира в списъка, моля свържете се с нас, за да бъде добавено в платформата.</p>
+                                                                <p class="text-xs text-gray-400 mt-2 flex items-start gap-1.5"><i class="fa-solid fa-circle-info mt-0.5"></i>Ако вашия център не фигурира в списъка, моля свържете се с нас, за да бъде добавен в платформата.</p>
                                                             </div>
                                                         </template>
 
@@ -1072,48 +1342,56 @@
                                                                 <label class="block text-sm font-medium text-gray-700 mb-3">Работни дни</label>
                                                                 <div class="flex flex-wrap gap-3">
                                                                     <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                                        <input type="checkbox" :checked="cabinet.schedule.day0" name="day1" checked class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
+                                                                        <input type="checkbox" :checked="cabinet.schedule.day1" name="day1" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
                                                                         <span class="ml-2 text-gray-700">Пон</span>
                                                                     </label>
                                                                     <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                                        <input type="checkbox" :checked="cabinet.schedule.day1" name="day2" checked class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
+                                                                        <input type="checkbox" :checked="cabinet.schedule.day2" name="day2" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
                                                                         <span class="ml-2 text-gray-700">Вто</span>
                                                                     </label>
                                                                     <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                                        <input type="checkbox" :checked="cabinet.schedule.day2" name="day3" checked class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
+                                                                        <input type="checkbox" :checked="cabinet.schedule.day3" name="day3" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
                                                                         <span class="ml-2 text-gray-700">Сря</span>
                                                                     </label>
                                                                     <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                                        <input type="checkbox" :checked="cabinet.schedule.day3" name="day4" checked class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
+                                                                        <input type="checkbox" :checked="cabinet.schedule.day4" name="day4" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
                                                                         <span class="ml-2 text-gray-700">Чет</span>
                                                                     </label>
                                                                     <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                                        <input type="checkbox" :checked="cabinet.schedule.day4" name="day5" checked class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
+                                                                        <input type="checkbox" :checked="cabinet.schedule.day5" name="day5" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
                                                                         <span class="ml-2 text-gray-700">Пет</span>
                                                                     </label>
                                                                     <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                                        <input type="checkbox" :checked="cabinet.schedule.day5" name="day6" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
+                                                                        <input type="checkbox" :checked="cabinet.schedule.day6" name="day6" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
                                                                         <span class="ml-2 text-gray-700">Съб</span>
                                                                     </label>
                                                                     <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                                        <input type="checkbox" :checked="cabinet.schedule.day6" name="day0" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
+                                                                        <input type="checkbox" :checked="cabinet.schedule.day0" name="day0" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
                                                                         <span class="ml-2 text-gray-700">Нед</span>
                                                                     </label>
                                                                 </div>
                                                             </div>
 
-                                                            <div class="mb-4">
-                                                                <label class="block text-sm font-medium text-gray-700 mb-3">Работи с онлайн консултация</label>
-                                                                <label class="inline-flex items-center cursor-pointer bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors">
-                                                                    <input type="checkbox" x-model="online" name="online" class="w-4 h-4 text-accent-500 rounded border-gray-300 focus:ring-primary-500">
-                                                                    <span class="ml-2 text-gray-700">Онлайн консултация</span>
-                                                                </label>
+                                                            <!-- Онлайн часове -->
+                                                            <div class="mb-4 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+                                                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                                                    <div>
+                                                                        <p class="font-medium text-gray-900 flex items-center gap-2">
+                                                                            <i class="fa-solid fa-video text-blue-500"></i>
+                                                                            Онлайн консултации
+                                                                        </p>
+                                                                        <p class="text-sm text-gray-500 mt-0.5" x-text="onlineSlotsCount(cabinet) > 0
+                                                                            ? onlineSlotsCount(cabinet) + ' часа са маркирани като онлайн'
+                                                                            : 'Няма маркирани онлайн часове'"></p>
+                                                                    </div>
+                                                                    <button type="button" @click="alpineListeners('post.doctors_cabinets', $event)" @success="data.my_doctor.cabinet_ids[index] = $event.detail.response.obj; data.modals.online_slots = { obj: $event.detail.response.obj }" class="flex-shrink-0 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+                                                                        <i class="fa-solid fa-sliders"></i>
+                                                                        Настрой онлайн часовете
+                                                                    </button>
+                                                                </div>
                                                             </div>
 
-                                                            <div class="">
-                                                                <label class="block text-sm font-medium text-gray-700 mb-2">Линк за видео консултация</label>
-                                                                <input type="text" :value="cabinet.online_url" name="online_url" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500">
-                                                            </div>
+                                                            <input type="hidden" name="online" :value="onlineSlotsCount(cabinet) > 0 ? 1 : 0">
 
                                                         </div>
                                                     </div>
@@ -1591,6 +1869,15 @@
                             const date = new Date(dateStr);
                             return months[date.getMonth()];
                         },
+                        shortLink(url, max = 30) {
+                            if (!url) return '';
+                            let short = String(url).trim();
+                            try {
+                                const u = new URL(/^https?:\/\//i.test(short) ? short : 'https://' + short);
+                                short = u.hostname.replace(/^www\./, '') + (u.pathname + u.search).replace(/\/$/, '');
+                            } catch (e) { }
+                            return short.length > max ? short.slice(0, max) + '…' : short;
+                        },
                         googleCalendarUrl(apt) {
                             const datePart = apt.date.replace(/-/g, '');
                             const startTime = (apt.time_start || '00:00').replace(':', '') + '00';
@@ -1711,6 +1998,15 @@
                                                             <i :class="apt.online ? 'fa-solid fa-video text-blue-400' : 'fa-solid fa-location-dot text-red-400'" class="mr-1"></i>
                                                             <span x-text="apt.online ? 'Онлайн' : apt.cabinet?.address"></span>
                                                         </p>
+
+                                                        <!-- Линк за видео консултация -->
+                                                        <template x-if="apt.online && apt.cabinet?.online_url">
+                                                            <a :href="apt.cabinet.online_url" target="_blank" rel="noopener noreferrer" @click.stop :title="apt.cabinet.online_url" class="inline-flex items-center gap-1.5 mt-1 max-w-full px-2 py-1 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 text-xs font-medium transition-colors">
+                                                                <i class="fa-solid fa-link text-[10px] flex-shrink-0"></i>
+                                                                <span class="truncate" x-text="shortLink(apt.cabinet.online_url)"></span>
+                                                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-60 flex-shrink-0"></i>
+                                                            </a>
+                                                        </template>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2224,7 +2520,7 @@
                                                                 <div :class="message.user_id == data.user.id ? 'bg-accent-500 text-white' : 'bg-white border border-gray-200 text-gray-900'" class="max-w-xs lg:max-w-md px-4 py-2 rounded-2xl shadow-sm">
                                                                     <!-- Text message -->
                                                                     <template x-if="!message.is_file">
-                                                                        <p x-text="message.text"></p>
+                                                                        <p class="whitespace-pre-line break-words" x-text="message.text"></p>
                                                                     </template>
                                                                     <!-- File message -->
                                                                     <template x-if="message.is_file">
@@ -2299,7 +2595,6 @@
                                             </template>
                                         </div>
                                     </div>
-                                    <p class="text-center text-gray-400 text-xs py-2"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Всички съобщения се изтриват автоматично след 90 дни.</p>
 
                                 </div>
                             </template>
@@ -2312,6 +2607,9 @@
                                     <p class="text-gray-500">Нямате активни съобщения</p>
                                 </div>
                             </template>
+
+                            <p class="text-right text-gray-400 text-xs py-2"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Всички съобщения се изтриват автоматично след 90 дни.</p>
+
                         </div>
 
                     </template>
@@ -2645,13 +2943,92 @@
                             </form>
                         </div>
 
+                        <!-- Legal Documents Section (Patient) -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 mt-4">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+                                <i class="fa-solid fa-file-shield text-accent-500"></i>
+                                Правни документи
+                            </h2>
+                            <p class="text-gray-500 text-sm mb-6">При регистрацията сте приели следните документи. Можете да ги прегледате по всяко време.</p>
+
+                            <div class="bg-green-50 border border-green-100 rounded-xl px-5 py-4 mb-6 flex items-start gap-3">
+                                <div class="w-9 h-9 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-check text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-green-900">Съгласието е регистрирано</p>
+                                    <p class="text-sm text-green-700">Всички правни документи са приети успешно при регистрацията ви в платформата.</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <!-- Общи условия -->
+                                <a href="/bg/terms-conditions" class="group flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                                    <div class="w-11 h-11 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-file-lines text-primary-500 text-lg"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
+                                            <p class="font-semibold text-gray-900 truncate">Общи условия</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 truncate">Правила за използване на платформата</p>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-primary-600 text-sm font-medium flex-shrink-0">
+                                        <span class="hidden sm:inline">Виж</span>
+                                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </a>
+
+                                <!-- Политика за поверителност -->
+                                <a href="/bg/gdpr" class="group flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                                    <div class="w-11 h-11 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-shield-halved text-primary-500 text-lg"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
+                                            <p class="font-semibold text-gray-900 truncate">Политика за поверителност</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 truncate">Защита на личните данни съгласно GDPR</p>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-primary-600 text-sm font-medium flex-shrink-0">
+                                        <span class="hidden sm:inline">Виж</span>
+                                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </a>
+
+                                <!-- Уведомление за родители -->
+                                <a href="/bg/privacy-parents" class="group flex items-center gap-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                                    <div class="w-11 h-11 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-people-roof text-primary-500 text-lg"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
+                                            <p class="font-semibold text-gray-900 truncate">Уведомление за Родители, Настойници и Попечители</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500 truncate">Информация за обработване на данните ви и на детето</p>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-primary-600 text-sm font-medium flex-shrink-0">
+                                        <span class="hidden sm:inline">Виж</span>
+                                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
                         <!-- Deactivate Account Section -->
                         <div class="bg-white rounded-2xl shadow-sm border border-red-100 p-6 lg:p-8 mt-6">
                             <h2 class="text-2xl font-bold text-red-600 mb-4 flex items-center gap-3">
                                 <i class="fa-solid fa-user-slash text-red-500"></i>
                                 Деактивация на акаунт
                             </h2>
-                            <p class="text-gray-600 mb-6">След деактивация акаунтът ви ще бъде спрян и няма да имате достъп до платформата. Можете да се свържете с нас, ако желаете да възстановите акаунта си.</p>
+                            <p class="text-gray-600 mb-4">След деактивация акаунтът ви ще бъде спрян и няма да имате достъп до платформата. Можете да се свържете с нас, ако желаете да възстановите акаунта си.</p>
+                            <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-800 flex items-start gap-3 mb-6">
+                                <i class="fa-solid fa-triangle-exclamation mt-0.5 flex-shrink-0"></i>
+                                <span>С деактивирането на акаунта всички ваши лични и терапевтични данни в профила ще бъдат изтрити от платформата.</span>
+                            </div>
                             <button type="button" @click="callModal($el)" data-modal="deactivate_account" class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors">
                                 <i class="fa-solid fa-user-slash mr-2"></i>Деактивирай акаунта
                             </button>
@@ -2674,6 +3051,15 @@
                             const months = ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни', 'Юли', 'Авг', 'Сеп', 'Окт', 'Ное', 'Дек'];
                             const date = new Date(dateStr);
                             return months[date.getMonth()];
+                        },
+                        shortLink(url, max = 30) {
+                            if (!url) return '';
+                            let short = String(url).trim();
+                            try {
+                                const u = new URL(/^https?:\/\//i.test(short) ? short : 'https://' + short);
+                                short = u.hostname.replace(/^www\./, '') + (u.pathname + u.search).replace(/\/$/, '');
+                            } catch (e) { }
+                            return short.length > max ? short.slice(0, max) + '…' : short;
                         },
                         googleCalendarUrl(apt) {
                             const datePart = apt.date.replace(/-/g, '');
@@ -2789,6 +3175,15 @@
                                                             <i :class="apt.online ? 'fa-solid fa-video text-blue-400' : 'fa-solid fa-location-dot text-red-400'" class="mr-1"></i>
                                                             <span x-text="apt.online ? 'Онлайн' : apt.cabinet?.address"></span>
                                                         </p>
+
+                                                        <!-- Линк за видео консултация -->
+                                                        <template x-if="apt.online && apt.cabinet?.online_url">
+                                                            <a :href="apt.cabinet.online_url" target="_blank" rel="noopener noreferrer" @click.stop :title="apt.cabinet.online_url" class="inline-flex items-center gap-1.5 mt-1 max-w-full px-2 py-1 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 text-xs font-medium transition-colors">
+                                                                <i class="fa-solid fa-link text-[10px] flex-shrink-0"></i>
+                                                                <span class="truncate" x-text="shortLink(apt.cabinet.online_url)"></span>
+                                                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-60 flex-shrink-0"></i>
+                                                            </a>
+                                                        </template>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2964,6 +3359,47 @@
                                 </div>
                             </template>
                         </div>
+
+                        <!-- Retention Period Setting -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 mt-6" apiData="get.my_patient" keyName="my_patient">
+                            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-3 mb-4">
+                                <i class="fa-solid fa-clock-rotate-left text-accent-500"></i>
+                                Съхранение на досиета
+                            </h3>
+
+                            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-5">
+                                <div class="flex gap-3">
+                                    <i class="fa-solid fa-circle-info text-blue-500 mt-0.5"></i>
+                                    <div class="text-sm text-blue-800">
+                                        <p class="font-semibold mb-1">Как работи автоматичното изтриване?</p>
+                                        <p>Информацията от вашите досиета се изтрива автоматично след избрания период от време. Това включва записки, файлове и история на прегледите. По подразбиране периодът е <strong>6 месеца</strong>. Можете да го намалите по ваш избор.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <template x-if="data.my_patient">
+
+                                <form class="max-w-sm">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Период на съхранение</label>
+                                    <select name="retention_period" class="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 text-sm">
+                                        <!-- <option value="1" :selected="data.my_patient?.retention_period == 1">1 месец</option>
+                                        <option value="2" :selected="data.my_patient?.retention_period == 2">2 месеца</option> -->
+                                        <option value="3" :selected="data.my_patient?.retention_period == 3">3 месеца</option>
+                                        <!-- <option value="4" :selected="data.my_patient?.retention_period == 4">4 месеца</option>
+                                        <option value="5" :selected="data.my_patient?.retention_period == 5">5 месеца</option> -->
+                                        <option value="6" :selected="!data.my_patient?.retention_period || data.my_patient?.retention_period == 6">6 месеца</option>
+                                    </select>
+                                    <p class="text-xs text-gray-400 mt-2">След изтичане на избрания период, данните от досиетата ви ще бъдат автоматично изтрити.</p>
+
+                                    <div class="mt-5">
+                                        <button type="button" @click="alpineListeners('post.patients', $event)" class="bg-accent-500 hover:bg-accent-600 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
+                                            <i class="fa-solid fa-save mr-2"></i>Запази
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </template>
+                        </div>
                     </div>
 
                     <!-- Messages Tab -->
@@ -3039,7 +3475,7 @@
                                                                 <div :class="message.user_id == data.user.id ? 'bg-accent-500 text-white' : 'bg-white border border-gray-200 text-gray-900'" class="max-w-xs lg:max-w-md px-4 py-2 rounded-2xl shadow-sm">
                                                                     <!-- Text message -->
                                                                     <template x-if="!message.is_file">
-                                                                        <p x-text="message.text"></p>
+                                                                        <p class="whitespace-pre-line break-words" x-text="message.text"></p>
                                                                     </template>
                                                                     <!-- File message -->
                                                                     <template x-if="message.is_file">
@@ -3381,7 +3817,10 @@
                             <!-- Warning -->
                             <div class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
                                 <i class="fa-solid fa-triangle-exclamation text-red-500 mt-0.5"></i>
-                                <p class="text-sm text-red-800">Сигурни ли сте, че искате да деактивирате акаунта си? Тази операция ще спре достъпа ви до платформата.</p>
+                                <div class="text-sm text-red-800 space-y-1">
+                                    <p>Сигурни ли сте, че искате да деактивирате акаунта си? Тази операция ще спре достъпа ви до платформата.</p>
+                                    <p class="font-semibold">Всички ваши лични и терапевтични данни в профила ще бъдат изтрити от платформата.</p>
+                                </div>
                             </div>
 
                             <!-- Password Input -->
@@ -3411,6 +3850,181 @@
                 </div>
             </div>
         </form>
+    </div>
+</template>
+
+<!-- ==================== ONLINE SLOTS MODAL ==================== -->
+<template x-if="data.modals.online_slots">
+    <div x-data="{
+            cabinet: data.modals.online_slots.obj,
+            selected: {},
+            days: [
+                { i: 1, t: 'Понеделник' },
+                { i: 2, t: 'Вторник' },
+                { i: 3, t: 'Сряда' },
+                { i: 4, t: 'Четвъртък' },
+                { i: 5, t: 'Петък' },
+                { i: 6, t: 'Събота' },
+                { i: 0, t: 'Неделя' }
+            ],
+            get schedule() { return this.cabinet?.schedule || {} },
+            get activeDays() { return this.days.filter(d => this.schedule['day' + d.i] == 1) },
+            get times() {
+                const toMin = s => { const p = String(s || '').split(':'); return (Number(p[0]) || 0) * 60 + (Number(p[1]) || 0); };
+                const pad = n => String(n).padStart(2, '0');
+                const start = toMin(this.schedule.time_start || '08:00');
+                const end = toMin(this.schedule.time_end || '18:00');
+                const step = Number(this.schedule.interval) || 30;
+                const out = [];
+                for (let m = start; m + step <= end; m += step) out.push(pad(Math.floor(m / 60)) + ':' + pad(m % 60));
+                return out;
+            },
+            get flatSlots() {
+                const out = [];
+                this.activeDays.forEach(d => (this.selected[d.i] || []).forEach(t => out.push({ d: d.i, t: t })));
+                return out;
+            },
+            get totalSelected() { return this.flatSlots.length },
+            get allSelected() {
+                return this.activeDays.length > 0 && this.times.length > 0
+                    && this.activeDays.every(d => this.times.every(t => this.has(d.i, t)));
+            },
+            init() {
+                const src = this.schedule.online_slots || [];
+                const state = {};
+                this.days.forEach(d => { state[d.i] = [...(src[d.i] || [])]; });
+                this.selected = state;
+            },
+            has(day, time) { return (this.selected[day] || []).includes(time) },
+            toggle(day, time) {
+                const current = this.selected[day] || [];
+                this.selected[day] = current.includes(time)
+                    ? current.filter(x => x !== time)
+                    : [...current, time].sort();
+            },
+            toggleDay(day) {
+                const current = this.selected[day] || [];
+                this.selected[day] = current.length === this.times.length ? [] : [...this.times];
+            },
+            toggleAll() {
+                const fill = this.allSelected ? [] : this.times;
+                const state = { ...this.selected };
+                this.activeDays.forEach(d => { state[d.i] = [...fill]; });
+                this.selected = state;
+            },
+            syncLocal() {
+                const i = data.my_doctor.cabinet_ids.findIndex(c => c.id == this.cabinet.id);
+                if (i < 0) return;
+                const arr = [[], [], [], [], [], [], []];
+                this.activeDays.forEach(d => { arr[d.i] = [...(this.selected[d.i] || [])]; });
+                data.my_doctor.cabinet_ids[i].schedule.online_slots = arr;
+                data.my_doctor.cabinet_ids[i].online = this.totalSelected > 0 ? 1 : 0;
+                data.my_doctor.cabinet_ids[i].online_url = document.getElementById('onlineUrlInput')?.value || '';
+            }
+        }">
+        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="callModal($el)" data-modal="online_slots"></div>
+
+            <!-- Modal -->
+            <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden max-h-[90vh] flex flex-col" @click.stop>
+
+                <!-- Header -->
+                <div class="relative bg-blue-50 px-6 py-4 flex items-center justify-between flex-shrink-0">
+                    <div>
+                        <h3 class="text-lg font-bold text-blue-800 flex items-center gap-2">
+                            <i class="fa-solid fa-video"></i>
+                            Онлайн часове
+                        </h3>
+                        <p class="text-sm text-blue-600/80 mt-0.5" x-text="cabinet.address || 'Кабинет'"></p>
+                    </div>
+                    <button type="button" @click="callModal($el)" data-modal="online_slots" class="w-8 h-8 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center text-blue-600 transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Body -->
+                <div class="overflow-y-auto px-6 py-5 space-y-5">
+
+                    <!-- Toolbar -->
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-gray-100">
+                        <p class="text-sm text-gray-600">
+                            Маркирайте часовете, които могат да се провеждат онлайн.
+                            <span class="block text-xs text-gray-400 mt-0.5" x-text="totalSelected + ' избрани от ' + (activeDays.length * times.length)"></span>
+                        </p>
+                        <button type="button" @click="toggleAll()" :class="allSelected ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'" class="flex-shrink-0 font-semibold px-4 py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid" :class="allSelected ? 'fa-xmark' : 'fa-check-double'"></i>
+                            <span x-text="allSelected ? 'Изчисти всички' : 'Всички часове'"></span>
+                        </button>
+                    </div>
+
+                    <!-- Няма работни дни -->
+                    <template x-if="activeDays.length === 0 || times.length === 0">
+                        <div class="text-center py-10">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-calendar-xmark text-gray-400 text-2xl"></i>
+                            </div>
+                            <p class="text-gray-500 text-sm">Първо задайте работни дни и часове на кабинета.</p>
+                        </div>
+                    </template>
+
+                    <!-- Дни и часове -->
+                    <template x-for="d in activeDays" :key="d.i">
+                        <div class="border border-gray-200 rounded-2xl p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <p class="font-semibold text-gray-900" x-text="d.t"></p>
+                                <button type="button" @click="toggleDay(d.i)" class="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors" x-text="(selected[d.i] || []).length === times.length ? 'Изчисти деня' : 'Целият ден'"></button>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <template x-for="t in times" :key="d.i + '-' + t">
+                                    <button type="button" @click="toggle(d.i, t)" :class="has(d.i, t)
+                                                ? 'bg-blue-500 text-white border-blue-500'
+                                                : 'bg-white text-gray-600 border-gray-200 hover:border-blue-400 hover:text-blue-600'" class="px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors inline-flex items-center gap-1.5">
+                                        <span x-text="t"></span>
+                                        <template x-if="has(d.i, t)">
+                                            <i class="fa-solid fa-video text-[10px]"></i>
+                                        </template>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Линк за видео консултация -->
+                    <form>
+                        <!-- Пълно състояние на кабинета, за да не се загубят полета при update -->
+                        <input type="hidden" name="id" :value="cabinet.id">
+                        <input type="hidden" name="private_cabinet" :value="cabinet.private_cabinet">
+                        <input type="hidden" name="region_id" :value="cabinet.region_id">
+                        <input type="hidden" name="city_id" :value="cabinet.city_id">
+                        <input type="hidden" name="clinic_id" :value="cabinet.clinic_id || 'empty'">
+                        <input type="hidden" name="address" :value="cabinet.address">
+                        <input type="hidden" name="online" :value="totalSelected > 0 ? 1 : 0">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fa-solid fa-link text-blue-500 mr-2"></i>Линк за видео консултация
+                        </label>
+                        <input type="text" id="onlineUrlInput" name="online_url" :value="cabinet.online_url" placeholder="https://meet.google.com/..." class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-colors text-sm">
+                        <p class="text-xs text-gray-400 mt-2">Изпраща се на пациента при запазване на онлайн час.</p>
+                        <p id="saveOnlineUrl" keyName="dummy" class="hidden"></p>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <form class="px-6 py-4 border-t border-gray-100 flex gap-3 flex-shrink-0">
+                    <input type="hidden" name="cabinet_id" :value="cabinet.id">
+                    <template x-for="s in flatSlots" :key="s.d + '-' + s.t">
+                        <input type="hidden" :name="'online_slots[' + s.d + '][]'" :value="s.t">
+                    </template>
+
+                    <button type="button" @click="callModal($el)" data-modal="online_slots" class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                        Затвори
+                    </button>
+                    <button type="button" @click="alpineListeners('post.doctors_schedules', $event)" keyName="dummy" data-modal="online_slots" @success="syncLocal(); alpineListeners('post.doctors_cabinets', document.getElementById('saveOnlineUrl')); callModal($el)" class="flex-1 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-blue-500/30">
+                        <i class="fa-solid fa-check mr-2"></i>Запази
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -3846,9 +4460,15 @@
         visitType: 'in_person',
         selectedCabinetIndex: 0,
         selectedTime: null,
+        selectedTimeOnline: false,
         date: '',
         mode: 'single',
-        added: false
+        added: false,
+        pickSlot(slot) {
+            this.selectedTime = slot.time_start;
+            this.selectedTimeOnline = !!slot.online;
+            if (!this.selectedTimeOnline) this.visitType = 'in_person';
+        }
     }">
         <form>
             <input type="hidden" :value="data.modals.add_appointment_list.obj.client_id" name="client_id">
@@ -3905,7 +4525,7 @@
                             <!-- Cabinet Select -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Кабинет</label>
-                                <select @change="selectedCabinetIndex = $event.target.selectedIndex" name="cabinet_id" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
+                                <select @change="selectedCabinetIndex = $event.target.selectedIndex; selectedTime = null; selectedTimeOnline = false; visitType = 'in_person'" name="cabinet_id" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
                                     <template x-for="(cabinet, index) in data.my_doctor.cabinet_ids" :key="index">
                                         <option x-text="cabinet.address + (cabinet.online ? ' (онлайн)' : '')" :value="cabinet.id"></option>
                                     </template>
@@ -3936,24 +4556,6 @@
                             <!-- ===== SINGLE MODE ===== -->
                             <div x-show="mode === 'single'" x-transition class="space-y-5">
 
-                                <!-- Visit Type -->
-                                <template x-if="data.my_doctor.cabinet_ids[selectedCabinetIndex].online">
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Тип на посещение</label>
-                                        <div class="flex gap-3">
-                                            <button type="button" @click="visitType = 'in_person'" :class="visitType === 'in_person' ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all">
-                                                <i class="fa-solid fa-hospital"></i>
-                                                Присъствено
-                                            </button>
-                                            <button type="button" @click="visitType = 'online'" :class="visitType === 'online' ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all">
-                                                <i class="fa-solid fa-video"></i>
-                                                Онлайн
-                                            </button>
-                                            <input type="hidden" name="online" :value="visitType === 'online' ? 1 : 0">
-                                        </div>
-                                    </div>
-                                </template>
-
                                 <!-- Date -->
                                 <div x-data="DateHelper.date()">
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Избери дата</label>
@@ -3966,13 +4568,39 @@
                                     <template x-if="data.addAptSlots">
                                         <div class="grid grid-cols-4 gap-2">
                                             <template x-for="slot in Object.values(data.addAptSlots)[0]?.time_slots || []">
-                                                <button type="button" x-text="slot.time_start" @click="selectedTime = slot.time_start" class="px-3 py-2 rounded-lg border text-sm font-medium transition-all text-center" :class="slot.status_id != 1
+                                                <button type="button" @click="pickSlot(slot)" class="px-3 py-2 rounded-lg border text-sm font-medium transition-all text-center inline-flex items-center justify-center gap-1.5" :class="slot.status_id != 1
                                                     ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed line-through'
-                                                    : (selectedTime === slot.time_start ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-primary-50')" :disabled="slot.status_id != 1"></button>
+                                                    : (selectedTime === slot.time_start ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-primary-50')" :disabled="slot.status_id != 1">
+                                                    <span x-text="slot.time_start"></span>
+                                                    <template x-if="slot.online">
+                                                        <i class="fa-solid fa-video text-[10px]" :class="selectedTime === slot.time_start ? 'text-white' : 'text-blue-500'" title="Възможна е онлайн консултация"></i>
+                                                    </template>
+                                                </button>
                                             </template>
                                         </div>
                                     </template>
                                 </div>
+
+                                <!-- Visit Type -->
+                                <template x-if="selectedTime && selectedTimeOnline">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Тип на посещение</label>
+                                        <div class="flex gap-3">
+                                            <button type="button" @click="visitType = 'in_person'" :class="visitType === 'in_person' ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all">
+                                                <i class="fa-solid fa-hospital"></i>
+                                                Присъствено
+                                            </button>
+                                            <button type="button" @click="visitType = 'online'" :class="visitType === 'online' ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all">
+                                                <i class="fa-solid fa-video"></i>
+                                                Онлайн
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <template x-if="mode === 'single' && visitType === 'online' && selectedTimeOnline">
+                                    <input type="hidden" name="online" value="1">
+                                </template>
                             </div>
 
                             <!-- ===== SERIES MODE ===== -->

@@ -10,3 +10,68 @@ Stack trace:
 #0 /home/supercare/web/supercare.expozy.net/public_html/index.php(14): Page->load_page()
 #1 {main}
   thrown in /home/supercare/web/supercare.expozy.net/public_html/core/classes/class.page.php on line 163
+[17-Jun-2026 13:18:04 Europe/Sofia] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$slug of type string in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php:56
+Stack trace:
+#0 /home/supercare/web/supercare.bg/public_html/core/autoload.php(54): Page->__construct()
+#1 /home/supercare/web/supercare.bg/public_html/index.php(4): require_once('/home/supercare...')
+#2 {main}
+  thrown in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php on line 56
+[17-Jun-2026 13:19:14 Europe/Sofia] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$slug of type string in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php:56
+Stack trace:
+#0 /home/supercare/web/supercare.bg/public_html/core/autoload.php(54): Page->__construct()
+#1 /home/supercare/web/supercare.bg/public_html/index.php(4): require_once('/home/supercare...')
+#2 {main}
+  thrown in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php on line 56
+[17-Jun-2026 13:19:38 Europe/Sofia] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$slug of type string in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php:56
+Stack trace:
+#0 /home/supercare/web/supercare.bg/public_html/core/autoload.php(54): Page->__construct()
+#1 /home/supercare/web/supercare.bg/public_html/index.php(4): require_once('/home/supercare...')
+#2 {main}
+  thrown in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php on line 56
+[17-Jun-2026 13:19:43 Europe/Sofia] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$slug of type string in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php:56
+Stack trace:
+#0 /home/supercare/web/supercare.bg/public_html/core/autoload.php(54): Page->__construct()
+#1 /home/supercare/web/supercare.bg/public_html/index.php(4): require_once('/home/supercare...')
+#2 {main}
+  thrown in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php on line 56
+[17-Jun-2026 13:19:48 Europe/Sofia] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$slug of type string in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php:56
+Stack trace:
+#0 /home/supercare/web/supercare.bg/public_html/core/autoload.php(54): Page->__construct()
+#1 /home/supercare/web/supercare.bg/public_html/index.php(4): require_once('/home/supercare...')
+#2 {main}
+  thrown in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php on line 56
+[17-Jun-2026 13:19:53 Europe/Sofia] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$slug of type string in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php:56
+Stack trace:
+#0 /home/supercare/web/supercare.bg/public_html/core/autoload.php(54): Page->__construct()
+#1 /home/supercare/web/supercare.bg/public_html/index.php(4): require_once('/home/supercare...')
+#2 {main}
+  thrown in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php on line 56
+[17-Jun-2026 13:20:16 Europe/Sofia] PHP Fatal error:  Uncaught TypeError: Cannot assign null to property Page::$slug of type string in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php:56
+Stack trace:
+#0 /home/supercare/web/supercare.bg/public_html/core/autoload.php(54): Page->__construct()
+#1 /home/supercare/web/supercare.bg/public_html/index.php(4): require_once('/home/supercare...')
+#2 {main}
+  thrown in /home/supercare/web/supercare.bg/public_html/core/classes/class.page.php on line 56
+[11-Aug-2026 09:04:57 Europe/Sofia] Blacklisted IP, drop connection 2a03:2880:24ff:1:: to /bg/post/11-razstroistvo-s-deficit-na-vnimanieto-i-hiperaktivnost-hsdv.html.
+[11-Aug-2026 09:05:05 Europe/Sofia] Blacklisted IP, drop connection 2a03:2880:15ff:: to /bg/post/11-razstroistvo-s-deficit-na-vnimanieto-i-hiperaktivnost-hsdv.html.
+[11-Aug-2026 09:05:58 Europe/Sofia] Blacklisted IP, drop connection 216.73.217.105 to /sitemap.xml.
+[11-Aug-2026 09:38:14 Europe/Sofia] Blacklisted IP, drop connection 46.232.152.16 to /.
+[11-Aug-2026 09:38:47 Europe/Sofia] Blacklisted IP, drop connection 151.251.247.187 to /.
+[11-Aug-2026 09:44:19 Europe/Sofia] Blacklisted IP, drop connection 216.73.217.71 to /sitemap.xml.
+[11-Aug-2026 10:08:53 Europe/Sofia] Blacklisted IP, drop connection 2a03:2880:16ff:4d:: to /.
+[11-Aug-2026 10:11:06 Europe/Sofia] Blacklisted IP, drop connection 2a00:4804:d800:15dd:111a:cd83:36e9:ee62 to /?utm_medium=paid&utm_source=an&utm_id=120250469314540287&utm_content=120250469314550287&utm_term=120250469314560287&utm_campaign=120250469314540287&fbclid=IwZXh0bgNhZW0BMABhZGlkAas3PFbh5L91c3JtAAAAAAAAAA5zcnRjBmFwcF9pZA8yNDU3OTA4MTg5NTU4NjgAAR4yACK62Tg31GUZH6kr9FXQH5Y9N0tJhRV6RUjmtVmwKLJ50XI51K42r2bL6g_aem_HBC61K4iLYyll6tlRO9JjQ.
+[11-Aug-2026 11:36:17 Europe/Sofia] Blacklisted IP, drop connection 95.169.214.242 to /bg/about.
+[11-Aug-2026 11:36:23 Europe/Sofia] Blacklisted IP, drop connection 216.73.217.71 to /sitemap.xml.
+[11-Aug-2026 11:36:30 Europe/Sofia] Blacklisted IP, drop connection 95.169.214.242 to /.
+[11-Aug-2026 11:37:17 Europe/Sofia] Blacklisted IP, drop connection 62.73.101.230 to /.
+[14-Sep-2026 11:16:27 Europe/Sofia] Blacklisted IP, drop connection 46.232.152.43 to /.
+[14-Sep-2026 11:16:53 Europe/Sofia] Blacklisted IP, drop connection 46.232.152.43 to /.
+[14-Sep-2026 11:17:20 Europe/Sofia] Blacklisted IP, drop connection 46.232.152.43 to /pages/login.php.
+[14-Sep-2026 11:17:31 Europe/Sofia] Blacklisted IP, drop connection 46.232.152.43 to /pages/login.php.
+[14-Sep-2026 11:25:07 Europe/Sofia] Blacklisted IP, drop connection 46.232.152.43 to /pages/login.php.
+[14-Sep-2026 11:26:49 Europe/Sofia] Blacklisted IP, drop connection 9.129.54.133 to /.
+[14-Sep-2026 11:32:47 Europe/Sofia] Blacklisted IP, drop connection 149.62.204.161 to /.
+[14-Sep-2026 11:36:45 Europe/Sofia] Visitor has headless mode: 46.232.152.43.
+[14-Sep-2026 11:36:45 Europe/Sofia] Blacklisted IP, drop connection 46.232.152.43 to /.
+[14-Sep-2026 11:45:18 Europe/Sofia] Blacklisted IP, drop connection 205.210.31.43 to /.
+[14-Sep-2026 11:47:29 Europe/Sofia] Blacklisted IP, drop connection 149.62.204.161 to /.

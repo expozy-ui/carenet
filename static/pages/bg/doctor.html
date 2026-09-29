@@ -23,10 +23,12 @@
                         <!-- Photo -->
                         <div class="flex-shrink-0">
                             <template x-if="data.doctor.avatar && data.doctor.avatar.url">
-                                <img :src="data.doctor.avatar.url" :alt="data.doctor.user_info.names" class="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl object-cover shadow-lg">
+                                <img :src="data.doctor.avatar.url" :alt="data.doctor.user_info.names"
+                                    class="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl object-cover shadow-lg">
                             </template>
                             <template x-if="!data.doctor.avatar || !data.doctor.avatar.url">
-                                <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-primary-100 flex items-center justify-center shadow-lg">
+                                <div
+                                    class="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-primary-100 flex items-center justify-center shadow-lg">
                                     <i class="fa-solid fa-user-doctor text-primary-500 text-5xl"></i>
                                 </div>
                             </template>
@@ -34,8 +36,11 @@
 
                         <!-- Info -->
                         <div class="flex-1">
-                            <h1 class="text-2xl lg:text-3xl font-bold text-gray-900" x-text="data.doctor.user_info.names"></h1>
-                            <p class="text-base text-primary-600 font-medium mt-1" x-text="data.doctor.speciality.title"></p>
+                            <h1 class="text-2xl lg:text-3xl font-bold text-gray-900"
+                                x-text="data.doctor.user_info.names"></h1>
+                            <p class="text-base text-primary-600 font-medium mt-1"
+                                x-text="(data.doctor.specialities?.length ? data.doctor.specialities : (data.doctor.speciality ? [data.doctor.speciality] : [])).map(s => s.title).join(', ')">
+                            </p>
 
                             <!-- Rating -->
                             <div class="flex items-center gap-3 mt-3" x-data="{
@@ -51,10 +56,12 @@
                             }">
                                 <div class="flex items-center gap-1">
                                     <template x-for="s in 5" :key="s">
-                                        <i :class="s <= Math.round(parseFloat(avgRating)) ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-gray-300'"></i>
+                                        <i
+                                            :class="s <= Math.round(parseFloat(avgRating)) ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-gray-300'"></i>
                                     </template>
                                 </div>
-                                <span class="font-semibold text-gray-900" x-text="avgRating > 0 ? avgRating : '-'"></span>
+                                <span class="font-semibold text-gray-900"
+                                    x-text="avgRating > 0 ? avgRating : '-'"></span>
                                 <span class="text-gray-400">|</span>
                                 <span class="text-gray-500" x-text="totalReviews + ' отзива'"></span>
                             </div>
@@ -62,25 +69,29 @@
                             <!-- Tags -->
                             <div class="flex flex-wrap gap-2 mt-4">
                                 <template x-if="data.doctor.nzok">
-                                    <span class="inline-flex items-center gap-1 bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    <span
+                                        class="inline-flex items-center gap-1 bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
                                         <i class="fa-solid fa-check text-xs"></i>
                                         <span>НЗОК</span>
                                     </span>
                                 </template>
                                 <template x-if="data.doctor.children">
-                                    <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    <span
+                                        class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
                                         <i class="fa-solid fa-child text-xs"></i>
                                         <span>Работи с деца</span>
                                     </span>
                                 </template>
                                 <template x-if="data.doctor.home_visits">
-                                    <span class="inline-flex items-center gap-1 bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    <span
+                                        class="inline-flex items-center gap-1 bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
                                         <i class="fa-solid fa-house-medical text-xs"></i>
                                         <span>Домашни посещения</span>
                                     </span>
                                 </template>
                                 <template x-if="data.doctor.cabinet_ids && data.doctor.cabinet_ids.some(c => c.online)">
-                                    <span class="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    <span
+                                        class="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-sm font-medium">
                                         <i class="fa-solid fa-video text-xs"></i>
                                         <span>Онлайн консултации</span>
                                     </span>
@@ -100,7 +111,36 @@
                     <!-- Description -->
                     <template x-if="data.doctor.description">
                         <div class="mt-6 pt-6 border-t border-gray-100">
-                            <p class="text-gray-600 leading-relaxed" x-text="data.doctor.description"></p>
+                            <p class="text-gray-600 leading-relaxed whitespace-pre-line"
+                                x-text="data.doctor.description"></p>
+                        </div>
+                    </template>
+
+                    <!-- Специализации -->
+                    <template x-if="data.doctor.tags && data.doctor.tags.length">
+                        <div class="mt-6 pt-6 border-t border-gray-100" x-data="{ showAllTags: false, tagsLimit: 10 }">
+                            <p class="text-sm font-medium text-gray-500 mb-3">Специализации</p>
+                            <div class="flex flex-wrap gap-2">
+                                <template
+                                    x-for="tag in (showAllTags ? data.doctor.tags : data.doctor.tags.slice(0, tagsLimit))"
+                                    :key="tag.id">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
+                                        <i class="fa-solid fa-tag text-[10px] text-gray-400"></i>
+                                        <span x-text="tag.title"></span>
+                                    </span>
+                                </template>
+                            </div>
+
+                            <template x-if="data.doctor.tags.length > tagsLimit">
+                                <button type="button" @click="showAllTags = !showAllTags"
+                                    class="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                                    <span
+                                        x-text="showAllTags ? 'Покажи по-малко' : 'Виж всички (' + data.doctor.tags.length + ')'"></span>
+                                    <i class="fa-solid text-xs"
+                                        :class="showAllTags ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                                </button>
+                            </template>
                         </div>
                     </template>
                 </div>
@@ -109,7 +149,7 @@
                 <template x-if="data.doctor.education">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                         <h2 class="text-xl font-bold text-gray-900 mb-4">Образование</h2>
-                        <p class="text-gray-600 leading-relaxed" x-text="data.doctor.education"></p>
+                        <p class="text-gray-600 leading-relaxed whitespace-pre-line" x-text="data.doctor.education"></p>
                     </div>
                 </template>
 
@@ -117,7 +157,7 @@
                 <!-- <template x-if="data.doctor.biography">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
                         <h2 class="text-xl font-bold text-gray-900 mb-4">Подробно описание на професионалния опит</h2>
-                        <p class="text-gray-600 leading-relaxed" x-text="data.doctor.biography"></p>
+                        <p class="text-gray-600 leading-relaxed whitespace-pre-line" x-text="data.doctor.biography"></p>
                     </div>
                 </template> -->
 
@@ -148,7 +188,11 @@
                             <!-- YouTube Video -->
                             <template x-if="data.doctor.video_url && data.doctor.video_url.includes('youtube')">
                                 <div class="aspect-video max-w-md rounded-xl overflow-hidden">
-                                    <iframe :src="'https://www.youtube.com/embed/' + data.doctor.video_url.split('v=')[1].split('&')[0]" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe
+                                        :src="'https://www.youtube.com/embed/' + data.doctor.video_url.split('v=')[1].split('&')[0]"
+                                        class="w-full h-full" frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
                                 </div>
                             </template>
                             <!-- Uploaded Video -->
@@ -162,11 +206,13 @@
                 </template>
 
                 <!-- Reviews -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8" apiData="get.doctors_ratings" :data-doctor_id="data.pageUrl.id" keyName="doctor_ratings">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8"
+                    apiData="get.doctors_ratings" :data-doctor_id="data.pageUrl.id" keyName="doctor_ratings">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-xl font-bold text-gray-900">
                             Отзиви
-                            <span class="text-base font-normal text-gray-400" x-text="'(' + (data.doctor_ratings.pagination?.total_results || 0) + ')'"></span>
+                            <span class="text-base font-normal text-gray-400"
+                                x-text="'(' + (data.doctor_ratings.pagination?.total_results || 0) + ')'"></span>
                         </h2>
                     </div>
 
@@ -175,23 +221,29 @@
                         <template x-for="review in data.doctor_ratings.result" :key="review.id">
                             <div class="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
                                 <div class="flex items-center gap-3 mb-2">
-                                    <div class="w-10 h-10 rounded-full overflow-hidden bg-primary-100 flex items-center justify-center flex-shrink-0">
-                                        <img :src="review.client.avatar?.url_10x10 || Helpers.image('user')" class="w-full h-full object-cover" alt="">
+                                    <div
+                                        class="w-10 h-10 rounded-full overflow-hidden bg-primary-100 flex items-center justify-center flex-shrink-0">
+                                        <img :src="review.client.avatar?.url_10x10 || Helpers.image('user')"
+                                            class="w-full h-full object-cover" alt="">
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="font-semibold text-gray-900 truncate" x-text="review.client.names || review.client.email"></p>
+                                        <p class="font-semibold text-gray-900 truncate"
+                                            x-text="review.client.names || review.client.email"></p>
                                         <div class="flex items-center gap-2">
                                             <div class="flex">
                                                 <template x-for="s in 5" :key="s">
-                                                    <i :class="s <= review.rating ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-gray-300'" class="text-xs"></i>
+                                                    <i :class="s <= review.rating ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-gray-300'"
+                                                        class="text-xs"></i>
                                                 </template>
                                             </div>
-                                            <span class="text-xs text-gray-400" x-text="Helpers.formatDate(review.date_created)"></span>
+                                            <span class="text-xs text-gray-400"
+                                                x-text="Helpers.formatDate(review.date_created)"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <template x-if="review.text">
-                                    <p class="text-gray-600 text-sm pl-[52px]" x-text="review.text"></p>
+                                    <p class="text-gray-600 text-sm pl-[52px] whitespace-pre-line" x-text="review.text">
+                                    </p>
                                 </template>
                             </div>
                         </template>
@@ -200,7 +252,8 @@
                     <!-- Empty State -->
                     <template x-if="!data.doctor_ratings.result || data.doctor_ratings.result.length === 0">
                         <div class="text-center py-8">
-                            <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <div
+                                class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
                                 <i class="fa-regular fa-comment-dots text-gray-400 text-xl"></i>
                             </div>
                             <p class="text-gray-500 text-sm">Все още няма отзиви</p>
@@ -208,12 +261,18 @@
                     </template>
 
                     <!-- Pagination -->
-                    <template x-if="data.doctor_ratings.pagination?.pagesArray && data.doctor_ratings.pagination.total_pages > 1">
+                    <template
+                        x-if="data.doctor_ratings.pagination?.pagesArray && data.doctor_ratings.pagination.total_pages > 1">
                         <div class="flex justify-center pt-6 mt-2 border-t border-gray-100">
                             <ul class="flex items-center gap-1">
-                                <template x-for="(page, index) in data.doctor_ratings.pagination.pagesArray" :key="index">
+                                <template x-for="(page, index) in data.doctor_ratings.pagination.pagesArray"
+                                    :key="index">
                                     <li>
-                                        <button @click="alpineListeners('get.doctors_ratings', $event)" :data-page="page" :data-doctor_id="data.pageUrl.id" keyName="doctor_ratings" x-text="page" :class="page == data.doctor_ratings.pagination.current_page ? 'bg-primary-500 text-white' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'" class="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium transition-colors"></button>
+                                        <button @click="alpineListeners('get.doctors_ratings', $event)"
+                                            :data-page="page" :data-doctor_id="data.pageUrl.id" keyName="doctor_ratings"
+                                            x-text="page"
+                                            :class="page == data.doctor_ratings.pagination.current_page ? 'bg-primary-500 text-white' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'"
+                                            class="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium transition-colors"></button>
                                     </li>
                                 </template>
                             </ul>
@@ -248,19 +307,29 @@
                                     <label class="block text-sm text-gray-600 mb-2">Изберете кабинет</label>
 
                                     <template x-for="cabinet in data.doctor.cabinet_ids" :key="cabinet.id">
-                                        <div :id="data.timeSlot.selectedCabinet.id" @click="data.timeSlot.setCabinet(cabinet); $nextTick(() => { alpineListeners('get.doctors_timeslots', $refs.getTimeslots)}) " :class="data.timeSlot.selectedCabinet.id === cabinet.id ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-primary-300'" class="border rounded-xl p-4 cursor-pointer transition-colors">
+                                        <div :id="data.timeSlot.selectedCabinet.id"
+                                            @click="data.timeSlot.setCabinet(cabinet); $nextTick(() => { alpineListeners('get.doctors_timeslots', $refs.getTimeslots)}) "
+                                            :class="data.timeSlot.selectedCabinet.id === cabinet.id ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-primary-300'"
+                                            class="border rounded-xl p-4 cursor-pointer transition-colors">
                                             <div class="flex items-start gap-3">
-                                                <i :class="cabinet.online ? 'fa-solid fa-video text-blue-500' : 'fa-solid fa-location-dot text-primary-500'" class="mt-1"></i>
+                                                <i :class="cabinet.online ? 'fa-solid fa-video text-blue-500' : 'fa-solid fa-location-dot text-primary-500'"
+                                                    class="mt-1"></i>
                                                 <div class="flex-1">
 
                                                     <p class="text-sm text-gray-500" x-text="cabinet.address"></p>
                                                     <!-- Working days -->
                                                     <div class="flex flex-wrap gap-1 mt-2">
-                                                        <template x-for="day in cabinet.schedule.dayOfWeek" :key="day.id">
-                                                            <span :class="day.status_id === 1 ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-400'" class="text-xs px-2 py-0.5 rounded" x-text="day.title.substring(0, 3)"></span>
+                                                        <template x-for="day in cabinet.schedule.dayOfWeek"
+                                                            :key="day.id">
+                                                            <span
+                                                                :class="day.status_id === 1 ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-400'"
+                                                                class="text-xs px-2 py-0.5 rounded"
+                                                                x-text="day.title.substring(0, 3)"></span>
                                                         </template>
                                                     </div>
-                                                    <p class="text-xs text-gray-400 mt-1" x-text="cabinet.schedule.time_start + ' - ' + cabinet.schedule.time_end"></p>
+                                                    <p class="text-xs text-gray-400 mt-1"
+                                                        x-text="cabinet.schedule.time_start + ' - ' + cabinet.schedule.time_end">
+                                                    </p>
                                                 </div>
                                                 <template x-if="data.timeSlot.selectedCabinet.id === cabinet.id">
                                                     <i class="fa-solid fa-check-circle text-primary-500 text-xl"></i>
@@ -275,11 +344,15 @@
                             <!-- Service Selection -->
                             <template x-if="data.timeSlot">
                                 <div class="mb-6">
-                                    <label class="block text-sm text-gray-600 mb-2">Каква е причината за посещението?</label>
-                                    <select @change="data.selectedServiceId = $event.target.value" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white text-gray-700">
+                                    <label class="block text-sm text-gray-600 mb-2">Каква е причината за
+                                        посещението?</label>
+                                    <select @change="data.selectedServiceId = $event.target.value"
+                                        class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white text-gray-700">
                                         <!-- <option value="">Избери...</option> -->
                                         <template x-for="service in data.timeSlot.selectedCabinet.services">
-                                            <option :value="service.service_id" x-text="service.service.title"></option>
+                                            <option :value="service.service_id"
+                                                :selected="service.service_id == data.selectedServiceId"
+                                                x-text="service.service.title"></option>
                                         </template>
                                     </select>
                                 </div>
@@ -298,7 +371,8 @@
                             <div class="mb-6">
                                 <!-- Calendar Navigation -->
                                 <div class="flex items-center justify-between mb-4">
-                                    <button @click="data.timeSlot.changeDays(-3)" class="p-2 transition-colors text-gray-600 hover:text-primary-600">
+                                    <button @click="data.timeSlot.changeDays(-3)"
+                                        class="p-2 transition-colors text-gray-600 hover:text-primary-600">
                                         <i class="fa-solid fa-chevron-left"></i>
                                     </button>
 
@@ -306,13 +380,16 @@
                                     <div class="flex-1 grid grid-cols-3 gap-2 text-center">
                                         <template x-for="day in data.timeSlots">
                                             <div class="text-sm">
-                                                <p class="text-gray-500" x-text="Helpers.getDayTitleByIndex(day.dayOfWeek) "></p>
-                                                <p class="font-semibold text-gray-900" x-text="Helpers.formatDate(day.date, 'bg')"></p>
+                                                <p class="text-gray-500"
+                                                    x-text="Helpers.getDayTitleByIndex(day.dayOfWeek) "></p>
+                                                <p class="font-semibold text-gray-900"
+                                                    x-text="Helpers.formatDate(day.date, 'bg')"></p>
                                             </div>
                                         </template>
                                     </div>
 
-                                    <button @click="data.timeSlot.changeDays(3)" class="p-2 transition-colors text-gray-600 hover:text-primary-600">
+                                    <button @click="data.timeSlot.changeDays(3)"
+                                        class="p-2 transition-colors text-gray-600 hover:text-primary-600">
                                         <i class="fa-solid fa-chevron-right"></i>
                                     </button>
                                 </div>
@@ -324,35 +401,62 @@
                                             <template x-if="day.time_slots.length > 0">
 
                                                 <template x-for="time in day.time_slots">
-                                                    <button @click="time.status_id == 1 ? (data.timeSlot.selectedТimeStart = time.time_start, data.timeSlot.selectedDate = day.date) : null" :class="time.status_id != 1
+                                                    <button
+                                                        @click="time.status_id == 1 ? data.timeSlot.selectSlot(day, time) : null"
+                                                        :class="time.status_id != 1
                                                             ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed line-through'
                                                             : (data.timeSlot.selectedТimeStart === time.time_start && data.timeSlot.selectedDate === day.date
                                                                 ? 'bg-primary-500 text-white border-primary-500'
-                                                                : 'bg-white text-primary-600 border-primary-200 hover:border-primary-500 hover:bg-primary-50')" :disabled="time.status_id != 1" class="w-fit h-fit py-2 px-4 border rounded-lg text-base font-medium transition-colors" x-text="time.time_start"></button>
+                                                                : 'bg-white text-primary-600 border-primary-200 hover:border-primary-500 hover:bg-primary-50')"
+                                                        :disabled="time.status_id != 1"
+                                                        class="w-fit h-fit py-2 px-4 border rounded-lg text-base font-medium transition-colors inline-flex items-center gap-1.5">
+                                                        <span x-text="time.time_start"></span>
+                                                        <template x-if="time.online">
+                                                            <i class="fa-solid fa-video text-xs"
+                                                                :class="time.status_id != 1 ? 'text-gray-400' : (data.timeSlot.selectedТimeStart === time.time_start && data.timeSlot.selectedDate === day.date ? 'text-white' : 'text-blue-500')"
+                                                                title="Възможна е онлайн консултация"></i>
+                                                        </template>
+                                                    </button>
                                                 </template>
 
                                             </template>
 
                                             <template x-if="day.time_slots.length === 0">
-                                                <div class="h-full flex items-center justify-center bg-gray-50 rounded-lg">
-                                                    <p class="text-gray-600 text-base text-center px-2">Няма налични часове</p>
+                                                <div
+                                                    class="h-full flex items-center justify-center bg-gray-50 rounded-lg">
+                                                    <p class="text-gray-600 text-base text-center px-2">Няма налични
+                                                        часове</p>
                                                 </div>
                                             </template>
                                         </div>
                                     </template>
                                 </div>
+
+                                <!-- Legend -->
+                                <template
+                                    x-if="Object.values(data.timeSlots || {}).some(d => (d.time_slots || []).some(t => t.online))">
+                                    <p class="mt-3 text-xs text-gray-500 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-video text-blue-500"></i>
+                                        Провежда онлайн часове
+                                    </p>
+                                </template>
                             </div>
 
                             <!-- Book Button -->
                             <template x-if="!data.user.logged_in ">
-                                <button type="button" @click="callModal($el)" data-modal="login" :class="(!data.timeSlot.selectedТimeStart || !data.timeSlot.selectedDate) ? 'bg-gray-300 cursor-not-allowed' : ''" class="w-full bg-accent-500 hover:bg-accent-600 py-3 text-white font-semibold rounded-xl transition-colors mb-6">
+                                <button type="button" @click="data.timeSlot.savePending(); callModal($el)"
+                                    data-modal="login"
+                                    :class="(!data.timeSlot.selectedТimeStart || !data.timeSlot.selectedDate) ? 'bg-gray-300 cursor-not-allowed' : ''"
+                                    class="w-full bg-accent-500 hover:bg-accent-600 py-3 text-white font-semibold rounded-xl transition-colors mb-6">
                                     <i class="fa-solid fa-calendar-check mr-2"></i>
                                     Запази час
                                 </button>
                             </template>
 
                             <template x-if="data.user.logged_in ">
-                                <button type="button" @click="data.showBookingModal = true" :class="(!data.timeSlot.selectedТimeStart || !data.timeSlot.selectedDate) ? 'bg-gray-300 cursor-not-allowed' : ''" class="w-full bg-accent-500 hover:bg-accent-600 py-3 text-white font-semibold rounded-xl transition-colors mb-6">
+                                <button type="button" @click="data.showBookingModal = true"
+                                    :class="(!data.timeSlot.selectedТimeStart || !data.timeSlot.selectedDate) ? 'bg-gray-300 cursor-not-allowed' : ''"
+                                    class="w-full bg-accent-500 hover:bg-accent-600 py-3 text-white font-semibold rounded-xl transition-colors mb-6">
                                     <i class="fa-solid fa-calendar-check mr-2"></i>
                                     Запази час
                                 </button>
@@ -362,7 +466,10 @@
                             <div class="border-t border-gray-100 pt-6">
                                 <p class="font-semibold text-gray-900 mb-2">Имате нужда от помощ?</p>
                                 <p class="text-sm text-gray-600">
-                                    Разгледайте страницата ни с <a href="#" class="text-primary-600 hover:underline">Често задавани въпроси</a> или ни пишете на <a href="mailto:hello@supercare.bg" class="text-primary-600 hover:underline">hello@supercare.bg</a>
+                                    Разгледайте страницата ни с <a href="#"
+                                        class="text-primary-600 hover:underline">Често задавани въпроси</a> или ни
+                                    пишете на <a href="mailto:hello@CareNet.bg"
+                                        class="text-primary-600 hover:underline">hello@CareNet.bg</a>
                                 </p>
                             </div>
                         </div>
@@ -377,13 +484,19 @@
 </main>
 
 <!-- Booking Confirmation Modal -->
-<div x-show="data.showBookingModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+<div x-show="data.showBookingModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
 
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/50" @click="data.showBookingModal = false"></div>
 
     <!-- Modal Content -->
-    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
         <form>
 
             <input type="hidden" :value="data.timeSlot.selectedCabinet.id" name="cabinet_id">
@@ -391,14 +504,15 @@
             <input type="hidden" :value="data.timeSlot.selectedDate" name="date">
             <input type="hidden" :value="data.timeSlot.selectedТimeStart" name="time_start">
 
-            <template x-if="data.bookingVisitType == 'online'">
-                <input type="text" name="online" value="1" id="">
+            <template x-if="data.bookingVisitType == 'online' && data.timeSlot.selectedTimeOnline">
+                <input type="hidden" name="online" value="1">
             </template>
 
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-6 border-b border-gray-100">
                 <h3 class="text-xl font-bold text-gray-900">Заяви час</h3>
-                <button type="button" @click="data.showBookingModal = false" class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
+                <button type="button" title="Затвори" @click="data.showBookingModal = false"
+                    class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
@@ -409,7 +523,8 @@
                 <!-- Doctor Info -->
                 <div class="flex items-center gap-4 pb-5 border-b border-gray-100">
                     <template x-if="data.doctor.avatar && data.doctor.avatar.url">
-                        <img :src="data.doctor.avatar.url" :alt="data.doctor.user_info.names" class="w-14 h-14 rounded-xl object-cover">
+                        <img :src="data.doctor.avatar.url" :alt="data.doctor.user_info.names"
+                            class="w-14 h-14 rounded-xl object-cover">
                     </template>
                     <template x-if="!data.doctor.avatar || !data.doctor.avatar.url">
                         <div class="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center">
@@ -418,16 +533,19 @@
                     </template>
                     <div>
                         <p class="font-semibold text-gray-900" x-text="data.doctor.user_info.names"></p>
-                        <p class="text-sm text-primary-600" x-text="data.doctor.speciality.title"></p>
+                        <p class="text-sm text-primary-600"
+                            x-text="(data.doctor.specialities?.length ? data.doctor.specialities : (data.doctor.speciality ? [data.doctor.speciality] : [])).map(s => s.title).join(', ')">
+                        </p>
                     </div>
                 </div>
 
                 <!-- Cabinet Info -->
                 <div class="flex items-start gap-3">
                     <div class="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0">
-                        <i :class="data.timeSlot.selectedCabinet.online ? 'fa-solid fa-video text-blue-500' : 'fa-solid fa-location-dot text-primary-500'"></i>
+                        <i
+                            :class="data.bookingVisitType === 'online' ? 'fa-solid fa-video text-blue-500' : 'fa-solid fa-location-dot text-primary-500'"></i>
                     </div>
-                    <div>
+                    <div class="min-w-0">
                         <p class="text-sm font-medium text-gray-500">Кабинет</p>
                         <p class="text-gray-900" x-text="data.timeSlot.selectedCabinet.address"></p>
                     </div>
@@ -443,10 +561,31 @@
                         <p class="text-gray-900">
                             <span x-text="data.timeSlot.selectedDate"></span>
                             <span class="mx-1">в</span>
-                            <span class="font-semibold text-primary-600" x-text="data.timeSlot.selectedТimeStart"></span>
+                            <span class="font-semibold text-primary-600"
+                                x-text="data.timeSlot.selectedТimeStart"></span>
                         </p>
                     </div>
                 </div>
+
+                <!-- Онлайн линк -->
+                <template x-if="data.bookingVisitType === 'online' && data.timeSlot.selectedCabinet.online_url">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-video text-indigo-500"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-gray-500">Линк за онлайн консултация</p>
+                            <a :href="data.timeSlot.selectedCabinet.online_url" target="_blank"
+                                rel="noopener noreferrer" :title="data.timeSlot.selectedCabinet.online_url"
+                                class="inline-flex items-center gap-1.5 max-w-full text-indigo-600 hover:text-indigo-700 hover:underline transition-colors">
+                                <span class="truncate"
+                                    x-text="data.timeSlot.shortLink(data.timeSlot.selectedCabinet.online_url)"></span>
+                                <i
+                                    class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 flex-shrink-0"></i>
+                            </a>
+                        </div>
+                    </div>
+                </template>
 
                 <!-- Visit Reason -->
                 <div class="flex items-start gap-3">
@@ -455,37 +594,49 @@
                     </div>
                     <div>
                         <p class="text-sm font-medium text-gray-500">Причина за посещение</p>
-                        <p class="text-gray-900" x-text="data.timeSlot.selectedCabinet.services?.find(s => s.service_id == data.selectedServiceId)?.service?.title "></p>
+                        <p class="text-gray-900"
+                            x-text="data.timeSlot.selectedCabinet.services?.find(s => s.service_id == data.selectedServiceId)?.service?.title ">
+                        </p>
                     </div>
                 </div>
 
                 <!-- Visit Type Selection -->
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-3">Тип на посещението</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button type="button" @click="data.bookingVisitType = 'in-person'" :class="data.bookingVisitType === 'in-person' ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-gray-200 text-gray-600 hover:border-primary-300'" class="flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-colors cursor-pointer">
+                    <div class="grid gap-3" :class="data.timeSlot.selectedTimeOnline ? 'grid-cols-2' : 'grid-cols-1'">
+                        <button type="button" @click="data.bookingVisitType = 'in-person'"
+                            :class="data.bookingVisitType === 'in-person' ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-gray-200 text-gray-600 hover:border-primary-300'"
+                            class="flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-colors cursor-pointer">
                             <i class="fa-solid fa-hospital text-2xl"></i>
                             <span class="text-sm font-medium">Присъствено</span>
                         </button>
 
-                        <template x-if="data.timeSlot.selectedCabinet.online">
-                            <button type="button" @click="data.bookingVisitType = 'online'" :class="data.bookingVisitType === 'online' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600 hover:border-blue-300'" class="flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-colors cursor-pointer">
+                        <template x-if="data.timeSlot.selectedTimeOnline">
+                            <button type="button" @click="data.bookingVisitType = 'online'"
+                                :class="data.bookingVisitType === 'online' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600 hover:border-blue-300'"
+                                class="flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-colors cursor-pointer">
                                 <i class="fa-solid fa-video text-2xl"></i>
                                 <span class="text-sm font-medium">Онлайн</span>
                             </button>
                         </template>
 
                     </div>
+                    <template x-if="!data.timeSlot.selectedTimeOnline">
+                        <p class="mt-2 text-xs text-gray-400">За избрания час е възможно само присъствено посещение.</p>
+                    </template>
                 </div>
 
                 <!-- For Another Patient -->
                 <div x-data="{ forAnother: false }">
                     <label class="flex items-center gap-3 cursor-pointer select-none">
-                        <input type="checkbox" x-model="forAnother" @change="!forAnother && ($refs.pacientNamesDr.value = '')" class="w-4 h-4 rounded text-primary-500 focus:ring-primary-300 cursor-pointer">
+                        <input type="checkbox" x-model="forAnother"
+                            @change="!forAnother && ($refs.pacientNamesDr.value = '')"
+                            class="w-4 h-4 rounded text-primary-500 focus:ring-primary-300 cursor-pointer">
                         <span class="text-sm font-medium text-gray-700">Запазвам за друг пациент</span>
                     </label>
                     <div x-show="forAnother" x-transition class="mt-3">
-                        <input x-ref="pacientNamesDr" type="text" name="pacient_names" placeholder="Имена на пациента" class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
+                        <input x-ref="pacientNamesDr" type="text" name="pacient_names" placeholder="Имена на пациента"
+                            class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors text-sm">
                     </div>
                 </div>
             </div>
@@ -493,12 +644,15 @@
             <!-- Modal Footer -->
             <div class="p-6 border-t border-gray-100 flex gap-3">
 
-                <button type="button" @click="data.showBookingModal = false" class="flex-1 py-3 px-4 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors">
+                <button type="button" @click="data.showBookingModal = false"
+                    class="flex-1 py-3 px-4 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors">
                     Назад
                 </button>
 
                 <template x-if="data.user.logged_in">
-                    <button type="button" @click="alpineListeners('post.doctors_appointment', $event)" @success="href(`/appointment?id=${$event.detail.response.obj.id}`)" class="flex-1 py-3 px-4 bg-accent-500 text-white font-semibold rounded-xl hover:bg-accent-600 transition-colors">
+                    <button type="button" @click="alpineListeners('post.doctors_appointment', $event)"
+                        @success="sessionStorage.removeItem('pendingBooking'); href(`/appointment?id=${$event.detail.response.obj.id}`)"
+                        class="flex-1 py-3 px-4 bg-accent-500 text-white font-semibold rounded-xl hover:bg-accent-600 transition-colors">
                         <i class="fa-solid fa-check mr-2"></i>
                         Потвърди
                     </button>
@@ -522,7 +676,8 @@
                 <!-- Header -->
                 <div class="relative bg-accent-50 px-6 py-4 flex items-center justify-between">
                     <h3 class="text-lg font-bold text-accent-700">Запазване на час</h3>
-                    <button type="button" @click="callModal($el)" data-modal="login" class="w-8 h-8 rounded-full bg-accent-100 hover:bg-accent-200 flex items-center justify-center text-accent-600 transition-colors">
+                    <button type="button" @click="callModal($el)" data-modal="login"
+                        class="w-8 h-8 rounded-full bg-accent-100 hover:bg-accent-200 flex items-center justify-center text-accent-600 transition-colors">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
@@ -532,11 +687,13 @@
                     <form class="space-y-5">
                         <input type="hidden" name="same_page" value="1">
                         <div class="text-center mb-2">
-                            <div class="inline-flex items-center justify-center w-14 h-14 bg-accent-100 rounded-full mb-3">
+                            <div
+                                class="inline-flex items-center justify-center w-14 h-14 bg-accent-100 rounded-full mb-3">
                                 <i class="fa-solid fa-calendar-check text-accent-600 text-xl"></i>
                             </div>
                             <p class="text-gray-700 font-semibold mb-1">Влезте в профила си, за да запазите час</p>
-                            <p class="text-sm text-gray-500">Необходимо е да сте регистриран потребител, за да резервирате час при този специалист.</p>
+                            <p class="text-sm text-gray-500">Необходимо е да сте регистриран потребител, за да
+                                резервирате час при този специалист.</p>
                         </div>
 
                         <!-- Email -->
@@ -546,7 +703,8 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                                     <i class="fa-solid fa-envelope text-gray-400"></i>
                                 </div>
-                                <input type="email" name="email" placeholder="name@example.com" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                                <input type="email" name="email" placeholder="name@example.com" required
+                                    class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
                             </div>
                         </div>
 
@@ -557,23 +715,27 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                                     <i class="fa-solid fa-lock text-gray-400"></i>
                                 </div>
-                                <input type="password" name="password" placeholder="••••••••" required class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
+                                <input type="password" name="password" placeholder="••••••••" required
+                                    class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-colors">
                             </div>
                         </div>
 
                         <!-- Remember & Forgot -->
                         <div class="flex items-center justify-between">
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" name="remember" class="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500">
+                                <input type="checkbox" name="remember"
+                                    class="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500">
                                 <span class="text-sm text-gray-600">Запомни ме</span>
                             </label>
-                            <button type="button" @click="href('/bg/forgotten-password')" class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                            <button type="button" @click="href('/bg/forgotten-password')"
+                                class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
                                 Забравена парола?
                             </button>
                         </div>
 
                         <!-- Submit -->
-                        <button type="button" @click="alpineListeners('User.login', $event)" keyName="user" class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
+                        <button type="button" @click="alpineListeners('User.login', $event)" keyName="user"
+                            class="w-full bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-right-to-bracket"></i>
                             Вход
                         </button>
@@ -592,7 +754,8 @@
                         <div class="text-center">
                             <p class="text-gray-600 text-sm">
                                 Нямате акаунт?
-                                <button type="button" @click="href('/bg/registration')" class="font-semibold text-primary-600 hover:text-primary-700 transition-colors ml-1">
+                                <button type="button" @click="href('/bg/registration')"
+                                    class="font-semibold text-primary-600 hover:text-primary-700 transition-colors ml-1">
                                     Регистрирайте се
                                 </button>
                             </p>
@@ -612,6 +775,7 @@
             selectedCabinet: {},
             selectedТimeStart: '',
             selectedDate: '',
+            selectedTimeOnline: false,
 
             shouldGet: false,
             _scheduled: false,
@@ -620,11 +784,31 @@
                 return this.selectedCabinet?.id ?? '';
             },
 
+            // Съкратен вид на линка за видео консултация
+            shortLink(url, max = 30) {
+                if (!url) return '';
+                let short = String(url).trim();
+                try {
+                    const u = new URL(/^https?:\/\//i.test(short) ? short : 'https://' + short);
+                    short = u.hostname.replace(/^www\./, '') + (u.pathname + u.search).replace(/\/$/, '');
+                } catch (e) { }
+                return short.length > max ? short.slice(0, max) + '…' : short;
+            },
+
+            // Избор на конкретен слот — пази и дали часът позволява онлайн консултация
+            selectSlot(day, time) {
+                this.selectedТimeStart = time.time_start;
+                this.selectedDate = day.date;
+                this.selectedTimeOnline = !!time.online;
+                data.bookingVisitType = 'in-person';
+            },
+
             init() {
                 this.shouldGet = false;
 
                 data.showBookingModal = false;
                 data.bookingVisitType = 'in-person';
+                this.selectedTimeOnline = false;
 
                 this.dateFrom = this.toYmd(new Date());
 
@@ -634,6 +818,9 @@
                     this.selectedCabinet = firstCabinet;
                     data.selectedServiceId = firstCabinet.services?.[0]?.service_id;
                 }
+
+                // Възстановяваме избран час след вход / регистрация
+                this.restorePending();
 
                 this.$watch('dateFrom', (value, oldValue) => {
                     if (!value || value === oldValue || !this.shouldGet) return;
@@ -649,6 +836,51 @@
 
                 // initial get СЛЕД като DOM/bindings са приложени
                 this.$nextTick(() => this.get());
+            },
+
+            // Пази избрания час, за да не се губи при отиване към регистрация
+            savePending() {
+                if (!this.selectedТimeStart || !this.selectedDate) return;
+                try {
+                    sessionStorage.setItem('pendingBooking', JSON.stringify({
+                        doctor_id: data.doctor?.id,
+                        cabinet_id: this.selectedCabinet?.id,
+                        service_id: data.selectedServiceId,
+                        date: this.selectedDate,
+                        time_start: this.selectedТimeStart,
+                        online: this.selectedTimeOnline,
+                        saved_at: Date.now()
+                    }));
+                } catch (e) { }
+            },
+
+            restorePending() {
+                let pending = null;
+                try {
+                    pending = JSON.parse(sessionStorage.getItem('pendingBooking') || 'null');
+                } catch (e) { }
+                if (!pending) return;
+
+                const expired = Date.now() - (pending.saved_at || 0) > 60 * 60 * 1000;
+                const cabinet = data.doctor?.cabinet_ids?.find(c => c.id == pending.cabinet_id);
+
+                if (expired || pending.doctor_id != data.doctor?.id || !cabinet || pending.date < this.toYmd(new Date())) {
+                    if (expired || pending.date < this.toYmd(new Date())) sessionStorage.removeItem('pendingBooking');
+                    return;
+                }
+
+                this.selectedCabinet = cabinet;
+                data.selectedServiceId = pending.service_id ?? cabinet.services?.[0]?.service_id;
+                this.dateFrom = pending.date;
+                this.selectedDate = pending.date;
+                this.selectedТimeStart = pending.time_start;
+                this.selectedTimeOnline = !!pending.online;
+
+                // Логнат — директно към потвърждението
+                if (data.user?.logged_in) {
+                    sessionStorage.removeItem('pendingBooking');
+                    data.showBookingModal = true;
+                }
             },
 
             scheduleGet() {

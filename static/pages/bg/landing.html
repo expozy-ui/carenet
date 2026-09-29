@@ -1,0 +1,738 @@
+<div class="w-full overflow-hidden">
+
+    <!-- ============================================================
+         1. HERO
+         ============================================================ -->
+    <div class="is-section is-section-auto section lock">
+        <div class="is-overlay">
+            <div class="is-overlay-bg bg-gradient-to-br from-primary-900 via-violet-800 to-fuchsia-700"></div>
+        </div>
+        <div class="!container is-container v2 !max-w-full !p-0">
+            <div class="relative">
+
+                <!-- Декоративен слой -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                    <svg class="absolute inset-0 w-full h-full opacity-10" aria-hidden="true">
+                        <defs>
+                            <pattern id="cnDots1" width="28" height="28" patternUnits="userSpaceOnUse">
+                                <circle cx="2" cy="2" r="1.5" fill="#ffffff"></circle>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#cnDots1)"></rect>
+                    </svg>
+                    <div class="absolute -top-32 -left-24 w-96 h-96 rounded-full bg-fuchsia-500 opacity-30 blur-3xl animate-pulse"></div>
+                    <div class="absolute top-1/3 -right-24 w-96 h-96 rounded-full bg-accent-500 opacity-20 blur-3xl"></div>
+                    <svg class="absolute bottom-10 left-0 w-full h-40 opacity-25" viewBox="0 0 1440 200" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                        <path d="M-50,150 C250,40 520,190 780,110 C1000,45 1240,120 1500,60" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+                        <path d="M-50,185 C250,80 520,225 780,148 C1000,85 1240,158 1500,98" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity="0.6"></path>
+                    </svg>
+                </div>
+
+                <div class="relative max-w-7xl mx-auto pt-16 pb-28 lg:pt-24 lg:pb-40">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-10 items-center">
+
+                        <div class="lg:col-span-7 text-white text-center lg:text-left" x-data="{ s: false }" x-init="s = true">
+
+                            <span class="inline-flex items-center gap-3 bg-white/10 border border-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full mb-7 transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'">
+                                <span class="relative flex w-2 h-2">
+                                    <span class="animate-ping absolute inline-flex w-full h-full rounded-full bg-accent-400 opacity-75"></span>
+                                    <span class="relative inline-flex w-2 h-2 rounded-full bg-accent-400"></span>
+                                </span>
+                                Специална оферта за специалисти по детско развитие
+                            </span>
+
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight mb-6 transition-all duration-700 delay-100 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                                <span class="bg-gradient-to-r from-accent-300 via-accent-400 to-fuchsia-300 bg-clip-text text-transparent">CareNet</span>
+                                твоята практика за детско развитие
+                                <span class="relative inline-block">
+                                    онлайн
+                                    <svg class="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                                        <path d="M2,9 C50,2 150,2 198,7" stroke="#ff8a48" stroke-width="4" stroke-linecap="round"></path>
+                                    </svg>
+                                </span>
+                            </h1>
+
+                            <p class="text-lg lg:text-xl text-violet-100 leading-relaxed mb-9 max-w-2xl mx-auto lg:mx-0 transition-all duration-700 delay-200 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                                От момента, в който родителят Ви открие, до записването на час и последващата
+                                комуникация и терапия — всичко в една професионална дигитална среда.
+                            </p>
+
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 justify-center lg:justify-start mb-9 transition-all duration-700 delay-300 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                                <a href="https://carenet.bg/bg/registration" class="group relative overflow-hidden bg-gradient-to-r from-accent-500 via-accent-400 to-fuchsia-500 text-white px-9 py-4 rounded-2xl shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                                    <span class="absolute inset-0 bg-white opacity-20 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></span>
+                                    <span class="relative block text-lg font-black uppercase tracking-wide">Регистрирай се</span>
+                                    <span class="relative block text-xs font-medium text-white">Тествай безплатно 2 месеца</span>
+                                </a>
+                                <a href="#kak-raboti" class="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white hover:bg-white/10 text-white px-7 py-4 rounded-2xl font-semibold transition-all duration-300">
+                                    Виж как работи
+                                    <i class="fa-solid fa-arrow-down text-sm"></i>
+                                </a>
+                            </div>
+
+                            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-x-7 gap-y-3 text-sm text-violet-100 transition-all duration-700 delay-500 ease-out" :class="s ? 'opacity-100' : 'opacity-0'">
+                                <span class="inline-flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-300"></i> Без обвързване</span>
+                                <span class="inline-flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-300"></i> 1 минута регистрация</span>
+                                <span class="inline-flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-300"></i> Прекратявате по всяко време</span>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-5" x-data="{ s: false }" x-init="setTimeout(() => s = true, 150)">
+                            <div class="relative transition-all duration-1000 ease-out" :class="s ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'">
+                                <div class="absolute -inset-4 bg-gradient-to-tr from-accent-500 to-fuchsia-500 opacity-30 rounded-3xl blur-2xl"></div>
+
+                                <div class="relative rounded-3xl overflow-hidden ring-1 ring-white/20 shadow-2xl">
+                                    <img class="w-full aspect-[4/3] object-cover" src="https://r2.expozy.com/supercare/a.jpg" alt="Специалист по детско развитие">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-primary-900 to-transparent opacity-50"></div>
+                                </div>
+
+                                <div class="absolute left-0 sm:-left-6 bottom-16 bg-white rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3 hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white flex items-center justify-center shadow-lg">
+                                        <i class="fa-solid fa-calendar-check"></i>
+                                    </span>
+                                    <div class="text-left leading-tight">
+                                        <p class="text-sm font-bold text-gray-900">Онлайн записвания 24/7</p>
+                                        <p class="text-xs text-gray-500">Без обаждания и чакане</p>
+                                    </div>
+                                </div>
+
+                                <div class="absolute right-0 sm:-right-4 -bottom-6 bg-white rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3 hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white flex items-center justify-center shadow-lg">
+                                        <i class="fa-solid fa-comments"></i>
+                                    </span>
+                                    <div class="text-left leading-tight">
+                                        <p class="text-sm font-bold text-gray-900">Всичко на едно място</p>
+                                        <p class="text-xs text-gray-500">Съобщения и файлове</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Извивка към бялата секция -->
+                <svg class="absolute bottom-0 left-0 w-full h-16 lg:h-24 text-white" viewBox="0 0 1440 120" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0,120 C280,25 620,5 900,45 C1140,79 1290,105 1440,72 L1440,120 Z" fill="currentColor"></path>
+                </svg>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         2. ФЛАЕР ЛИЦЕ — Всеки ден избираш да помагаш на децата
+         ============================================================ -->
+    <div class="is-section is-section-auto section lock">
+        <div class="is-overlay">
+            <div class="is-overlay-bg bg-white"></div>
+        </div>
+        <div class="!container is-container v2 !max-w-7xl py-16 lg:py-28">
+            <div class="relative">
+
+                <div class="absolute -top-16 -right-10 w-72 h-72 rounded-full bg-violet-100 opacity-60 blur-3xl pointer-events-none"></div>
+
+                <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16 lg:mb-20">
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'">
+                        <span class="inline-flex items-center gap-3 text-xs font-black uppercase tracking-widest text-violet-600 mb-6">
+                            <span class="w-10 h-0.5 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500"></span>
+                            За специалисти
+                        </span>
+
+                        <h2 class="text-4xl lg:text-5xl font-black text-gray-900 leading-tight tracking-tight mb-7">
+                            Всеки ден избираш да
+                            <span class="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">помагаш на децата</span>
+                        </h2>
+
+                        <p class="text-3xl lg:text-4xl font-black text-gray-900 leading-tight mb-9">
+                            <span class="bg-gradient-to-r from-primary-700 to-violet-600 bg-clip-text text-transparent">CareNet</span>
+                            избира да помага на теб.
+                        </p>
+
+                        <a href="https://carenet.bg/bg/registration" class="group inline-flex items-center gap-3 text-primary-800 font-bold">
+                            Започни безплатно
+                            <span class="w-10 h-10 rounded-full bg-gradient-to-br from-accent-500 to-fuchsia-500 text-white flex items-center justify-center shadow-lg group-hover:translate-x-1 transition-transform duration-300">
+                                <i class="fa-solid fa-arrow-right text-sm"></i>
+                            </span>
+                        </a>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="relative transition-all duration-700 delay-150 ease-out" :class="s ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'">
+                        <div class="relative bg-gradient-to-br from-violet-50 via-white to-accent-50 rounded-3xl p-8 lg:p-10 ring-1 ring-violet-100 shadow-xl">
+                            <i class="fa-solid fa-quote-right absolute top-6 right-7 text-4xl text-violet-100"></i>
+                            <ul class="space-y-5">
+                                <li class="flex items-start gap-4">
+                                    <span class="w-7 h-7 shrink-0 mt-1 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white text-xs flex items-center justify-center shadow"><i class="fa-solid fa-check"></i></span>
+                                    <span class="text-lg text-gray-800 font-semibold">Организирай срещите си.</span>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <span class="w-7 h-7 shrink-0 mt-1 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white text-xs flex items-center justify-center shadow"><i class="fa-solid fa-check"></i></span>
+                                    <span class="text-lg text-gray-800 font-semibold">Общувай по-лесно с родителите.</span>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <span class="w-7 h-7 shrink-0 mt-1 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white text-xs flex items-center justify-center shadow"><i class="fa-solid fa-check"></i></span>
+                                    <span class="text-lg text-gray-800 font-semibold">Управлявай практиката си на едно място.</span>
+                                </li>
+                            </ul>
+                            <p class="mt-7 pt-7 border-t border-violet-100 text-gray-600 leading-relaxed">
+                                За да можеш да отделяш <span class="font-bold text-gray-900">повече време</span> за това,
+                                което има най-голямо значение — <span class="font-bold text-gray-900">децата</span>.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="relative grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group relative bg-white rounded-3xl p-8 ring-1 ring-gray-100 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <span class="absolute inset-x-8 top-0 h-1 rounded-full bg-gradient-to-r from-primary-600 to-violet-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"></span>
+                        <span class="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-primary-50 to-violet-100 ring-1 ring-violet-100 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                            <i class="fa-solid fa-calendar-days text-2xl bg-gradient-to-br from-primary-700 to-violet-600 bg-clip-text text-transparent"></i>
+                        </span>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">По-добра организация</h3>
+                        <p class="text-gray-600 leading-relaxed">Онлайн записвания и календар</p>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group relative bg-white rounded-3xl p-8 ring-1 ring-gray-100 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 delay-100 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <span class="absolute inset-x-8 top-0 h-1 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"></span>
+                        <span class="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-100 ring-1 ring-fuchsia-100 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                            <i class="fa-solid fa-comments text-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                        </span>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">По-лесна комуникация</h3>
+                        <p class="text-gray-600 leading-relaxed">Съобщения и обмяна на файлове</p>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group relative bg-white rounded-3xl p-8 ring-1 ring-gray-100 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 delay-200 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <span class="absolute inset-x-8 top-0 h-1 rounded-full bg-gradient-to-r from-fuchsia-500 to-accent-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"></span>
+                        <span class="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-accent-50 to-fuchsia-100 ring-1 ring-accent-100 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                            <i class="fa-solid fa-heart text-2xl bg-gradient-to-br from-fuchsia-600 to-accent-500 bg-clip-text text-transparent"></i>
+                        </span>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Проследявай развитието</h3>
+                        <p class="text-gray-600 leading-relaxed">Бележки, цели и препоръки</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         3. ФЛАЕР ГРЪБ — работата извън кабинета
+         ============================================================ -->
+    <div class="is-section is-section-auto section lock">
+        <div class="is-overlay">
+            <div class="is-overlay-bg bg-gray-50"></div>
+        </div>
+        <div class="!container is-container v2 !max-w-7xl py-16 lg:py-28">
+            <div class="relative">
+
+                <svg class="absolute -top-10 left-0 w-full h-40 opacity-40 pointer-events-none" viewBox="0 0 1000 160" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0,120 C180,20 340,150 520,80 C680,18 840,120 1000,50" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round"></path>
+                </svg>
+
+                <div class="relative max-w-4xl mx-auto text-center mb-14 lg:mb-20" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                        <span class="inline-flex items-center gap-3 text-xs font-black uppercase tracking-widest text-fuchsia-600 mb-6">
+                            <span class="w-10 h-0.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-accent-500"></span>
+                            Извън кабинета
+                        </span>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight">
+                            <span class="text-gray-900">Работите с деца.</span><br>
+                            <span class="bg-gradient-to-r from-primary-700 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent">Но зад всяка терапия стои и много работа, която остава извън кабинета.</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 max-w-6xl mx-auto">
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <span class="w-14 h-14 mb-5 rounded-2xl ring-1 ring-violet-100 bg-violet-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <i class="fa-solid fa-magnifying-glass text-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                        </span>
+                        <p class="text-lg font-semibold text-gray-900">Родителите трудно Ви откриват.</p>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 delay-75 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <span class="w-14 h-14 mb-5 rounded-2xl ring-1 ring-primary-100 bg-primary-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <i class="fa-solid fa-clock text-xl bg-gradient-to-br from-primary-700 to-violet-600 bg-clip-text text-transparent"></i>
+                        </span>
+                        <p class="text-lg font-semibold text-gray-900">Записванията и графикът отнемат време.</p>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 delay-150 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <span class="w-14 h-14 mb-5 rounded-2xl ring-1 ring-fuchsia-100 bg-fuchsia-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <i class="fa-solid fa-share-nodes text-xl bg-gradient-to-br from-fuchsia-600 to-accent-500 bg-clip-text text-transparent"></i>
+                        </span>
+                        <p class="text-lg font-semibold text-gray-900">Комуникацията е разпиляна между телефон, чатове и имейли.</p>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 ease-out md:col-span-2" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <span class="w-14 h-14 mb-5 rounded-2xl ring-1 ring-accent-100 bg-accent-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <i class="fa-solid fa-file-lines text-xl bg-gradient-to-br from-accent-500 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                        </span>
+                        <p class="text-lg font-semibold text-gray-900 mb-1">Материали, препоръки и терапевтични задачи</p>
+                        <p class="text-gray-500">— губи се време в печатане и обсъждане набързо между часовете</p>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 delay-75 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <span class="w-14 h-14 mb-5 rounded-2xl ring-1 ring-emerald-100 bg-emerald-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <i class="fa-solid fa-chart-line text-xl bg-gradient-to-br from-emerald-500 to-teal-600 bg-clip-text text-transparent"></i>
+                        </span>
+                        <p class="text-lg font-semibold text-gray-900">Управлението на практиката често остава на заден план.</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         4. CareNet събира всичко на едно място
+         ============================================================ -->
+    <div class="is-section is-section-auto section lock">
+        <div class="is-overlay">
+            <div class="is-overlay-bg bg-gradient-to-br from-violet-700 via-primary-800 to-fuchsia-700"></div>
+        </div>
+        <div class="!container is-container v2 !max-w-7xl py-16 lg:py-28">
+            <div class="relative">
+
+                <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                    <div class="absolute -top-20 right-1/4 w-96 h-96 rounded-full bg-fuchsia-500 opacity-25 blur-3xl animate-pulse"></div>
+                    <div class="absolute bottom-0 -left-20 w-80 h-80 rounded-full bg-accent-500 opacity-20 blur-3xl"></div>
+                </div>
+
+                <div class="relative max-w-3xl mx-auto text-center mb-14" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                        <span class="inline-flex items-center gap-3 text-xs font-black uppercase tracking-widest text-accent-300 mb-6">
+                            <span class="w-10 h-0.5 rounded-full bg-accent-400"></span>
+                            Една платформа
+                        </span>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-6">
+                            CareNet събира всичко на едно място.
+                        </h2>
+                        <p class="text-lg text-violet-100 leading-relaxed">
+                            Вашият професионален профил. Вашият график. Вашите записвания.
+                            Вашата комуникация с родителите. Вашите материали и терапевтична организация.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative grid grid-cols-2 lg:grid-cols-6 gap-3 lg:gap-4 mb-16" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="group bg-white/10 ring-1 ring-white/20 rounded-2xl p-6 text-center hover:bg-white/20 hover:-translate-y-1 transition-all duration-500 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <i class="fa-solid fa-id-card text-2xl text-accent-300 mb-3 block group-hover:scale-110 transition-transform duration-300"></i>
+                        <p class="text-white font-semibold text-sm">Профил</p>
+                    </div>
+                    <div class="group bg-white/10 ring-1 ring-white/20 rounded-2xl p-6 text-center hover:bg-white/20 hover:-translate-y-1 transition-all duration-500 delay-75 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <i class="fa-solid fa-calendar-days text-2xl text-accent-300 mb-3 block group-hover:scale-110 transition-transform duration-300"></i>
+                        <p class="text-white font-semibold text-sm">График</p>
+                    </div>
+                    <div class="group bg-white/10 ring-1 ring-white/20 rounded-2xl p-6 text-center hover:bg-white/20 hover:-translate-y-1 transition-all duration-500 delay-100 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <i class="fa-solid fa-calendar-check text-2xl text-accent-300 mb-3 block group-hover:scale-110 transition-transform duration-300"></i>
+                        <p class="text-white font-semibold text-sm">Записвания</p>
+                    </div>
+                    <div class="group bg-white/10 ring-1 ring-white/20 rounded-2xl p-6 text-center hover:bg-white/20 hover:-translate-y-1 transition-all duration-500 delay-150 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <i class="fa-solid fa-comments text-2xl text-accent-300 mb-3 block group-hover:scale-110 transition-transform duration-300"></i>
+                        <p class="text-white font-semibold text-sm">Комуникация</p>
+                    </div>
+                    <div class="group bg-white/10 ring-1 ring-white/20 rounded-2xl p-6 text-center hover:bg-white/20 hover:-translate-y-1 transition-all duration-500 delay-200 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <i class="fa-solid fa-folder-open text-2xl text-accent-300 mb-3 block group-hover:scale-110 transition-transform duration-300"></i>
+                        <p class="text-white font-semibold text-sm">Материали</p>
+                    </div>
+                    <div class="group bg-white/10 ring-1 ring-white/20 rounded-2xl p-6 text-center hover:bg-white/20 hover:-translate-y-1 transition-all duration-500 delay-300 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <i class="fa-solid fa-list-check text-2xl text-accent-300 mb-3 block group-hover:scale-110 transition-transform duration-300"></i>
+                        <p class="text-white font-semibold text-sm">Организация</p>
+                    </div>
+                </div>
+
+                <div class="relative grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="bg-white rounded-3xl p-8 text-center shadow-2xl transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <span class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-primary-50 to-violet-100 flex items-center justify-center">
+                            <i class="fa-solid fa-circle-minus text-xl bg-gradient-to-br from-primary-700 to-violet-600 bg-clip-text text-transparent"></i>
+                        </span>
+                        <p class="text-xl font-black text-gray-900 leading-snug">По-малко администрация.</p>
+                    </div>
+                    <div class="bg-white rounded-3xl p-8 text-center shadow-2xl md:-mt-5 transition-all duration-700 delay-150 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <span class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-100 flex items-center justify-center">
+                            <i class="fa-solid fa-children text-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                        </span>
+                        <p class="text-xl font-black text-gray-900 leading-snug">Повече време за децата.</p>
+                    </div>
+                    <div class="bg-white rounded-3xl p-8 text-center shadow-2xl transition-all duration-700 delay-300 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <span class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-accent-50 to-fuchsia-100 flex items-center justify-center">
+                            <i class="fa-solid fa-arrow-trend-up text-xl bg-gradient-to-br from-accent-500 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                        </span>
+                        <p class="text-xl font-black text-gray-900 leading-snug">Повече възможности за вашата практика.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         5. ДИГИТАЛЕН КАБИНЕТ + как записват родителите
+         ============================================================ -->
+    <div class="is-section is-section-auto section lock">
+        <div class="is-overlay">
+            <div class="is-overlay-bg bg-white"></div>
+        </div>
+        <div class="!container is-container v2 !max-w-7xl py-16 lg:py-28">
+            <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+
+                <div class="lg:col-span-5" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <span class="inline-flex items-center gap-3 text-xs font-black uppercase tracking-widest text-primary-700 mb-6">
+                            <span class="w-10 h-0.5 rounded-full bg-gradient-to-r from-primary-700 to-violet-500"></span>
+                            Дигитален кабинет
+                        </span>
+
+                        <h2 class="text-3xl lg:text-5xl font-black text-gray-900 leading-tight tracking-tight mb-6">
+                            CareNet е твоят
+                            <span class="bg-gradient-to-r from-primary-700 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">дигитален кабинет.</span>
+                        </h2>
+
+                        <p class="text-lg text-gray-600 leading-relaxed mb-5">
+                            Платформа, създадена за логопеди, психолози, ерготерапевти, арт и музикални
+                            терапевти, ресурсни учители, специални педагози и други специалисти по детско развитие.
+                        </p>
+
+                        <p class="text-lg text-gray-600 leading-relaxed mb-8">
+                            <span class="font-bold text-gray-900">CareNet.bg</span> свързва търсещи подкрепа
+                            родители с подходящите специалисти в една дигитална среда.
+                        </p>
+
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-sm font-medium text-violet-700 bg-violet-50 ring-1 ring-violet-100 px-4 py-2 rounded-full">Логопеди</span>
+                            <span class="text-sm font-medium text-violet-700 bg-violet-50 ring-1 ring-violet-100 px-4 py-2 rounded-full">Психолози</span>
+                            <span class="text-sm font-medium text-violet-700 bg-violet-50 ring-1 ring-violet-100 px-4 py-2 rounded-full">Ерготерапевти</span>
+                            <span class="text-sm font-medium text-violet-700 bg-violet-50 ring-1 ring-violet-100 px-4 py-2 rounded-full">Рехабилитатори</span>
+                            <span class="text-sm font-medium text-violet-700 bg-violet-50 ring-1 ring-violet-100 px-4 py-2 rounded-full">Ресурсни учители</span>
+                            <span class="text-sm font-medium text-violet-700 bg-violet-50 ring-1 ring-violet-100 px-4 py-2 rounded-full">Специални педагози</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="relative transition-all duration-700 delay-150 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <div class="absolute -inset-3 bg-gradient-to-br from-violet-200 to-accent-200 opacity-50 rounded-3xl blur-2xl"></div>
+
+                        <div class="relative bg-gradient-to-br from-primary-800 via-violet-700 to-fuchsia-700 rounded-3xl p-8 lg:p-10 shadow-2xl overflow-hidden">
+                            <svg class="absolute inset-0 w-full h-full opacity-10" aria-hidden="true">
+                                <defs>
+                                    <pattern id="cnDots2" width="24" height="24" patternUnits="userSpaceOnUse">
+                                        <circle cx="2" cy="2" r="1.2" fill="#ffffff"></circle>
+                                    </pattern>
+                                </defs>
+                                <rect width="100%" height="100%" fill="url(#cnDots2)"></rect>
+                            </svg>
+
+                            <h3 class="relative text-xl lg:text-2xl font-black text-white leading-snug mb-8">
+                                Как родителите предпочитат да записват часове през 2026 г.?
+                            </h3>
+
+                            <div class="relative space-y-4">
+                                <div class="flex items-start gap-4 bg-white rounded-2xl p-5 hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="w-11 h-11 shrink-0 rounded-xl bg-gradient-to-br from-primary-50 to-violet-100 flex items-center justify-center">
+                                        <i class="fa-solid fa-mobile-screen-button bg-gradient-to-br from-primary-700 to-violet-600 bg-clip-text text-transparent"></i>
+                                    </span>
+                                    <p class="text-gray-700 pt-2">Търсят и избират специалисти <span class="font-bold text-gray-900">през телефона си</span> — бързо, лесно и удобно.</p>
+                                </div>
+
+                                <div class="flex items-start gap-4 bg-white rounded-2xl p-5 hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="w-11 h-11 shrink-0 rounded-xl bg-gradient-to-br from-violet-50 to-fuchsia-100 flex items-center justify-center">
+                                        <i class="fa-solid fa-star-half-stroke bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                                    </span>
+                                    <p class="text-gray-700 pt-2">Четат <span class="font-bold text-gray-900">отзиви</span>, сравняват профили и искат да имат <span class="font-bold text-gray-900">доверие</span>.</p>
+                                </div>
+
+                                <div class="flex items-start gap-4 bg-white rounded-2xl p-5 hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="w-11 h-11 shrink-0 rounded-xl bg-gradient-to-br from-fuchsia-50 to-accent-100 flex items-center justify-center">
+                                        <i class="fa-solid fa-calendar-day bg-gradient-to-br from-fuchsia-600 to-accent-500 bg-clip-text text-transparent"></i>
+                                    </span>
+                                    <p class="text-gray-700 pt-2">Предпочитат <span class="font-bold text-gray-900">онлайн записване по всяко време</span>, без обаждания и чакане.</p>
+                                </div>
+
+                                <div class="flex items-start gap-4 bg-white rounded-2xl p-5 hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="w-11 h-11 shrink-0 rounded-xl bg-gradient-to-br from-accent-50 to-accent-100 flex items-center justify-center">
+                                        <i class="fa-solid fa-clipboard-check bg-gradient-to-br from-accent-600 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                                    </span>
+                                    <p class="text-gray-700 pt-2">Искат <span class="font-bold text-gray-900">обратна връзка и препоръки</span> за работа у дома, достъпни по всяко време, на едно място.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         6. РОЛ БАНЕР — четирите стъпки
+         ============================================================ -->
+    <div class="is-section is-section-auto section lock" id="kak-raboti">
+        <div class="is-overlay">
+            <div class="is-overlay-bg bg-gray-50"></div>
+        </div>
+        <div class="!container is-container v2 !max-w-7xl py-16 lg:py-28">
+            <div class="relative">
+
+                <div class="max-w-3xl mx-auto text-center mb-16" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                        <span class="inline-flex items-center gap-3 text-xs font-black uppercase tracking-widest text-accent-500 mb-6">
+                            <span class="w-10 h-0.5 rounded-full bg-gradient-to-r from-accent-500 to-fuchsia-500"></span>
+                            Как работи
+                        </span>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight tracking-tight mb-5">
+                            Четири стъпки до по-подредена практика
+                        </h2>
+                        <span class="block w-28 h-1.5 mx-auto rounded-full bg-gradient-to-r from-primary-700 via-violet-500 to-accent-500"></span>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <span class="hidden lg:block absolute top-10 left-0 right-0 mx-32 h-0.5 bg-gradient-to-r from-primary-200 via-violet-300 to-accent-300"></span>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+
+                        <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group relative transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                            <span class="relative z-10 w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-primary-600 to-primary-800 text-white text-2xl font-black flex items-center justify-center shadow-xl group-hover:-translate-y-1 group-hover:rotate-3 transition-all duration-500">1</span>
+                            <div class="bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm group-hover:shadow-2xl transition-all duration-500 text-center">
+                                <i class="fa-solid fa-id-card text-3xl mb-4 bg-gradient-to-br from-primary-700 to-violet-600 bg-clip-text text-transparent"></i>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Създай профил и представи своята практика</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">Лесно, бързо и професионално.</p>
+                            </div>
+                        </div>
+
+                        <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group relative transition-all duration-700 delay-100 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                            <span class="relative z-10 w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-violet-600 to-violet-800 text-white text-2xl font-black flex items-center justify-center shadow-xl group-hover:-translate-y-1 group-hover:rotate-3 transition-all duration-500">2</span>
+                            <div class="bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm group-hover:shadow-2xl transition-all duration-500 text-center">
+                                <i class="fa-solid fa-calendar-check text-3xl mb-4 bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">График, който се запълва докато работиш</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">Онлайн резервации 24/7 и удобно управление на часовете.</p>
+                            </div>
+                        </div>
+
+                        <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group relative transition-all duration-700 delay-200 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                            <span class="relative z-10 w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-fuchsia-600 to-fuchsia-800 text-white text-2xl font-black flex items-center justify-center shadow-xl group-hover:-translate-y-1 group-hover:rotate-3 transition-all duration-500">3</span>
+                            <div class="bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm group-hover:shadow-2xl transition-all duration-500 text-center">
+                                <i class="fa-solid fa-comments text-3xl mb-4 bg-gradient-to-br from-fuchsia-600 to-accent-500 bg-clip-text text-transparent"></i>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Комуникация на едно място</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">Съобщения с родители, обмен на файлове, препоръки за работа у дома.</p>
+                            </div>
+                        </div>
+
+                        <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="group relative transition-all duration-700 delay-300 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                            <span class="relative z-10 w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-accent-500 to-accent-700 text-white text-2xl font-black flex items-center justify-center shadow-xl group-hover:-translate-y-1 group-hover:rotate-3 transition-all duration-500">4</span>
+                            <div class="bg-white rounded-3xl p-7 ring-1 ring-gray-100 shadow-sm group-hover:shadow-2xl transition-all duration-500 text-center">
+                                <i class="fa-solid fa-arrow-trend-up text-3xl mb-4 bg-gradient-to-br from-accent-500 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Развивай практиката си модерно</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">Повече функционалности, по-лесно управление, повече доверие.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         7. МНЕНИЯ
+         ============================================================ -->
+    <div class="is-section is-section-auto section lock">
+        <div class="is-overlay">
+            <div class="is-overlay-bg bg-white"></div>
+        </div>
+        <div class="!container is-container v2 !max-w-7xl py-16 lg:py-28">
+            <div class="relative">
+
+                <div class="absolute top-10 -left-16 w-72 h-72 rounded-full bg-violet-100 opacity-70 blur-3xl pointer-events-none"></div>
+                <div class="absolute bottom-0 -right-16 w-72 h-72 rounded-full bg-accent-100 opacity-70 blur-3xl pointer-events-none"></div>
+
+                <div class="relative max-w-3xl mx-auto text-center mb-16" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+                        <div class="flex items-center justify-center gap-2 text-xl mb-5">
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight tracking-tight">
+                            Какво казват специалистите, които вече работят с CareNet
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="relative grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start">
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="relative bg-white rounded-3xl p-8 pt-11 ring-1 ring-gray-100 shadow-xl md:mt-10 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <span class="absolute -top-6 left-8 w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-white flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-quote-left"></i>
+                        </span>
+                        <p class="text-gray-700 leading-relaxed mb-7">
+                            Платформата е изключително удобна, с интуитивен и лесен за използване интерфейс.
+                            Работата с нея е бърза, приятна и ефективна. Отличава се с отлична функционалност,
+                            надеждност, достъпност.
+                        </p>
+                        <div class="flex items-center gap-3 pt-6 border-t border-gray-100">
+                            <span class="w-11 h-11 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white font-black flex items-center justify-center shadow">Г</span>
+                            <div class="leading-tight">
+                                <p class="font-bold text-gray-900 text-sm">Логопедичен кабинет „Говориниче“</p>
+                                <p class="text-xs text-gray-500">Специалист в платформата</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="relative rounded-3xl p-8 pt-11 shadow-2xl bg-gradient-to-br from-primary-800 via-violet-700 to-fuchsia-700 hover:-translate-y-1 transition-all duration-500 delay-150 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <div class="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+                            <div class="absolute -top-16 -right-10 w-48 h-48 rounded-full bg-fuchsia-500 opacity-30 blur-2xl"></div>
+                        </div>
+                        <span class="absolute -top-6 left-8 w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-400 to-accent-600 text-white flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-quote-left"></i>
+                        </span>
+                        <div class="relative flex items-center gap-1 text-accent-300 mb-5">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="relative text-xl lg:text-2xl font-bold text-white leading-snug mb-7">
+                            Изключително коректни, с разбиране към проблемите на родители и специалисти.
+                            Изключително подкрепящи.
+                        </p>
+                        <div class="relative flex items-center gap-3 pt-6 border-t border-white/20">
+                            <span class="w-11 h-11 rounded-full bg-white/20 text-white font-black flex items-center justify-center">С</span>
+                            <div class="leading-tight">
+                                <p class="font-bold text-white text-sm">Стефка Николова</p>
+                                <p class="text-xs text-violet-200">Специалист в платформата</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true" class="relative bg-white rounded-3xl p-8 pt-11 ring-1 ring-gray-100 shadow-xl md:mt-10 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 delay-300 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                        <span class="absolute -top-6 left-8 w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-700 to-violet-600 text-white flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-quote-left"></i>
+                        </span>
+                        <p class="text-gray-700 leading-relaxed mb-5">
+                            Супер сте. Много удобна платформа.
+                        </p>
+                        <div class="flex items-center gap-1 mb-7">
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                            <i class="fa-solid fa-star bg-gradient-to-br from-accent-400 to-fuchsia-500 bg-clip-text text-transparent"></i>
+                        </div>
+                        <div class="flex items-center gap-3 pt-6 border-t border-gray-100">
+                            <span class="w-11 h-11 rounded-full bg-gradient-to-br from-primary-600 to-violet-600 text-white font-black flex items-center justify-center shadow">С</span>
+                            <div class="leading-tight">
+                                <p class="font-bold text-gray-900 text-sm">Стефка Николова</p>
+                                <p class="text-xs text-gray-500">Специалист в платформата</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         8. ФИНАЛЕН CTA
+         ============================================================ -->
+    <div class="is-section is-section-auto section lock">
+        <div class="is-overlay">
+            <div class="is-overlay-bg bg-gradient-to-br from-primary-900 via-violet-800 to-fuchsia-700"></div>
+        </div>
+        <div class="!container is-container v2 !max-w-full !p-0">
+            <div class="relative">
+
+                <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                    <svg class="absolute inset-0 w-full h-full opacity-10" aria-hidden="true">
+                        <defs>
+                            <pattern id="cnDots3" width="28" height="28" patternUnits="userSpaceOnUse">
+                                <circle cx="2" cy="2" r="1.5" fill="#ffffff"></circle>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#cnDots3)"></rect>
+                    </svg>
+                    <div class="absolute -top-24 left-1/4 w-96 h-96 rounded-full bg-accent-500 opacity-25 blur-3xl animate-pulse"></div>
+                    <div class="absolute -bottom-24 right-1/4 w-96 h-96 rounded-full bg-fuchsia-500 opacity-25 blur-3xl"></div>
+                </div>
+
+                <div class="relative max-w-5xl mx-auto py-20 lg:py-28 text-center text-white" x-data="{ s: false }" x-init="window.IntersectionObserver ? new IntersectionObserver((en, ob) => { if (en[0].isIntersecting) { s = true; ob.disconnect() } }, { threshold: 0.08 }).observe($el) : s = true">
+                    <div class="transition-all duration-700 ease-out" :class="s ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+
+                        <span class="inline-flex items-center gap-3 bg-gradient-to-r from-accent-500 to-fuchsia-500 text-white text-sm font-black uppercase tracking-wide px-5 py-2 rounded-full mb-7 shadow-lg">
+                            <i class="fa-solid fa-gift"></i> 2 месеца безплатно
+                        </span>
+
+                        <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black leading-tight tracking-tight mb-6">
+                            Направете го още днес.<br class="hidden sm:block">
+                            Ние се грижим за организацията.
+                        </h2>
+
+                        <p class="text-lg lg:text-xl text-violet-100 max-w-2xl mx-auto mb-11">
+                            Регистрирайте се и тествайте цялата платформа безплатно за 2 месеца —
+                            без такси и без никакво обвързване.
+                        </p>
+
+                        <a href="https://carenet.bg/bg/registration" class="group relative inline-block overflow-hidden bg-white text-primary-800 px-12 py-5 rounded-2xl shadow-2xl hover:-translate-y-1 transition-all duration-300 mb-12">
+                            <span class="absolute inset-0 bg-gradient-to-r from-accent-100 to-fuchsia-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            <span class="relative block text-xl font-black uppercase tracking-wide">Регистрирай се</span>
+                            <span class="relative block text-sm font-medium text-violet-600">Тествай безплатно 2 месеца без обвързване</span>
+                        </a>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-12">
+                            <div class="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-6 hover:bg-white/20 transition-colors duration-300">
+                                <i class="fa-solid fa-bolt text-accent-300 text-xl mb-3"></i>
+                                <p class="font-bold mb-1">1 минута регистрация</p>
+                                <p class="text-sm text-violet-100">Бързо, лесно и без излишни формуляри</p>
+                            </div>
+                            <div class="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-6 hover:bg-white/20 transition-colors duration-300">
+                                <i class="fa-solid fa-headset text-accent-300 text-xl mb-3"></i>
+                                <p class="font-bold mb-1">Нашият екип е до Вас</p>
+                                <p class="text-sm text-violet-100">Ще съдействаме с настройването на профила</p>
+                            </div>
+                            <div class="bg-white/10 ring-1 ring-white/20 rounded-2xl px-5 py-6 hover:bg-white/20 transition-colors duration-300">
+                                <i class="fa-solid fa-shield-heart text-accent-300 text-xl mb-3"></i>
+                                <p class="font-bold mb-1">Без обвързване</p>
+                                <p class="text-sm text-violet-100">Може да прекратите по всяко време</p>
+                            </div>
+                        </div>
+
+                        <p class="inline-flex items-center gap-2 text-white font-semibold mb-3">
+                            <i class="fa-solid fa-globe text-accent-300"></i> www.carenet.bg
+                        </p>
+                        <p class="text-sm italic text-violet-200 max-w-2xl mx-auto">
+                            Дигитална платформа, която свързва родители със специалисти по детско развитие
+                            в една среда за цялостна грижа.
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         9. ЛЕПКАВ CTA ЗА МОБИЛЕН
+         ============================================================ -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 p-3 bg-white border-t border-gray-200 lg:hidden">
+        <a href="https://carenet.bg/bg/registration" class="flex flex-col items-center justify-center w-full bg-gradient-to-r from-accent-500 via-accent-400 to-fuchsia-500 text-white py-3 rounded-xl shadow-lg">
+            <span class="font-black uppercase tracking-wide">Регистрирай се</span>
+            <span class="text-xs text-white">2 месеца безплатно, без обвързване</span>
+        </a>
+    </div>
+    <div class="h-20 lg:hidden"></div>
+
+</div>

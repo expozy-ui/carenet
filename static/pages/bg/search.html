@@ -1,3 +1,11 @@
+<!--
+    При навигация Назад/Напред link.js вика Page.load() без да нулира data.pageUrl,
+    затова "id" от страницата на специалиста остава. combineRequest превръща id в
+    path сегмент (doctors/65), което дава счупен URL /bg/search/65 и заявка за
+    един специалист вместо за списъка. Тази страница не ползва pageUrl.id.
+-->
+<div x-init="delete data.pageUrl.id"></div>
+
 <!-- Main Content -->
 <main class="flex-1">
 
@@ -108,6 +116,80 @@
 
                     </div>
 
+                    <!-- Doctor Tags -->
+                    <div class="mb-6" apiData="get.doctors_tags" x-data="{
+                            open: false,
+                            search: '',
+                            selected: (() => {
+                                const u = data.pageUrl || {};
+                                const raw = [u['tag_ids[]'], u.tag_ids, u.tag_id]
+                                    .filter(v => v !== undefined && v !== null && v !== '')
+                                    .flatMap(v => Array.isArray(v) ? v : String(v).split(','));
+                                return [...new Set(raw.map(Number).filter(Boolean))];
+                            })(),
+                            get all() { return Object.values(data.doctors_tags || {}) },
+                            get available() {
+                                const q = this.search.trim().toLowerCase();
+                                return this.all.filter(t => !this.selected.includes(Number(t.id))
+                                    && (q === '' || (t.title || '').toLowerCase().includes(q)));
+                            },
+                            title(id) { return this.all.find(t => Number(t.id) === Number(id))?.title || ''; },
+                            toggle(id, checked) {
+                                id = Number(id);
+                                if (checked) {
+                                    if (!this.selected.includes(id)) this.selected.push(id);
+                                    this.search = '';
+                                    this.open = false;
+                                } else {
+                                    this.selected = this.selected.filter(x => x !== id);
+                                }
+                            }
+                        }" @click.outside="open = false">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Специализации</h3>
+                        <form>
+                            <!-- Реалното състояние на филтъра — тези чекбокси се пращат като tag_ids[] -->
+                            <div class="sr-only">
+                                <template x-for="tag in all" :key="tag.id">
+                                    <input type="checkbox" :id="'tag-cb-' + tag.id" :title="tag.title" name="tag_ids[]" :value="tag.id" :checked="selected.includes(Number(tag.id))" @change="toggle(tag.id, $el.checked); alpineListeners('get.doctors', $el)" keyName="doctors">
+                                </template>
+                            </div>
+
+                            <!--
+                                Стойност "empty" кара FormDataCollector да изтрие ключа от data.pageUrl,
+                                иначе options-pushurl мърджва стария tag_ids обратно в заявката и филтърът
+                                не може да се изчисти. Двата варианта на ключа са нужни, защото page.js
+                                пази "tag_ids[]", а формата събира "tag_ids".
+                            -->
+                            <input type="hidden" name="tag_ids" value="empty">
+                            <input type="hidden" name="tag_ids[]" value="empty">
+
+                            <div class="relative">
+                                <div @click="open = true; $refs.tagSearch.focus()" :class="open ? 'border-primary-500 ring-2 ring-primary-500' : 'border-gray-200'" class="w-full min-h-[2.75rem] flex flex-wrap items-center gap-1.5 px-2 py-1.5 bg-white rounded-lg border transition-all cursor-text">
+
+                                    <template x-for="id in selected" :key="id">
+                                        <span class="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 bg-primary-50 text-primary-700 border border-primary-200 rounded-md text-xs font-medium">
+                                            <span x-text="title(id)"></span>
+                                            <button type="button" title="Премахни" @click.stop="document.getElementById('tag-cb-' + id).click()" class="w-4 h-4 flex items-center justify-center rounded-full text-primary-500 hover:bg-primary-500 hover:text-white transition-colors cursor-pointer">
+                                                <i class="fa-solid fa-xmark text-[10px]"></i>
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <input type="text" x-ref="tagSearch" x-model="search" @focus="open = true" @keydown.enter.prevent="available[0] && document.getElementById('tag-cb-' + available[0].id).click()" @keydown.backspace="search === '' && selected.length && document.getElementById('tag-cb-' + selected[selected.length - 1]).click()" @keydown.escape="open = false" title="Търсене на специализации" placeholder="Избери специализации" :placeholder="selected.length ? '' : 'Избери специализации'" class="flex-1 min-w-[6rem] py-1 px-1 bg-transparent border-0 focus:ring-0 focus:outline-none text-sm text-gray-700 placeholder-gray-400">
+                                </div>
+
+                                <div x-show="open" x-cloak x-transition.opacity.duration.150ms class="absolute z-30 left-0 right-0 mt-2 max-h-60 overflow-y-auto bg-white rounded-lg border border-gray-200 shadow-lg">
+                                    <template x-for="tag in available" :key="tag.id">
+                                        <label :for="'tag-cb-' + tag.id" class="block px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors cursor-pointer" x-text="tag.title"></label>
+                                    </template>
+                                    <template x-if="available.length === 0">
+                                        <div class="px-3 py-2 text-sm text-gray-400" x-text="all.length === 0 ? 'Няма налични специализации' : (search ? 'Няма намерени специализации' : 'Всички специализации са избрани')"></div>
+                                    </template>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
             </aside>
 
@@ -149,7 +231,7 @@
                                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                                         <div>
                                             <h3 class="text-lg font-semibold text-gray-900" x-text="doctor.user_info.names"></h3>
-                                            <p class="text-primary-600 font-medium" x-text="doctor.speciality.title  "></p>
+                                            <p class="text-primary-600 font-medium" x-text="(doctor.specialities?.length ? doctor.specialities : (doctor.speciality ? [doctor.speciality] : [])).map(s => s.title).join(', ')"></p>
 
                                             <!-- Rating -->
                                             <div class="flex items-center gap-2 mt-2">
@@ -190,10 +272,20 @@
 
                                         </div>
 
-                                        <button @click="href(`/doctor?id=${doctor.id}`)" class="w-full sm:w-auto bg-accent-500 hover:bg-accent-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
-                                            <i class="fa-regular fa-calendar-check"></i>
-                                            Запази час
-                                        </button>
+                                        <div class="flex flex-col-reverse sm:flex-col sm:items-end sm:self-stretch sm:justify-between gap-2">
+                                            <button @click="href(`/doctor?id=${doctor.id}`)" class="w-full sm:w-auto bg-accent-500 hover:bg-accent-600 text-white px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                                                <i class="fa-regular fa-calendar-check"></i>
+                                                Запази час
+                                            </button>
+
+                                            <!-- City / Град -->
+                                            <template x-if="doctor.cabinet_ids && doctor.cabinet_ids.length && [...new Set(doctor.cabinet_ids.map(c => (Object.values(data.cities || {}).find(ci => ci.id == c.city_id) || {}).title).filter(Boolean))].length">
+                                                <div class="flex items-center gap-1.5 text-gray-500 text-sm">
+                                                    <i class="fa-solid fa-location-dot text-primary-500"></i>
+                                                    <span x-text="[...new Set(doctor.cabinet_ids.map(c => (Object.values(data.cities || {}).find(ci => ci.id == c.city_id) || {}).title).filter(Boolean))].join(', ')"></span>
+                                                </div>
+                                            </template>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -317,6 +409,76 @@
                             <input id="mobile-home_visits" type="checkbox" :checked="data.pageUrl.home_visits != undefined" @change="alpineListeners('get.doctors', $el)" keyName="doctors" name="home_visits" class="w-5 h-5 text-primary-500 rounded border-gray-300 focus:ring-primary-500">
                             <span class="text-gray-600">Домашни посещения</span>
                         </label>
+                    </form>
+                </div>
+
+                <!-- Doctor Tags -->
+                <div class="mb-6" apiData="get.doctors_tags" x-data="{
+                        open: false,
+                        search: '',
+                        selected: (() => {
+                            const u = data.pageUrl || {};
+                            const raw = [u['tag_ids[]'], u.tag_ids, u.tag_id]
+                                .filter(v => v !== undefined && v !== null && v !== '')
+                                .flatMap(v => Array.isArray(v) ? v : String(v).split(','));
+                            return [...new Set(raw.map(Number).filter(Boolean))];
+                        })(),
+                        get all() { return Object.values(data.doctors_tags || {}) },
+                        get available() {
+                            const q = this.search.trim().toLowerCase();
+                            return this.all.filter(t => !this.selected.includes(Number(t.id))
+                                && (q === '' || (t.title || '').toLowerCase().includes(q)));
+                        },
+                        title(id) { return this.all.find(t => Number(t.id) === Number(id))?.title || ''; },
+                        toggle(id, checked) {
+                            
+                            id = Number(id);
+                            if (checked) {
+                                if (!this.selected.includes(id)) this.selected.push(id);
+                                this.search = '';
+                                this.open = false;
+                            } else {
+                                this.selected = this.selected.filter(x => x !== id);
+                            }
+                        }
+                    }" @click.outside="open = false">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Специализации</h3>
+                    <form>
+                        <!-- Реалното състояние на филтъра — тези чекбокси се пращат като tag_ids[] -->
+                        <div class="sr-only">
+                            <template x-for="tag in all" :key="tag.id">
+                                <input type="checkbox" :id="'m-tag-cb-' + tag.id" :title="tag.title" name="tag_ids[]" :value="tag.id" :checked="selected.includes(Number(tag.id))" @change="toggle(tag.id, $el.checked); alpineListeners('get.doctors', $el)" keyName="doctors">
+                            </template>
+                        </div>
+
+                        <!-- Изчиства ключа от data.pageUrl — виж коментара в desktop филтъра -->
+                        <input type="hidden" name="tag_ids" value="empty">
+                        <input type="hidden" name="tag_ids[]" value="empty">
+
+                        <div class="relative">
+                            <div @click="open = true; $refs.tagSearchMobile.focus()" :class="open ? 'border-primary-500 ring-2 ring-primary-500' : 'border-gray-200'" class="w-full min-h-[2.75rem] flex flex-wrap items-center gap-1.5 px-2 py-1.5 bg-white rounded-lg border transition-all cursor-text">
+
+                                <template x-for="id in selected" :key="id">
+                                    <span class="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 bg-primary-50 text-primary-700 border border-primary-200 rounded-md text-xs font-medium">
+                                        <span x-text="title(id)"></span>
+                                        <button type="button" title="Премахни" @click.stop="document.getElementById('m-tag-cb-' + id).click()" class="w-4 h-4 flex items-center justify-center rounded-full text-primary-500 hover:bg-primary-500 hover:text-white transition-colors cursor-pointer">
+                                            <i class="fa-solid fa-xmark text-[10px]"></i>
+                                        </button>
+                                    </span>
+                                </template>
+
+                                <input type="text" x-ref="tagSearchMobile" x-model="search" @focus="open = true" @keydown.enter.prevent="available[0] && document.getElementById('m-tag-cb-' + available[0].id).click()" @keydown.backspace="search === '' && selected.length && document.getElementById('m-tag-cb-' + selected[selected.length - 1]).click()" @keydown.escape="open = false" title="Търсене на специализации" placeholder="Избери специализации" :placeholder="selected.length ? '' : 'Избери специализации'" class="flex-1 min-w-[6rem] py-1 px-1 bg-transparent border-0 focus:ring-0 focus:outline-none text-sm text-gray-700 placeholder-gray-400">
+                            </div>
+
+                            <div x-show="open" x-cloak x-transition.opacity.duration.150ms class="absolute z-30 left-0 right-0 mt-2 max-h-60 overflow-y-auto bg-white rounded-lg border border-gray-200 shadow-lg">
+                                <template x-for="tag in available" :key="tag.id">
+                                    <label :for="'m-tag-cb-' + tag.id" class="block px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors cursor-pointer" x-text="tag.title"></label>
+                                </template>
+                                <template x-if="available.length === 0">
+                                    <div class="px-3 py-2 text-sm text-gray-400" x-text="all.length === 0 ? 'Няма налични специализации' : (search ? 'Няма намерени специализации' : 'Всички специализации са избрани')"></div>
+                                </template>
+                            </div>
+                        </div>
                     </form>
                 </div>
 
