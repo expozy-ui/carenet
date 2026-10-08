@@ -37,7 +37,10 @@
 
 <!-- CORE SYSTEM SETTINGS -->
 		<script type="text/javascript">
-			const SITEURL = "<?php echo $core->site_url ?>";
+			//Собственият хост на фронта, не site_url от ядрото: през SITEURL JS-ът тегли с fetch()
+			//файлове от самия фронт сървър (static/pages, static/css, editor/cb). На дев домейн
+			//site_url (прод) е друг origin и fetch-ът пада с CORS. На прод двете съвпадат.
+			const SITEURL = "https://<?php echo $_SERVER['HTTP_HOST'] ?>";
 			const LANG = "<?php echo $lang->language ?>";
 			const SAAS_KEY = "<?php echo SAAS_KEY ?>";
 			const COREURL = "<?php echo CORE_URL; ?>api/";

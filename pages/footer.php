@@ -26,9 +26,10 @@
 
 
 <!-- SCRIPTS AND STYLES FOR GLIDE SLIDER -->
- <link href="<?php echo $core->site_url ?>/editor/cb/assets/scripts/glide/css/glide.core.min.css" rel="stylesheet">
-<link href="<?php echo $core->site_url ?>/editor/cb/assets/scripts/glide/css/glide.theme.css" rel="stylesheet">
-<script src="<?php echo $core->site_url ?>/editor/cb/assets/scripts/glide/glide.min.js"></script>
+<?php //файловете са на самия фронт сървър — относителни пътища, не site_url (прод) ?>
+ <link href="/editor/cb/assets/scripts/glide/css/glide.core.min.css" rel="stylesheet">
+<link href="/editor/cb/assets/scripts/glide/css/glide.theme.css" rel="stylesheet">
+<script src="/editor/cb/assets/scripts/glide/glide.min.js"></script>
 
 <link rel="stylesheet"  href="https://r2.expozy.com/cdn/fa/css/all.css?v=<?php echo JS_VERSION ?>" />
 

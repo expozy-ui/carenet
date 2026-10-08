@@ -16,7 +16,7 @@ setlocale(LC_ALL,					'bg_BG.utf8');
 
 /* Directoires
 ========================================== */
-define('CORE_URL',				'https://core.expozy.com/');
+define('CORE_URL',				'https://devcore.myexpozy.com/');
 
 define('API_DIR',					'core/');
 define('CLASSES_DIR',				'core/classes/');
